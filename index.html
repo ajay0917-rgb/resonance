@@ -61,7 +61,8 @@ body{height:100%;margin:0;overflow:hidden;background:var(--ground);color:var(--i
 #burstBtn.ready span{color:#f2c46d}
 @keyframes glow{from{box-shadow:0 0 6px rgba(242,196,109,.4)}to{box-shadow:0 0 22px rgba(242,196,109,.9)}}
 #wxTxt{margin-left:auto;font-weight:800}
-.slot.fused{border:1px solid #f2c46d;display:flex;align-items:center;justify-content:center;font-size:15px;letter-spacing:-1px;padding-bottom:0;box-shadow:inset 0 0 8px rgba(242,196,109,.25)}
+.duo{font-size:15px!important;letter-spacing:-1px;display:flex!important;align-items:center;justify-content:center}
+.badge.duo{font-size:19px!important}
 .badge.rl{border-radius:50% 50% 12px 12px;border-color:#f2c46d}
 .badge.pact{border-style:dashed}
 #slots{display:flex;gap:6px;justify-content:center}
@@ -278,6 +279,11 @@ const ET={
   splitter:{n:'孢囊',r:13,spd:46,hp:16,dmg:9,xp:2,c:'#9be36b',f:'#16260e',split:3},
   mite:{n:'蟎',r:6,spd:96,hp:3,dmg:4,xp:0,c:'#c4f08f',f:'#1c2a10'},
   cleanser:{n:'淨化者',r:12,spd:44,hp:22,dmg:8,xp:3,c:'#d9c8ff',f:'#1e1836',purge:4},
+  charger:{n:'衝鋒者',r:12,spd:50,hp:26,dmg:12,xp:3,c:'#ff9f43',f:'#2e1a08',ai:1},
+  spitter:{n:'射手',r:11,spd:48,hp:16,dmg:7,xp:3,c:'#ff5c8a',f:'#2a0f1e',ai:1},
+  bomber:{n:'爆彈蟲',r:11,spd:74,hp:10,dmg:0,xp:2,c:'#ffd166',f:'#2e2406',ai:1},
+  shaman:{n:'祭司',r:13,spd:40,hp:34,dmg:8,xp:4,c:'#7fe7ff',f:'#0c2230',ai:1},
+  blinker:{n:'閃現者',r:10,spd:58,hp:14,dmg:10,xp:3,c:'#b58cff',f:'#1c1030',ai:1},
   elite:{r:24,spd:48,hp:230,dmg:22,xp:20,c:'#ff2d55',f:'#330a18',elite:1},
   boss:{r:34,spd:36,hp:1,dmg:18,xp:0,c:'#ffffff',f:'#222222',elite:1},
 };
@@ -289,6 +295,11 @@ const EINFO=[
   ['bubble','永遠濕潤。導電、凍結、蒸發的好目標。'],
   ['splitter','死亡時分裂成 3 隻蟎，蟎會繼承它身上的狀態。範圍反應最有價值的對象。'],
   ['cleanser','每 4 秒洗掉周圍敵人的狀態（出手前會有虛線圈預警）。優先處理。'],
+  ['charger','（深淵）停下蓄力後直線衝撞，地上會先出現衝鋒線，往旁邊閃就好。'],
+  ['spitter','（深淵）保持距離吐出慢速彈，發射前會發光。'],
+  ['bomber','（深淵）衝過來自爆；被擊殺也會留下延遲爆炸。爆炸會點燃周圍的敵人，可以拿來借力。'],
+  ['shaman','（深淵）躲在後排替周圍敵人上結界，結界只怕反應。優先擊殺。'],
+  ['blinker','（深淵）消失後閃現到你身邊，閃現點會先出現預警。'],
 ];
 /* 菁英詞綴：每隻菁英隨機一種 */
 const AFX={
@@ -343,7 +354,95 @@ const WX={
   snow:{n:'寒潮',el:'chill',c:'#9fe8ff',d:'敵人會不斷變得寒冷'},
   storm:{n:'雷暴',el:'shock',c:'#ffe04a',d:'落雷會讓敵人帶電'},
 };
-const MISC={burst:['共鳴爆發','#f2c46d'],weather:['天候','#9fdcef']};
+/* ===== 融合進化：兩個滿級技能合成全新技能，三種進化方向 ===== */
+const PE={ember:'burn',surge:'wet',frost:'chill',arc:'shock',oil:'oil',blades:'phys',lance:'phys',gale:'wind',rock:'geo'};
+const NOUN={'burn|chill':'凍焰','burn|geo':'熔岩','burn|oil':'燎原','burn|phys':'熔刃','burn|shock':'雷火','burn|wet':'蒸汽','burn|wind':'火旋',
+  'chill|geo':'凍土','chill|oil':'霜膠','chill|phys':'冰刃','chill|shock':'極光','chill|wet':'冰晶','chill|wind':'暴雪',
+  'geo|oil':'瀝青','geo|phys':'碎岩','geo|shock':'磁石','geo|wet':'泥流','geo|wind':'沙暴',
+  'oil|phys':'黏刃','oil|shock':'電漿','oil|wet':'泥沼','oil|wind':'油霧',
+  'phys|shock':'雷刃','phys|wet':'潮刃','phys|wind':'風刃','shock|wet':'雷雨','shock|wind':'迅雷','wet|wind':'颶浪'};
+const FORMS={
+  arrow:{suf:'矢',tag:'追蹤彈',d:(L,x)=>`每 1.1 秒朝最近的敵人射出 ${[2,3,4][L]} 枚追蹤彈，命中時附加${x}。單體爆發。`},
+  field:{suf:'領域',tag:'領域',d:(L,x)=>`每 4 秒在敵群中展開半徑 ${[75,90,105][L]} 的領域，持續 3.5 秒，每 0.8 秒對裡面最多 ${[8,10,12][L]} 名敵人輪流附加${x}。範圍控場。`},
+  ring:{suf:'之環',tag:'環繞',d:(L,x)=>`${[3,4,5][L]} 顆光球環繞你旋轉，碰到的敵人輪流被附加${x}。近身防禦。`},
+};
+const hexA=(h,a)=>{ const n=parseInt(h.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
+function makeFused(a,b,form){
+  const id='fx_'+[a,b].sort().join('_')+'_'+form; if(SK[id]) return id;
+  const key=[PE[a],PE[b]].sort().join('|'), noun=NOUN[key]||(SK[a].ch+SK[b].ch);
+  const tags=[...new Set([...SK[a].ap,...SK[b].ap])];
+  const els=[...ANY5.filter(x=>tags.includes(x)),...tags.filter(x=>x==='wind'||x==='geo')], phys=tags.includes('phys');
+  const xt=els.map(x=>STN[x]).join('＋')+(phys?(els.length?'＋':'')+'物理傷害':'');
+  SK[id]={ch:noun,n:noun+FORMS[form].suf,c:SK[a].c,c2:SK[b].c,ap:tags,hidden:1,fused:{a,b,form,els,phys,noun},d:[0,1,2].map(L=>FORMS[form].d(L,xt))};
+  return id;
+}
+function fuseNote(F){
+  const E=new Set(F.els), rs=[];
+  for(const k in REACT){ const pr=REACT[k].pair;
+    if(pr.every(x=>x==='any'?ANY5.some(y=>E.has(y)):x==='ele'?ELE4.some(y=>E.has(y)):x!=='frozen'&&E.has(x))) rs.push(k); }
+  const ph=F.phys?'物理傷害能打碎凍結的敵人。':'';
+  const rn=rs.map(k=>REACT[k].n).join('、'), en=F.els.map(x=>STN[x]).join('和');
+  if(F.form==='arrow') return (rs.length?`每次命中都直接觸發${rn}。`:F.els.length>1?`一次幫敵人疊好${en}，等其他技能來引爆。`:'')+ph;
+  return (rs.length?`同一個敵人被打到兩次就會觸發${rn}。`:F.els.length>1?`輪流疊上${en}，等其他技能來引爆。`:'')+ph;
+}
+function fuseHit(e,F,dmg,src,one){
+  if(e.dead) return; hit(e,dmg,src,F.phys);
+  if(one!=null){ if(F.els.length&&!e.dead) applyStatus(e,F.els[one%F.els.length],3,src,4*dMult()); return; }   // 領域、環繞：每次只附加一種，輪流
+  for(const x of F.els){ if(e.dead) break; applyStatus(e,x,3,src,4*dMult()); }                                  // 追蹤彈：一次附加全部
+}
+function cyc(s,e){ if(!s.cy||s.cy.size>600) s.cy=new Map(); const k=(s.cy.get(e)||0); s.cy.set(e,k+1); return k; }
+function doFuse(a,b,form){
+  const id=makeFused(a,b,form);
+  S.order=S.order.filter(x=>x!==b); S.order[S.order.indexOf(a)]=id;
+  delete S.sk[a]; delete S.sk[b];
+  S.sk[id]={lv:1,cd:0.5,ang:0,acc:0,pos:[]};
+  banner('融合：'+SK[id].n,SK[id].c); sfx('res'); fxRing(S.p.x,S.p.y,130,SK[id].c,0.5); fxRing(S.p.x,S.p.y,90,SK[id].c2,0.4);
+}
+function updFused(id,s,L,dt){
+  const F=SK[id].fused, p=S.p;
+  if(F.form==='arrow'){
+    s.cd-=dt; if(s.cd>0) return;
+    const ts=nearestN(p.x,p.y,[2,3,4][L-1],420,null); if(!ts.length){ s.cd=0.3; return; }
+    s.cd=1.1; const n=[2,3,4][L-1], dm=[12,15,18][L-1]*dMult();
+    for(let i=0;i<n;i++){ const t=ts[i%ts.length];
+      later(i*0.22,()=>{ if(!S||t.dead) return; const a=Math.atan2(t.y-p.y,t.x-p.x)+(i%2?0.35:-0.35);
+        S.P.push({k:'fo',x:p.x,y:p.y,vx:Math.cos(a)*380,vy:Math.sin(a)*380,t,id,l:1.6,pierce:1,hs:new Set(),dmg:dm}); }); }
+  } else if(F.form==='field'){
+    s.cd-=dt; s.f=s.f||[]; if(!s.hs||s.hs.size>600) s.hs=new Map();
+    if(s.cd<=0){ const c=query(p.x,p.y,320); if(!c.length) s.cd=0.3; else { s.cd=4; const t=densest(c); s.f.push({x:t.x,y:t.y,l:3.5,r:[75,90,105][L-1]}); } }
+    for(const z of s.f){ z.l-=dt; z.tk=(z.tk||0)-dt; } s.f=s.f.filter(z=>z.l>0);
+    const cap=[8,10,12][L-1], dm=[6,7,8][L-1]*dMult();
+    for(const z of s.f){ if(z.tk>0) continue; z.tk=0.8; z.k=(z.k||0)+1;
+      const ts=query(z.x,z.y,z.r).sort((u,v)=>dd(u.x,u.y,z.x,z.y)-dd(v.x,v.y,z.x,z.y)).slice(0,cap);
+      for(const e of ts) fuseHit(e,F,dm,id,z.k); }
+  } else {
+    s.ang=(s.ang||0)+2.6*dt; if(!s.hs||s.hs.size>400) s.hs=new Map();
+    const n=[3,4,5][L-1], R=[85,95,105][L-1], dm=[8,10,12][L-1]*dMult();
+    for(let i=0;i<n;i++){ const a=s.ang+i*TAU/n, ox=p.x+Math.cos(a)*R, oy=p.y+Math.sin(a)*R;
+      for(const e of query(ox,oy,14)){ if((s.hs.get(e)||0)>S.t) continue; s.hs.set(e,S.t+1.2); fuseHit(e,F,dm,id,cyc(s,e)); } }
+  }
+}
+const badgeHTML=d=>d.fused?`<span style="color:${d.c}">${d.ch[0]}</span><span style="color:${d.c2}">${d.ch[1]}</span>`:d.ch;
+const MISC={burst:['共鳴爆發','#f2c46d'],weather:['天候','#9fdcef'],blast:['爆炸','#ff9a4d']};
+/* 無盡模式 5:00 之後每 2 分鐘進入新的一層：換景色、加入新敵人、選一個詛咒 */
+const LAYERS=[
+  {n:'灰燼荒原',c:'#ff9f43',bg:'#1f0d08',grid:'rgba(255,122,61,0.11)'},
+  {n:'霜寂迴廊',c:'#9fe8ff',bg:'#061826',grid:'rgba(159,232,255,0.11)'},
+  {n:'雷鳴高原',c:'#ffe04a',bg:'#191606',grid:'rgba(255,224,74,0.10)'},
+  {n:'虛空之庭',c:'#c49bff',bg:'#150a28',grid:'rgba(196,155,255,0.11)'},
+  {n:'深淵核心',c:'#ff2d55',bg:'#1e0610',grid:'rgba(255,45,85,0.11)'},
+];
+const NEWT=['charger','spitter','bomber','shaman','blinker'];
+const NEWD={charger:'會蓄力衝撞',spitter:'會遠距離射擊',bomber:'會自爆',shaman:'會替同伴上結界',blinker:'會閃現到你身邊'};
+const MU={
+  haste:{ch:'疾',n:'狂奔',c:'#ff6fb0',d:'所有新出現的敵人移動速度 +20%。'},
+  volatile:{ch:'爆',n:'爆裂',c:'#ff7a3d',d:'敵人死亡時有 25% 機率留下延遲爆炸。爆炸也會點燃附近的敵人。'},
+  warded:{ch:'障',n:'庇護',c:'#7fe7ff',d:'祭司大量出現，敵人也更常一出現就帶著結界。結界只怕反應。'},
+  attune:{ch:'抗',n:'元素抗性',c:'#cfcbe0',d:'新出現的敵人有 35% 機率對一種元素免疫，虛線外框是它免疫的顏色。'},
+  swarm:{ch:'蟎',n:'蟲潮',c:'#9be36b',d:'定期有一圈蟎從四面八方湧來。'},
+  fog:{ch:'霧',n:'深淵之霧',c:'#8a7fb0',d:'視野變窄，遠處的敵人看不清楚。',once:1},
+  elite:{ch:'英',n:'菁英化',c:'#ff2d55',d:'之後每一波菁英多 1 隻。'},
+};
 const RES={
   vaporize:{n:'蒸汽雲',out:['wet'],d:'蒸發後留下一團蒸汽，待在裡面的敵人會濕潤。'},
   conduct:{n:'殘電',out:['shock'],d:'被導電打中的敵人，電流散去後仍然帶電。'},
@@ -433,12 +532,13 @@ const hpMult=t=>(1+t/55+(t/150)**2)*1.12;
 const spawnRate=t=>0.7+t/65;
 
 function newGame(mode){
+  for(const k in SK) if(SK[k].hidden) delete SK[k];
   input.active=false; input.id=null;
   const endless=mode==='endless';
   S={mode:'pick',t:0,endless,nextBoss:240,warned:0,bossN:0,bossQ:shuffle(Object.keys(BOSS)),slain:0,ph:0,lbEnt:null,
     p:{x:0,y:0,r:11,hp:100,max:100,spd:150,inv:0,lv:1,xp:0,next:xpNeed(1),fx:1,fy:0,mv:false,pick:70,moved:false,sh:0,shT:0},
     E:[],P:[],Z:[],G:[],FX:[],TX:[],Q:[],H:[],boss:null,bossK:Object.keys(BOSS)[(Math.random()*3)|0],bossDown:0,
-    sk:{},order:[],pv:{},porder:[],pc:0,rl:{},ct:{},asc:0,ms:{},bcd:0,fused:[],fz:{},bc:0,flash:0,wx:null,wxT:0,wxNext:80,wxAcc:0,wxLast:'',rainT:3,charmT:0.5,sa:0,ev:{},kills:0,rerolls:3,pend:0,dmg:{},rc:{},res:{},shake:0,hurt:0,choices:[],startPick:true,seen:{},pickAt:0};
+    sk:{},order:[],pv:{},porder:[],pc:0,rl:{},ct:{},asc:0,ms:{},bcd:0,layer:0,pal:null,unl:[],mu:{},muPick:0,muMode:0,swT:20,bc:0,flash:0,wx:null,wxT:0,wxNext:80,wxAcc:0,wxLast:'',rainT:3,charmT:0.5,sa:0,ev:{},kills:0,rerolls:3,pend:0,dmg:{},rc:{},res:{},shake:0,hurt:0,choices:[],startPick:true,seen:{},pickAt:0};
   if(endless) S.bossK=S.bossQ[0];
   el.clockSub.textContent=endless?'無盡模式':'撐到 00:00';
   el.hud.classList.remove('hidden');
@@ -497,7 +597,7 @@ function hit(e,dmg,src,phys,dot){
   if(e.sh>0){
     const sd=dmg*(isR?1:0.15); e.sh-=sd; S.dmg[src]=(S.dmg[src]||0)+sd;
     if(e.sh<=0){ e.sh=0; e.stun=2.5; e.st.vuln=Math.max(e.st.vuln,5);
-      fxRing(e.x,e.y,e.r+40,'#9fe8ff',0.5); burst(e.x,e.y,'#dff8ff',16,220,3); txt(e.x,e.y-e.r-18,'破甲','#9fe8ff',1.2); sfx('break'); }
+      if(e.elite){ fxRing(e.x,e.y,e.r+40,'#9fe8ff',0.5); burst(e.x,e.y,'#dff8ff',16,220,3); txt(e.x,e.y-e.r-18,'破甲','#9fe8ff',1.2); sfx('break'); } else { e.stun=1; burst(e.x,e.y,'#dff8ff',6,140,2); } }
     return;
   }
   e.hp-=dmg;
@@ -524,6 +624,8 @@ function kill(e,src){
     for(let i=0;i<4;i++) fxRing(e.x,e.y,60+i*55,B.c,0.5+i*0.15);
     burst(e.x,e.y,B.c,40,320,4); return;
   }
+  if(e.tp==='bomber') blast(e.x,e.y,62,16);
+  else if(S.mu.volatile&&!e.elite&&e.tp!=='mite'&&Math.random()<0.25*S.mu.volatile) blast(e.x,e.y,50,12);
   if(e.split){ for(let i=0;i<e.split;i++){ const a=i*TAU/e.split+rand(-.3,.3); spawnAt('mite',e.x+Math.cos(a)*10,e.y+Math.sin(a)*10,e); } }
   if(e.elite) S.G.push({k:'chest',x:e.x,y:e.y,m:false,s:0});
   else if(e.xp>0){ const r=Math.random();
@@ -555,7 +657,7 @@ function knock(e,x0,y0,f){
   const m=e.boss?0.08:e.elite?0.3:1; e.kx+=dx/d*f*m; e.ky+=dy/d*f*m;
 }
 function applyStatus(e,st,dur,src,dps){
-  if(e.dead)return;
+  if(e.dead||(e.res&&e.res===st))return;
   const s=e.st; let rt=null;
   if(st==='wind'||st==='geo'){
     const list=st==='wind'?ANY5:ELE4, r2=st==='wind'?'swirl':'crystal';
@@ -627,7 +729,7 @@ function react(type,e,casc,el){
   if(e.dead)return;
   if((e.rc[type]||0)>S.t)return;
   e.rc[type]=S.t+(type==='combust'?0.7:type==='crystal'||type==='swirl'?1.0:0.2);
-  const R=REACT[type], m=rMult()*(casc||1)*(S.fz[type]?1.3:1)*(1+0.2*(S.ms[type]||0)), s=e.st;
+  const R=REACT[type], m=rMult()*(casc||1)*(1+0.2*(S.ms[type]||0)), s=e.st;
   S.rc[type]=(S.rc[type]||0)+1; addCharge(casc?0.5:1);
   const keep=S.rl.stone&&Math.random()<0.25?{...s}:null;
   let shown=0, label=null;
@@ -742,11 +844,13 @@ function spawnDist(){ return Math.hypot(W/ZOOM,H/ZOOM)/2+40; }
 function spawnEnemy(type,ang,dist,at){
   const T=ET[type], p=S.p, a=ang==null?rand(0,TAU):ang, r=dist==null?spawnDist():dist;
   const ex=S.endless&&S.t>300?(S.t-300):0; // 無盡模式 5:00 之後額外加壓
-  const hp=T.hp*hpMult(S.t)*(1+(ex/200)**1.8)*1.008**Math.max(0,S.t-480)*(T.elite?1:rand(0.9,1.1));
-  const e={tp:type,x:at?at.x:p.x+Math.cos(a)*r,y:at?at.y:p.y+Math.sin(a)*r,r:T.r,hp,max:hp,spd:T.spd*(1+Math.min(S.t,600)/700)*rand(0.92,1.08),dmg:T.dmg*1.1*(1+S.t/400)*(1+ex/240)*1.002**Math.max(0,S.t-480),
+  const hp=T.hp*hpMult(S.t)*(1+(ex/200)**1.8)*1.006**Math.max(0,S.t-480)*(T.elite?1:rand(0.9,1.1));
+  const e={tp:type,x:at?at.x:p.x+Math.cos(a)*r,y:at?at.y:p.y+Math.sin(a)*r,r:T.r,hp,max:hp,spd:T.spd*(1+Math.min(S.t,600)/700)*(1+0.2*(S.mu.haste||0))*rand(0.92,1.08),dmg:T.dmg*1.1*(1+Math.min(S.t,600)/400),ai:T.ai||0,
     xp:T.xp,c:T.c,f:T.f,elite:!!T.elite,armor:T.armor||0,aura:T.aura||null,auT:0,split:T.split||0,purge:T.purge||0,pg:(T.purge||0)*rand(0.5,1),
     st:{burn:0,wet:0,chill:0,shock:0,oil:0,frozen:0,vuln:0},bd:0,bs:'ember',kx:0,ky:0,fl:0,bcd:0,rc:{},fb:0,stun:0,sh:0,dead:false};
   if(e.aura) e.st[e.aura]=1;
+  if(!T.elite&&S.mu.warded&&Math.random()<0.1*S.mu.warded) e.sh=e.shMax=hp*0.5;
+  if(!T.elite&&S.mu.attune&&Math.random()<Math.min(0.8,0.35*S.mu.attune)) e.res=ELE4[(Math.random()*4)|0];
   S.E.push(e); return e;
 }
 /* 在指定位置生成（分裂、母巢用），並繼承來源身上的狀態 */
@@ -764,7 +868,7 @@ function spawnElite(k){
   return e;
 }
 function spawnElites(n){
-  const ks=shuffle(Object.keys(AFX)).slice(0,n);
+  const ks=[]; while(ks.length<n) ks.push(...shuffle(Object.keys(AFX))); ks.length=n;
   ks.forEach(spawnElite);
   banner(ks.map(k=>AFX[k].n).join('・')+(n>1?' 菁英':'菁英出現'),'#ff4d6d');
 }
@@ -795,6 +899,7 @@ function pickType(t){
   if(t>90) w.push(['brute',0.06+t/2500]);
   if(t>110) w.push(['splitter',0.07]);
   if(t>150) w.push(['cleanser',0.035]);
+  for(const k of S.unl) w.push([k,k==='shaman'?0.035*(1+2*(S.mu.warded||0)):0.09]);
   let sum=0; for(const x of w) sum+=x[1];
   let r=Math.random()*sum; for(const [k,x] of w){ r-=x; if(r<=0) return k; }
   return 'crawler';
@@ -810,15 +915,56 @@ function spawn(dt){
     if(!S.warned&&t>=S.nextBoss-10){ S.warned=1; if(S.endless) S.bossK=S.bossQ[S.bossN%S.bossQ.length]; banner('強敵接近：'+BOSS[S.bossK].n,BOSS[S.bossK].c); sfx('warn'); }
     if(t>=S.nextBoss){ spawnBoss(); S.warned=0; S.nextBoss=S.endless?t+150:1e9; }
   }
+  if(S.endless&&t>=300+120*S.layer){
+    S.layer++; S.pal=(S.layer-1)%LAYERS.length; S.newE=S.layer<=NEWT.length?NEWT[S.layer-1]:null;
+    if(S.newE){ S.unl.push(S.newE); ringSpawn(S.newE,10); }
+    S.muPick=1; banner('深淵第 '+S.layer+' 層：'+LAYERS[S.pal].n,LAYERS[S.pal].c);
+  }
+  if(S.mu.swarm){ S.swT-=dt; if(S.swT<=0){ S.swT=Math.max(8,20/S.mu.swarm); ringSpawn('mite',14+4*S.mu.swarm); } }
   // 無盡模式 5:00 之後：每 30 秒輪流來一波菁英或屍潮，越來越多
   if(S.endless&&t>=300){ const ph=Math.floor((t-300)/30);
     if(ph>=S.ph){ S.ph=ph+1;
-      if(ph%2===0) spawnElites(Math.min(4,2+Math.floor(ph/4)));
-      else { const ty=['crawler','runner','bubble','splitter','husk','brute','cleanser'][(ph>>1)%7]; ringSpawn(ty,Math.min(44,22+ph*2)); banner(ET[ty].n+'潮','#ff6fb0'); } } }
+      if(ph%2===0) spawnElites(Math.min(4,2+Math.floor(ph/4))+(S.mu.elite||0));
+      else { const pool=['crawler','runner','bubble','splitter','husk','brute','cleanser',...S.unl], ty=pool[(ph>>1)%pool.length]; ringSpawn(ty,Math.min(44,22+ph*2)); banner(ET[ty].n+'潮','#ff6fb0'); } } }
 }
 
 /* ---------- 敵人的攻擊（只會傷害玩家） ---------- */
 function addHaz(h){ if(S.H.length<220) S.H.push(h); }
+function blast(x,y,r,dmg){
+  addHaz({k:'mark',x,y,r,t:0,dur:0.85,dmg,c:'255,122,61',l:0.85});
+  later(0.85,()=>{ for(const o of query(x,y,r)) if(!o.dead){ hit(o,8*dMult(),'blast'); if(!o.dead) applyStatus(o,'burn',3,'blast',2*dMult()); } });
+}
+/* 深淵敵人的行為：回傳 [方向x, 方向y, 速度]，null 代表照常追擊 */
+function enemyAI(e,dt,d,ux,uy){
+  const p=S.p, sp0=e.spd*(e.st.chill>0?0.55:1)*(e.st.oil>0?0.72:1);
+  switch(e.tp){
+    case 'charger':
+      if(e.cs==='wind'){ e.cw-=dt; if(e.cw<=0){ e.cs='dash'; e.cw=0.55; } return [e.cdx,e.cdy,0]; }
+      if(e.cs==='dash'){ e.cw-=dt; if(e.cw<=0){ e.cs=null; e.cT=2.6; } return [e.cdx,e.cdy,430]; }
+      e.cT=(e.cT==null?rand(0.5,2):e.cT)-dt;
+      if(e.cT<=0&&d<300){ e.cs='wind'; e.cw=0.7; e.cdx=ux; e.cdy=uy; return [ux,uy,0]; }
+      return null;
+    case 'spitter':
+      e.fT=(e.fT==null?rand(1,2.6):e.fT)-dt;
+      if(e.fT<=0&&d<430){ e.fT=2.8; addHaz({k:'shot',x:e.x,y:e.y,vx:ux*150,vy:uy*150,r:6,dmg:e.dmg*1.6,c:'255,92,138',l:4}); }
+      if(d<190) return [-ux,-uy,sp0*0.9];
+      if(d<250) return [ux,uy,0];
+      return null;
+    case 'shaman':
+      e.wT=(e.wT==null?2:e.wT)-dt;
+      if(e.wT<=0){ e.wT=3.2; fxRing(e.x,e.y,140,'#7fe7ff',0.4); for(const o of query(e.x,e.y,140)) if(o!==e&&!o.boss&&!(o.sh>0)) o.sh=o.shMax=o.max*0.4; }
+      if(d<260) return [-ux,-uy,sp0*0.8];
+      return null;
+    case 'blinker':
+      if(e.bl){ e.bl.t-=dt; if(e.bl.t<=0){ fxRing(e.x,e.y,22,'#b58cff',0.3); e.x=e.bl.x; e.y=e.bl.y; e.bl=null; e.bT=rand(3.5,5); fxRing(e.x,e.y,30,'#b58cff',0.35); } return [ux,uy,0]; }
+      e.bT=(e.bT==null?rand(1.5,3.5):e.bT)-dt;
+      if(e.bT<=0&&d>150){ const a=rand(0,TAU); e.bl={x:p.x+Math.cos(a)*85,y:p.y+Math.sin(a)*85,t:0.65}; return [ux,uy,0]; }
+      return null;
+  }
+  return null;
+}
+function muChoices(){ return shuffle(Object.keys(MU).filter(k=>!(MU[k].once&&S.mu[k]))).slice(0,3).map(k=>({mu:k})); }
+function openMutation(){ S.muPick=0; S.muMode=1; S.mode='levelup'; input.active=false; input.id=null; sfx('warn'); S.choices=muChoices(); showPick(); }
 function purgeAt(e,R){
   fxRing(e.x,e.y,R,'#e6d9ff',0.5); burst(e.x,e.y,'#f3eeff',10,R*1.6,2.5); sfx('purge');
   for(const o of query(e.x,e.y,R)){ for(const k of ['burn','wet','chill','shock','oil','vuln']) o.st[k]=0; o.fb=0; }
@@ -860,6 +1006,7 @@ function updSkills(dt){
   const p=S.p;
   for(const id of S.order){
     const s=S.sk[id], L=s.lv;
+    if(SK[id].fused){ updFused(id,s,L,dt); continue; }
     switch(id){
       case 'ember':
         s.cd-=dt; if(s.cd>0)break;{
@@ -980,6 +1127,12 @@ function updProj(dt){
     } else if(o.k==='flask'){
       o.t+=dt;
       if(o.t>=o.dur){ o.l=0; S.Z.push({k:'oil',x:o.tx,y:o.ty,r:o.r,l:5,m:5}); burst(o.tx,o.ty,COL.oil,10,140,3); }
+    } else if(o.k==='fo'){
+      if(o.t&&!o.t.dead){ const cur=Math.atan2(o.vy,o.vx); let da=Math.atan2(o.t.y-o.y,o.t.x-o.x)-cur; da=Math.atan2(Math.sin(da),Math.cos(da));
+        const na=cur+Math.max(-7*dt,Math.min(7*dt,da)); o.vx=Math.cos(na)*380; o.vy=Math.sin(na)*380; }
+      o.x+=o.vx*dt; o.y+=o.vy*dt; o.l-=dt;
+      const F=SK[o.id]&&SK[o.id].fused;
+      if(F) for(const e of query(o.x,o.y,10)){ if(o.hs.has(e)) continue; o.hs.add(e); fuseHit(e,F,o.dmg,o.id); if(--o.pierce<0){ o.l=0; break; } }
     } else if(o.k==='gale'){
       o.x+=o.vx*dt; o.y+=o.vy*dt; o.l-=dt;
       for(const e of query(o.x,o.y,o.r)){
@@ -1043,15 +1196,18 @@ function updEnemies(dt){
     const dx=p.x-e.x, dy=p.y-e.y, d=Math.hypot(dx,dy)||1;
     if(d>far&&!e.boss){ const a=Math.atan2(-dy,-dx)+Math.PI+rand(-1,1), r=spawnDist(); e.x=p.x+Math.cos(a)*r; e.y=p.y+Math.sin(a)*r; continue; }
     if(e.boss&&d>380) sp*=3;
-    let vx=dx/d*sp, vy=dy/d*sp;
+    let ux=dx/d, uy=dy/d;
+    if(e.ai&&!(s.frozen>0||e.stun>0)){ const r2=enemyAI(e,dt,d,ux,uy); if(r2){ ux=r2[0]; uy=r2[1]; sp=r2[2]; } }
+    let vx=ux*sp, vy=uy*sp;
     for(const w of wells){
       const wx=w.x-e.x, wy=w.y-e.y, wd=Math.hypot(wx,wy);
       if(wd<w.r&&wd>5){ const f=w.str*(e.boss?0.1:e.elite?0.35:1)*(0.55+0.45*(1-wd/w.r)); vx=vx*0.3+wx/wd*f; vy=vy*0.3+wy/wd*f; }
     }
     e.x+=(vx+e.kx)*dt; e.y+=(vy+e.ky)*dt; e.kx*=dec; e.ky*=dec;
-    if(s.frozen<=0&&e.stun<=0&&p.inv<=0){
+    if(e.tp==='bomber'){ const rr=e.r+p.r+14; if(s.frozen<=0&&e.stun<=0&&dd(p.x,p.y,e.x,e.y)<rr*rr){ kill(e,'blast'); continue; } }
+    else if(s.frozen<=0&&e.stun<=0&&p.inv<=0){
       const rr=e.r+p.r;
-      if(dd(p.x,p.y,e.x,e.y)<rr*rr) hurtPlayer(e.dmg);
+      if(dd(p.x,p.y,e.x,e.y)<rr*rr) hurtPlayer(e.cs==='dash'?e.dmg*1.5:e.dmg);
     }
   }
   // 分離
@@ -1150,7 +1306,7 @@ function update(dt){
   if(S.bossDown&&S.t-S.bossDown>1.6){ endGame(true); return; }
   if(S.p.hp<=0){ endGame(false); return; }
   if(!S.endless&&S.t>=WIN_T){ endGame(true); return; }
-  if(S.pend>0) openLevelUp();
+  if(S.muPick) openMutation(); else if(S.pend>0) openLevelUp();
 }
 
 /* ---------- HUD ---------- */
@@ -1178,12 +1334,9 @@ function bossState(b){
 }
 function renderSlots(){
   let h='';
-  const partner=new Map(); for(const [a,b] of S.fused){ partner.set(a,b); partner.set(b,null); }
-  const items=[]; for(const id of S.order){ if(partner.get(id)===null) continue; items.push(partner.has(id)?[id,partner.get(id)]:[id]); }
   for(let i=0;i<MAX_SLOTS;i++){
-    const it=items[i];
-    if(it&&it.length===2){ const [a,b]=it; h+=`<div class="slot fused"><span style="color:${SK[a].c}">${SK[a].ch}</span><span style="color:${SK[b].c}">${SK[b].ch}</span></div>`; }
-    else if(it){ const id=it[0], d=SK[id], l=S.sk[id].lv; h+=`<div class="slot" style="--c:${d.c}">${d.ch}<div class="pips">${[0,1,2].map(j=>`<b class="${j<l?'on':''}"></b>`).join('')}</div></div>`; }
+    const id=S.order[i];
+    if(id){ const d=SK[id], l=S.sk[id].lv; h+=`<div class="slot${d.fused?' duo':''}" style="--c:${d.c}">${badgeHTML(d)}<div class="pips">${[0,1,2].map(j=>`<b class="${j<l?'on':''}"></b>`).join('')}</div></div>`; }
     else h+='<div class="slot empty"></div>';
   }
   el.slots.innerHTML=h;
@@ -1203,7 +1356,7 @@ function genChoices(){
   const n=3+(S.rl.echo?1:0), pick=a=>a[(Math.random()*a.length)|0];
   if(S.pc>0){ const rl=shuffle(Object.keys(RL).filter(k=>!S.rl[k])).slice(0,n).map(k=>({rl:k})); if(rl.length>=2) return rl; }
   const fullS=slotsUsed()>=MAX_SLOTS, fullP=S.porder.length>=MAX_PV, sp=[], pp=[];
-  for(const id in SK){ const s=S.sk[id]; if(s){ if(s.lv<3)sp.push({id}); } else if(!fullS) sp.push({id}); }
+  for(const id in SK){ const s=S.sk[id]; if(s){ if(s.lv<3)sp.push({id}); } else if(!fullS&&!SK[id].hidden) sp.push({id}); }
   for(const id in PV){ const l=S.pv[id]||0; if(l){ if(l<3)pp.push({pv:id}); } else if(!fullP) pp.push({pv:id}); }
   shuffle(sp); shuffle(pp);
   const r=Math.random();
@@ -1219,7 +1372,7 @@ function genChoices(){
   if(out.length<n) out.push({ct:pick(cts)});
   const mk=shuffle(Object.keys(REACT).filter(k=>S.rc[k]>0&&(S.ms[k]||0)<5)).slice(0,2);
   for(const k of mk) if(out.length<n) out.push({ms:k});
-  const fu=new Set(S.fused.flat()), mine=S.order.filter(id=>!fu.has(id)), other=Object.keys(SK).filter(id=>!S.sk[id]);
+  const mine=S.order.filter(id=>!SK[id].hidden), other=Object.keys(SK).filter(id=>!S.sk[id]&&!SK[id].hidden);
   if(out.length<n&&mine.length&&other.length) out.push({tm:[pick(mine),pick(other)]});
   if(out.length<n) out.push({asc:1});
   if(out.length<n&&S.p.hp<S.p.max*0.6) out.push({f:'heal'});
@@ -1233,15 +1386,11 @@ function elSet(list){
   if(ELE4.some(x=>s.has(x))) s.add('ele');
   return s;
 }
-const slotsUsed=()=>S.order.length-S.fused.length;
+const slotsUsed=()=>S.order.length;
 /* 融合：兩個滿級技能、而且它們的反應已經共鳴，就能合成一格，空出技能欄 */
 function fuseOpts(){
-  const used=new Set(S.fused.flat()), ids=S.order.filter(id=>!used.has(id)&&S.sk[id].lv>=3&&SK[id].ap.length), out=[];
-  for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++){
-    const a=ids[i], b=ids[j], u=elSet([...SK[a].ap,...SK[b].ap]), ua=elSet(SK[a].ap), ub=elSet(SK[b].ap);
-    for(const k in REACT){ const pr=REACT[k].pair; if(!S.res[k]||S.fz[k]) continue;
-      if(pr.every(x=>u.has(x))&&!pr.every(x=>ua.has(x))&&!pr.every(x=>ub.has(x))){ out.push({fu:[a,b],k}); break; } }
-  }
+  const ids=S.order.filter(id=>PE[id]&&!SK[id].hidden&&S.sk[id].lv>=3), out=[];
+  for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++) if(PE[ids[i]]!==PE[ids[j]]) out.push({fu:[ids[i],ids[j]]});
   return out;
 }
 function ownedEls(extra){
@@ -1278,15 +1427,18 @@ function cardBox(i,c,cls,ch,title,tag,desc,extra){
   return `<button class="card" data-act="pick" data-i="${i}" style="--c:${c}"><div class="badge ${cls}">${ch}</div><div class="cb"><div class="ct">${title}${tag}</div><div class="cd">${desc}</div>${extra||''}</div></button>`;
 }
 function cardHTML(c,i){
+  if(c.mu){ const d=MU[c.mu], k=(S.mu[c.mu]||0)+1; return cardBox(i,d.c,'pact',d.ch,d.n+(k>1?' '+NUM[Math.min(k,10)]:''),'<span class="lv" style="color:#ff4d6d">詛咒</span>',d.d,''); }
   if(c.rl){ const d=RL[c.rl]; return cardBox(i,d.c,'rl',d.ch,d.n,'<span class="lv new">聖物</span>',d.d,'<div class="cl"><span class="supt">永久生效，不佔欄位</span></div>'); }
   if(c.ct){ const d=CT[c.ct], k=(S.ct[c.ct]||0)+1; return cardBox(i,d.c,'pact',d.ch,d.n+(k>1?' '+NUM[Math.min(k,10)]:''),'<span class="lv" style="color:#ff4d6d">契約</span>',d.d,''); }
   if(c.asc) return cardBox(i,'#f2c46d','','昇','昇華 '+NUM[Math.min(S.asc+1,10)],'<span class="lv">可重複</span>','所有反應傷害 +6%。','');
   if(c.ms){ const R=REACT[c.ms], k=(S.ms[c.ms]||0)+1; return cardBox(i,R.c,'res',R.n[0],R.n+'精通 '+NUM[Math.min(k,10)],'<span class="lv">可重複</span>',`${R.n}傷害 +20%（最多 5 次）。專精你最常打出的反應。`,''); }
   if(c.tm){ const [a,b]=c.tm; return cardBox(i,SK[b].c,'',SK[b].ch,`重組：${SK[a].n} → ${SK[b].n}`,'<span class="lv new">轉向</span>',`把「${SK[a].n}」換成「${SK[b].n}」，等級保留。讓組合接上新的元素。`,
       `<div class="cl"><span class="lab">反應</span>${rxFor(b).map(r=>`<span class="chip ${r.on?'on':'dim'}" style="--c:${REACT[r.k].c}">${r.on?'✦ ':''}${REACT[r.k].n}</span>`).join('')}</div>`); }
-  if(c.fu){ const [a,b]=c.fu, R=REACT[c.k];
-    return cardBox(i,R.c,'res','融',`融合：${SK[a].n}＋${SK[b].n}`,'<span class="lv new">融合</span>',`兩個技能合成一格、照常運作，空出一格技能欄。${R.n}傷害 +30%。`,
-      `<div class="cl"><span class="chip on" style="--c:${SK[a].c}">${SK[a].ch}</span><span class="chip on" style="--c:${SK[b].c}">${SK[b].ch}</span><span class="chip on" style="--c:${R.c}">✦ ${R.n}</span></div>`); }
+  if(c.evo){ const [a,b,f]=c.evo, id=makeFused(a,b,f), d=SK[id];
+    return `<button class="card" data-act="pick" data-i="${i}" style="--c:${d.c}"><div class="badge duo">${badgeHTML(d)}</div><div class="cb"><div class="ct">${d.n}<span class="lv new">${FORMS[f].tag}</span></div><div class="cd">${d.d[0]}</div><div class="cl"><span class="supt">${fuseNote(d.fused)}</span></div></div></button>`; }
+  if(c.fu){ const [a,b]=c.fu, noun=NOUN[[PE[a],PE[b]].sort().join('|')]||'';
+    return cardBox(i,SK[a].c,'res','融',`融合：${SK[a].n}＋${SK[b].n}`,'<span class="lv new">進化</span>',`兩個滿級技能合成全新的「${noun}」技能，原本兩格只剩一格。下一步選擇進化方向：追蹤彈、領域或環繞。`,
+      `<div class="cl"><span class="chip on" style="--c:${SK[a].c}">${SK[a].ch}</span><span class="chip on" style="--c:${SK[b].c}">${SK[b].ch}</span></div>`); }
   if(c.r){
     const R=REACT[c.r], Q=RES[c.r], ch=resChain(c.r);
     return `<button class="card" data-act="pick" data-i="${i}" style="--c:${R.c}"><div class="badge res">${R.n[0]}</div><div class="cb"><div class="ct">${Q.n}<span class="lv new">共鳴・${R.n}</span></div><div class="cd">${Q.d}</div>`+
@@ -1307,17 +1459,22 @@ function cardHTML(c,i){
     const rx=rxFor(c.id);
     if(rx.length) extra+='<div class="cl"><span class="lab">反應</span>'+rx.map(r=>`<span class="chip ${r.on?'on':'dim'}" style="--c:${REACT[r.k].c}">${r.on?'✦ ':''}${REACT[r.k].n}</span>`).join('')+'</div>';
   } else extra+=`<div class="cl"><span class="lab">輔助</span><span class="supt">${d.sup}</span></div>`;
-  return `<button class="card" data-act="pick" data-i="${i}" style="--c:${d.c}"><div class="badge">${d.ch}</div><div class="cb"><div class="ct">${d.n}${tag}</div><div class="cd">${d.d[lv]}</div>${extra}</div></button>`;
+  return `<button class="card" data-act="pick" data-i="${i}" style="--c:${d.c}"><div class="badge${d.fused?' duo':''}">${badgeHTML(d)}</div><div class="cb"><div class="ct">${d.n}${tag}</div><div class="cd">${d.d[lv]}</div>${extra}</div></button>`;
 }
 function showPick(){
   const start=S.startPick;
   let h=`<div class="panel">`;
-  if(start) h+=`<h2>選一個起手技能</h2><p class="sub">每個技能單獨都不強。把兩種元素疊在同一個敵人身上觸發反應，才是真正的輸出。</p>`;
+  if(S.evoMode){ const [a,b]=S.choices[0].evo;
+    h+=`<h2>選擇進化方向</h2><p class="sub">${SK[a].n}＋${SK[b].n} 會合成全新的技能，原本兩個技能消失，空出一格技能欄。進化後的技能還能再升兩級。</p>`; }
+  else if(S.muMode){ const L=LAYERS[S.pal], ne=S.newE;
+    h+=`<h2 style="color:${L.c}">深淵第 ${S.layer} 層</h2><p class="sub">${L.n}。${ne?`新敵人<b style="color:${ET[ne].c}">${ET[ne].n}</b>${NEWD[ne]}。`:''}選一個詛咒：敵人會因此改變，你會回復 30% 生命並得到一個寶箱。</p>`; }
+  else if(start) h+=`<h2>選一個起手技能</h2><p class="sub">每個技能單獨都不強。把兩種元素疊在同一個敵人身上觸發反應，才是真正的輸出。</p>`;
   else if(S.pc>0) h+=`<h2>寶箱</h2><p class="sub">選一件聖物。聖物會改寫規則，整局有效。</p>`;
   else h+=`<h2>升級了</h2><p class="sub">Lv ${S.p.lv-S.pend+1}${S.pend>1?`，後面還有 ${S.pend-1} 次`:''}。技能欄 ${slotsUsed()} / ${MAX_SLOTS}，被動欄 ${S.porder.length} / ${MAX_PV}</p>`;
   h+=S.choices.map(cardHTML).join('');
-  if(!start) h+=`<p class="legend"><b>✦</b> 表示搭配你現有的技能就能觸發這個反應</p>`;
-  if(!start) h+=`<button class="btn" data-act="reroll" ${S.rerolls<=0?'disabled':''}>重抽選項（剩 ${S.rerolls} 次）</button>`;
+  if(!start&&!S.muMode&&!S.evoMode) h+=`<p class="legend"><b>✦</b> 表示搭配你現有的技能就能觸發這個反應</p>`;
+  if(S.evoMode) h+=`<button class="btn" data-act="evoback">先不要融合</button>`;
+  if(!start&&!S.muMode&&!S.evoMode) h+=`<button class="btn" data-act="reroll" ${S.rerolls<=0?'disabled':''}>重抽選項（剩 ${S.rerolls} 次）</button>`;
   h+='</div>';
   S.pickAt=performance.now();
   showOv(h);
@@ -1329,6 +1486,13 @@ function openLevelUp(){
 function choose(i){
   const c=S.choices[i]; if(!c)return;
   const p=S.p;
+  if(c.fu){ S.evoPrev=S.choices; S.evoMode=1; S.choices=['arrow','field','ring'].map(f=>({evo:[c.fu[0],c.fu[1],f]})); showPick(); return; }
+  if(c.mu){
+    S.mu[c.mu]=(S.mu[c.mu]||0)+1; S.muMode=0; p.hp=Math.min(p.max,p.hp+p.max*0.3);
+    S.G.push({k:'chest',x:p.x+30,y:p.y,m:true,s:0}); banner('詛咒：'+MU[c.mu].n,MU[c.mu].c);
+    if(S.pend>0){ S.mode='levelup'; S.choices=genChoices(); showPick(); } else { S.mode='play'; p.inv=Math.max(p.inv,1); hideOv(); }
+    updHUD(); return;
+  }
   if(c.f){
     if(c.f==='heal') p.hp=Math.min(p.max,p.hp+p.max*0.4);
     else if(c.f==='guard') p.sh=shMax();
@@ -1341,7 +1505,7 @@ function choose(i){
   else if(c.asc){ S.asc++; sfx('res'); }
   else if(c.ms){ S.ms[c.ms]=(S.ms[c.ms]||0)+1; sfx('res'); }
   else if(c.tm){ const [a,b]=c.tm, i2=S.order.indexOf(a); if(i2>=0){ S.sk[b]={...S.sk[a],cd:0.4,pos:[]}; delete S.sk[a]; S.order[i2]=b; banner('重組：'+SK[a].ch+' → '+SK[b].ch,SK[b].c); sfx('res'); } }
-  else if(c.fu){ S.fused.push(c.fu); S.fz[c.k]=1; sfx('res'); banner('融合：'+SK[c.fu[0]].ch+'＋'+SK[c.fu[1]].ch,REACT[c.k].c); }
+  else if(c.evo){ doFuse(...c.evo); S.evoMode=0; S.evoPrev=null; }
   else if(c.pv){
     if(S.pv[c.pv]) S.pv[c.pv]++; else { S.pv[c.pv]=1; S.porder.push(c.pv); }
     if(c.pv==='vit'){ p.max+=25; p.hp=Math.min(p.max,p.hp+25); }
@@ -1437,7 +1601,7 @@ function lbPut(ent,dropCode){
   return keep.findIndex(x=>x.code===ent.code)+1;
 }
 const schoolOf=sc=>sc&&SCHOOL[sc]?{n:SCHOOL[sc],c:REACT[sc].c}:{n:'苦行者',c:'#cfcbe0'};
-const skChars=sk=>[...sk].map(ch=>{ const id=Object.keys(SK).find(k=>SK[k].ch===ch); return id?`<b style="color:${SK[id].c}">${ch}</b>`:''; }).join('');
+const skChars=sk=>[...sk].map(ch=>{ const id=Object.keys(SK).find(k=>SK[k].ch===ch&&!SK[k].hidden); return `<b style="color:${id?SK[id].c:'#f2c46d'}">${esc(ch)}</b>`; }).join('');
 function lbRow(e,i){
   const sc=schoolOf(e.sc);
   return `<div class="lb${i<3?' top':''}${e.own?' me':''}"><span class="rk">${i+1}</span><div class="who"><span style="color:${sc.c}">${sc.n}</span>・${esc(e.name)}${e.own?'<span class="you">我</span>':''}<small>Lv ${e.lv}・${e.k} 擊殺${e.b?'・討伐 '+e.b:''}　${skChars(e.sk)}</small></div><span class="tm">${fmt(e.t)}</span></div>`;
@@ -1518,14 +1682,20 @@ function codexHTML(){
   }
   h+='<h3>技能</h3>';
   for(const k in SK){
-    const d=SK[k];
+    const d=SK[k]; if(d.hidden) continue;
     const tags=d.ap.length?d.ap.map(chip).join(' '):`<span class="supt">${d.sup}</span>`;
     h+=`<div class="sk" style="--c:${d.c}"><div class="badge">${d.ch}</div><div class="cb"><div class="skn">${d.n}</div><div class="cl" style="margin-top:3px">${tags}</div></div></div>`;
   }
   h+=`<h3>共鳴爆發</h3><p class="sub">每觸發一次反應就會充能右下角的「鳴」。充滿後點它（電腦按空白鍵）：周圍敵人被震開，並一次沾上你技能的所有元素，讓整個組合同時反應。危急時也能拿來脫困。</p>`;
-  h+=`<h3>融合</h3><p class="sub">兩個滿級技能、而且它們能觸發的反應已經共鳴，升級時就可能出現融合：兩個技能合成一格、照常運作，空出一格技能欄，那個反應傷害 +30%。</p>`;
+  h+=`<h3>融合進化</h3><p class="sub">兩個元素不同、都已滿級的技能，升級時可能出現「融合」。融合後兩個技能會變成一個全新技能，空出一格技能欄。名字由兩種元素決定（例如火＋冰＝凍焰、水＋雷＝雷雨），並從三種進化方向選一個：</p>
+    <div class="foe" style="--c:#f2c46d"><i></i><div><b>矢・追蹤彈</b><span>朝最近的敵人射出會轉彎的彈，單體爆發。</span></div></div>
+    <div class="foe" style="--c:#f2c46d"><i></i><div><b>領域</b><span>在敵群中展開一片區域，持續上狀態，範圍控場。</span></div></div>
+    <div class="foe" style="--c:#f2c46d"><i></i><div><b>之環・環繞</b><span>光球繞著你轉，近身防禦。</span></div></div>
+    <p class="sub">融合技能一次附加兩種元素：會互相反應的組合（例如蒸汽）每次命中都直接觸發反應；不會反應的組合（例如凍焰）則一次幫敵人疊好兩種狀態，等其他技能來引爆。</p>`;
   h+='<h3>天候</h3>';
   for(const k in WX){ const w=WX[k]; h+=`<div class="foe" style="--c:${w.c}"><i></i><div><b>${w.n}</b><span>${w.d}。持續 22 秒，對手上有對應反應的組合是大好機會。</span></div></div>`; }
+  h+='<h3>深淵詛咒（無盡模式 5:00 後每 2 分鐘選一個）</h3>';
+  for(const k in MU){ const d=MU[k]; h+=`<div class="foe" style="--c:${d.c}"><i></i><div><b>${d.n}</b><span>${d.d}</span></div></div>`; }
   h+='<h3>聖物（菁英寶箱）</h3>';
   for(const k in RL){ const d=RL[k]; h+=`<div class="foe" style="--c:${d.c}"><i></i><div><b>${d.n}</b><span>${d.d}</span></div></div>`; }
   h+='<h3>契約（風險換報酬）</h3>';
@@ -1545,7 +1715,7 @@ function pauseHTML(){
   const own=ownedEls(), act=Object.keys(REACT).filter(k=>REACT[k].pair.every(x=>own.has(x)));
   let h=`<div class="panel"><h2>暫停</h2><p class="sub">${S.endless?'無盡模式，已存活 '+fmt(S.t):'剩餘 '+fmt(WIN_T-S.t)}，Lv ${S.p.lv}，${S.kills} 擊殺</p>`;
   if(S.boss&&!S.boss.dead){ const B=BOSS[S.boss.boss]; h+=`<p class="note" style="text-align:left;color:${B.c}">${B.n}｜考驗：${B.test}</p><p class="sub">${B.tip}</p>`; }
-  const ownR=[...Object.keys(S.rl).map(k=>`<span class="chip on" style="--c:${RL[k].c}">${RL[k].n}</span>`),...Object.keys(S.ct).map(k=>`<span class="chip on" style="--c:${CT[k].c}">${CT[k].n} ×${S.ct[k]}</span>`),...(S.asc?[`<span class="chip on" style="--c:#f2c46d">昇華 ×${S.asc}</span>`]:[]),...Object.keys(S.ms).map(k=>`<span class="chip on" style="--c:${REACT[k].c}">${REACT[k].n}精通 ×${S.ms[k]}</span>`)];
+  const ownR=[...Object.keys(S.rl).map(k=>`<span class="chip on" style="--c:${RL[k].c}">${RL[k].n}</span>`),...Object.keys(S.ct).map(k=>`<span class="chip on" style="--c:${CT[k].c}">${CT[k].n} ×${S.ct[k]}</span>`),...(S.asc?[`<span class="chip on" style="--c:#f2c46d">昇華 ×${S.asc}</span>`]:[]),...Object.keys(S.ms).map(k=>`<span class="chip on" style="--c:${REACT[k].c}">${REACT[k].n}精通 ×${S.ms[k]}</span>`),...Object.keys(S.mu).map(k=>`<span class="chip on" style="--c:${MU[k].c}">詛咒：${MU[k].n}${S.mu[k]>1?' ×'+S.mu[k]:''}</span>`)];
   if(ownR.length) h+=`<h3>聖物與契約</h3><div class="cl">${ownR.join('')}</div>`;
   h+=`<h3>目前能觸發的反應</h3><div class="cl">${act.length?act.map(k=>`<span class="chip on" style="--c:${REACT[k].c}">${REACT[k].n}</span>`).join(''):'<span class="supt">還沒有。試著拿兩種不同元素的技能。</span>'}</div>`;
   const prog=Object.keys(REACT).filter(k=>act.includes(k)||S.rc[k]);
@@ -1630,6 +1800,7 @@ el.ov.addEventListener('click',e=>{
   else if(a==='import') importCodes();
   else if(a==='share') shareResult();
   else if(a==='upload') uploadResult();
+  else if(a==='evoback'){ if(S&&S.evoPrev){ S.choices=S.evoPrev; S.evoPrev=null; S.evoMode=0; showPick(); } }
   else if(a==='tab'){ boardTab=b.dataset.t; showBoard(); }
   else if(a==='sound'){ AU.on=!AU.on; try{localStorage.setItem('resonance-sound',AU.on?'on':'off')}catch(_){} if(S&&S.mode==='pause') showOv(pauseHTML()); }
   else if(a==='pick'){ if(performance.now()-S.pickAt<350)return; choose(+b.dataset.i); }
@@ -1702,6 +1873,13 @@ function drawIdle(t){
   }
   ctx.restore();
 }
+function poly(x,y,r,n,a){ ctx.beginPath(); for(let i=0;i<n;i++){ const b=a+i*TAU/n, px=x+Math.cos(b)*r, py=y+Math.sin(b)*r; i?ctx.lineTo(px,py):ctx.moveTo(px,py); } ctx.closePath(); }
+function enemyPath(e,p){
+  if(e.tp==='charger') poly(e.x,e.y,e.r*1.3,4,e.cs?Math.atan2(e.cdy,e.cdx):Math.atan2(p.y-e.y,p.x-e.x));
+  else if(e.tp==='spitter') poly(e.x,e.y,e.r*1.3,3,Math.atan2(p.y-e.y,p.x-e.x));
+  else if(e.tp==='shaman') poly(e.x,e.y,e.r*1.15,6,S.t*0.6);
+  else circle(e.x,e.y,e.r);
+}
 function drawPick(g,t){
   const bob=Math.sin(t*4+g.x*0.05)*2, y=g.y+bob;
   if(g.k==='cry'){
@@ -1729,7 +1907,7 @@ function edgeArrow(wx,wy,c){
 function render(now){
   ctx.setTransform(DPR,0,0,DPR,0,0);
   ctx.globalAlpha=1; ctx.globalCompositeOperation='source-over';
-  ctx.fillStyle='#0d0f1f'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=S&&S.pal!=null?LAYERS[S.pal].bg:'#0d0f1f'; ctx.fillRect(0,0,W,H);
   if(!S){ drawIdle(now); return; }
   const p=S.p, t=S.t;
   let sx=0,sy=0; if(S.shake>0&&!RM){ const k=Math.min(1,S.shake)*9; sx=rand(-k,k); sy=rand(-k,k); }
@@ -1743,7 +1921,7 @@ function render(now){
   const g=48;
   for(let x=Math.floor(X0/g)*g;x<X1;x+=g){ctx.moveTo(x,Y0);ctx.lineTo(x,Y1)}
   for(let y=Math.floor(Y0/g)*g;y<Y1;y+=g){ctx.moveTo(X0,y);ctx.lineTo(X1,y)}
-  ctx.strokeStyle='rgba(150,140,230,0.07)'; ctx.lineWidth=1/ZOOM; ctx.stroke();
+  ctx.strokeStyle=S.pal!=null?LAYERS[S.pal].grid:'rgba(150,140,230,0.07)'; ctx.lineWidth=1/ZOOM; ctx.stroke();
 
   // 區域
   for(const z of S.Z){
@@ -1791,9 +1969,14 @@ function render(now){
   for(const e of S.E){
     if(!vis(e.x,e.y,e.r+40))continue;
     const s=e.st;
+    if(e.cs==='wind'){ const k=1-e.cw/0.7; ctx.strokeStyle=`rgba(255,159,67,${0.25+0.5*k})`; ctx.lineWidth=4+4*k; ctx.beginPath(); ctx.moveTo(e.x,e.y); ctx.lineTo(e.x+e.cdx*300,e.y+e.cdy*300); ctx.stroke(); }
+    if(e.bl){ ctx.strokeStyle='rgba(181,140,255,0.85)'; ctx.lineWidth=2; ctx.setLineDash([4,4]); circle(e.bl.x,e.bl.y,e.r+6); ctx.stroke(); ctx.setLineDash([]); }
+    if(e.res){ ctx.strokeStyle=COL[e.res]; ctx.lineWidth=2; ctx.setLineDash([3,4]); circle(e.x,e.y,e.r+8); ctx.stroke(); ctx.setLineDash([]); }
+    if(e.tp==='spitter'&&e.fT!=null&&e.fT<0.5){ ctx.fillStyle=`rgba(255,92,138,${0.5-e.fT})`; circle(e.x,e.y,e.r+9); ctx.fill(); }
+    ctx.globalAlpha=e.tp==='blinker'?(e.bl?Math.max(0.15,e.bl.t/0.65):0.8):1;
     if(e.aura&&s[e.aura]>0){ ctx.globalAlpha=0.26+0.1*Math.sin(t*6+e.x*0.1); ctx.fillStyle=COL[e.aura]; circle(e.x,e.y,e.r+8); ctx.fill(); ctx.globalAlpha=1; }
     if(e.boss){ ctx.globalAlpha=0.35+0.2*Math.sin(t*3); ctx.strokeStyle=e.c; ctx.lineWidth=2; circle(e.x,e.y,e.r+14+3*Math.sin(t*3)); ctx.stroke(); ctx.globalAlpha=1; }
-    circle(e.x,e.y,e.r);
+    enemyPath(e,p);
     ctx.fillStyle=e.fl>0?'#ffffff':s.frozen>0?'#9fdcef':e.f; ctx.fill();
     ctx.lineWidth=e.boss?4:e.elite||e.armor?3:2; ctx.strokeStyle=s.frozen>0?'#e9fbff':e.c; ctx.stroke();
     if(e.armor&&!(s.vuln>0)){ ctx.lineWidth=2; ctx.strokeStyle='rgba(255,255,255,0.32)'; circle(e.x,e.y,e.r-4); ctx.stroke(); }
@@ -1801,6 +1984,8 @@ function render(now){
     // 眼
     const a=Math.atan2(p.y-e.y,p.x-e.x);
     ctx.fillStyle=s.frozen>0?'#ffffff':e.c; circle(e.x+Math.cos(a)*e.r*0.4,e.y+Math.sin(a)*e.r*0.4,e.r*0.28); ctx.fill();
+    if(e.tp==='bomber'){ const fast=dd(p.x,p.y,e.x,e.y)<160*160; if(Math.sin(t*(fast?24:9))>0){ ctx.fillStyle='#ffffff'; circle(e.x,e.y-e.r-3,3); ctx.fill(); } }
+    ctx.globalAlpha=1;
     if(e.tp==='cleanser'||e.af==='purge'||e.boss==='eye'){ ctx.fillStyle='#ffffff'; circle(e.x+Math.cos(a)*e.r*0.4,e.y+Math.sin(a)*e.r*0.4,e.r*0.12); ctx.fill(); }
     // 淨化預警
     if(e.purge){ const tw=e.boss?1:0.8; if(e.pg<tw){ const R=e.boss?170:e.elite?130:95, k=1-e.pg/tw;
@@ -1849,6 +2034,16 @@ function render(now){
     ctx.globalCompositeOperation='source-over';
   }
 
+  for(const id of S.order){ const d=SK[id]; if(!d||!d.fused) continue; const F=d.fused, s=S.sk[id];
+    if(F.form==='field'&&s.f) for(const z of s.f){ const a=Math.min(1,z.l/0.5,(3.5-z.l)/0.3+0.2);
+      ctx.fillStyle=hexA(d.c,0.13*a); circle(z.x,z.y,z.r); ctx.fill();
+      ctx.strokeStyle=hexA(d.c2,0.7*a); ctx.lineWidth=2; ctx.setLineDash([8,6]); ctx.lineDashOffset=-t*30; circle(z.x,z.y,z.r); ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset=0; }
+    if(F.form==='ring'){ const n=[3,4,5][s.lv-1], R=[85,95,105][s.lv-1];
+      ctx.strokeStyle=hexA(d.c,0.12); ctx.lineWidth=1; circle(p.x,p.y,R); ctx.stroke();
+      for(let i=0;i<n;i++){ const a=(s.ang||0)+i*TAU/n, x=p.x+Math.cos(a)*R, y=p.y+Math.sin(a)*R;
+        ctx.fillStyle=hexA(d.c2,0.35); circle(x,y,13); ctx.fill(); ctx.fillStyle=d.c; circle(x,y,8); ctx.fill(); } }
+  }
+
   // 環刃
   const bl=S.sk.blades;
   if(bl&&bl.pos.length){
@@ -1872,6 +2067,8 @@ function render(now){
       const k=Math.min(1,o.t/o.dur), x=o.sx+(o.tx-o.sx)*k, y=o.sy+(o.ty-o.sy)*k, h=Math.sin(Math.PI*k)*50;
       ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(x,y,5,2.5,0,0,TAU); ctx.fill();
       ctx.fillStyle=COL.oil; circle(x,y-h,5); ctx.fill();
+    } else if(o.k==='fo'){
+      const d=SK[o.id]; if(d){ ctx.fillStyle=hexA(d.c2,0.35); circle(o.x,o.y,9); ctx.fill(); ctx.fillStyle=d.c; circle(o.x,o.y,5); ctx.fill(); }
     } else if(o.k==='gale'){
       const k=Math.min(1,o.l/0.4);
       for(let i=0;i<3;i++){ const rr=o.r*(0.4+0.28*i), a0=t*(9-2*i)+i*2.1; ctx.strokeStyle=`rgba(94,230,208,${(0.6-0.15*i)*k})`; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(o.x,o.y,rr,a0,a0+3.4); ctx.stroke(); }
@@ -1913,6 +2110,8 @@ function render(now){
 
   // 螢幕空間
   ctx.setTransform(DPR,0,0,DPR,0,0);
+  if(S.mu.fog){ const fg=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.26,W/2,H/2,Math.max(W,H)*0.62);
+    fg.addColorStop(0,'rgba(6,4,14,0)'); fg.addColorStop(1,'rgba(6,4,14,0.93)'); ctx.fillStyle=fg; ctx.fillRect(0,0,W,H); }
   if(S.wx){ const k=Math.max(0,Math.min(1,S.wxT/1.5,(22-S.wxT)/1.5));
     if(S.wx==='rain'){ ctx.strokeStyle=`rgba(120,180,255,${0.35*k})`; ctx.lineWidth=1; ctx.beginPath();
       for(let i=0;i<70;i++){ const x=((i*137.5+now*90)%(W+60))-30, y=((i*89.3+now*620)%(H+80))-40; ctx.moveTo(x,y); ctx.lineTo(x-6,y+16); } ctx.stroke(); }
