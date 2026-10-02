@@ -420,7 +420,11 @@ const AFX={
   purge:{n:'淨化',c:'#e6d9ff',d:'每 3.5 秒洗掉自己與周圍敵人的狀態。'},
   crystal:{n:'晶甲',c:'#9fe8ff',d:'晶甲先吃傷害：技能只剩 15%，反應全額。打破後暈眩 2.5 秒並進入易傷。'},
   brood:{n:'母巢',c:'#9be36b',d:'每 5 秒生出 4 隻蟎，蟎會繼承它身上的狀態。'},
+  storm:{n:'雷殛',c:'#ffe04a',d:'不吃帶電；每 3 秒在你腳下召來落雷，看到預警圈就閃開。'},
+  frost:{n:'寒獄',c:'#7fd0ff',d:'不吃寒冷；每 4 秒在身邊炸出一圈冰刺，別貼著它打。'},
+  swift:{n:'疾刃',c:'#ff6fb0',d:'每 3 秒預告後朝你高速突進。用凍結、暈眩或控場把它定住。'},
 };
+const EF={blaze:'#2a0d05',purge:'#1a1530',crystal:'#082230',brood:'#0e2208',storm:'#1c1a06',frost:'#0a1d2c',swift:'#2a0a1c'};
 /* 強敵：4:00 登場，每局隨機一隻。每隻都是一道反應題 */
 const BOSS={
   magma:{n:'熔核巨像',c:'#ff7a3d',f:'#3a1408',hp:11000,spd:34,test:'解除防禦',
@@ -438,18 +442,22 @@ const RES_NEED=12;
 const resNeed=()=>RES_NEED;
 /* 聖物：菁英寶箱的獎勵，改寫規則而不是加數字 */
 const RL={
-  rain:{ch:'雨',n:'雷雨雲',c:'#3fa9ff',d:'每 3 秒讓身邊 3 名敵人濕潤。任何組合都多了一個水源。'},
-  flame:{ch:'焰',n:'不滅之火',c:'#ff7a3d',d:'燃燒不會自己熄滅，只會被反應消耗。'},
-  stone:{ch:'賢',n:'賢者之石',c:'#f2c46d',d:'反應有 25% 機率不消耗狀態，可以馬上再反應一次。'},
-  mirror:{ch:'鏡',n:'雙生鏡',c:'#e6d9ff',d:'反應有 15% 機率在同一個敵人身上再觸發一次（60% 傷害）。'},
-  rod:{ch:'針',n:'避雷針',c:'#ffe04a',d:'帶電的敵人死亡時，電流跳到最近 2 名敵人身上。'},
-  heart:{ch:'凜',n:'冰心',c:'#9fe8ff',d:'凍結中的敵人死亡時，讓周圍敵人寒冷。'},
-  well:{ch:'井',n:'燃料庫',c:'#b98a55',d:'油膩的敵人死亡時，在原地留下油池。'},
-  charm:{ch:'霜',n:'霜晶護符',c:'#bfeaff',d:'身上有護盾時，靠近你的敵人會寒冷。'},
-  echo:{ch:'響',n:'殘響',c:'#ff9de2',d:'升級時多一個選項。'},
-  prism:{ch:'稜',n:'稜鏡',c:'#ffffff',d:'技能命中時有 12% 機率附加一個隨機狀態。'},
-  chain:{ch:'環',n:'連環',c:'#7cffb2',d:'被反應擊殺的敵人，會把身上剩下的狀態傳給最近的敵人。'},
-  core:{ch:'核',n:'共振核心',c:'#f2c46d',d:'共鳴爆發的充能速度加倍。'},
+  rain:{ch:'譴',n:'天譴雷雲',c:'#3fa9ff',d:'每 2 秒對身邊 6 名敵人降下暴雨與落雷：先濕潤、再帶電，直接導電。'},
+  flame:{ch:'焰',n:'永劫之焰',c:'#ff7a3d',d:'燃燒永不熄滅，燃燒傷害 ×3；燃燒中的敵人死亡時，火會跳到附近 3 名敵人身上。'},
+  stone:{ch:'賢',n:'賢者之石',c:'#f2c46d',d:'反應有 60% 機率不消耗狀態，可以馬上再反應一次。'},
+  mirror:{ch:'鏡',n:'雙生鏡',c:'#e6d9ff',d:'每次反應都會在同一個敵人身上再觸發一次（70% 傷害）。'},
+  rod:{ch:'鎚',n:'雷神之鎚',c:'#ffe04a',d:'每次觸發反應，都從目標劈出閃電，連鎖 4 名敵人並讓它們帶電。'},
+  heart:{ch:'凜',n:'絕對零度',c:'#9fe8ff',d:'凍結中的敵人受到的所有傷害 ×2；它們死亡時，周圍 6 名敵人直接凍結。'},
+  well:{ch:'獄',n:'煉獄油庫',c:'#ff9a4d',d:'油膩的敵人死亡時爆炸：重創周圍敵人，並讓它們沾油、著火——一路連環爆燃。'},
+  charm:{ch:'壁',n:'冰晶壁壘',c:'#bfeaff',d:'每 6 秒生成一層冰晶壁壘，完全擋下一次傷害；壁壘碎裂時凍結周圍 10 名敵人。'},
+  echo:{ch:'響',n:'殘響',c:'#ff9de2',d:'升級時多一個選項，而且重抽次數無限。'},
+  prism:{ch:'稜',n:'萬象稜鏡',c:'#ffffff',d:'技能命中時有 35% 機率附加一個隨機狀態。任何組合都能打出所有反應。'},
+  chain:{ch:'崩',n:'連鎖崩解',c:'#7cffb2',d:'被反應擊殺的敵人會爆炸，對周圍造成它最大生命 30% 的傷害，並把身上的狀態傳出去。'},
+  core:{ch:'核',n:'共振核心',c:'#f2c46d',d:'共鳴爆發充能 ×3；爆發後 5 秒內，所有反應傷害 ×2。'},
+  twin:{ch:'沙',n:'時之沙漏',c:'#ffd27a',d:'所有技能冷卻縮短 35%。'},
+  phoenix:{ch:'凰',n:'不死鳥之羽',c:'#ff5a3d',d:'死亡時浴火重生一次：回滿生命、無敵 3 秒，並焚滅身邊的敵人。'},
+  crown:{ch:'冠',n:'元素之冠',c:'#c9a8ff',d:'每 8 秒自動施放一次共鳴爆發，不需要充能。'},
+  leech:{ch:'月',n:'血月',c:'#ff4d6d',d:'每次觸發反應回復 0.8% 最大生命。'},
 };
 /* 契約：可重複的風險換報酬，後期不會只剩補血 */
 const CT_MAX={blood:3,swarm:3};
@@ -831,7 +839,7 @@ function doTri(f,c,tk){
   const t={}; for(const k of ORD) if(SK[k]) t[k]=SK[k]; for(const k in SK) if(!t[k]) t[k]=SK[k]; for(const k in SK) delete SK[k]; Object.assign(SK,t); }
 
 const badgeHTML=d=>d.fused?[...d.ch].slice(0,3).map((ch,i)=>`<span style="color:${[d.c,d.c2,d.c3||d.c][i]}">${ch}</span>`).join(''):d.ch;
-const MISC={fusion:['融合','#f2c46d'],burst:['共鳴爆發','#f2c46d'],weather:['天候','#9fdcef'],blast:['爆炸','#ff9a4d']};
+const MISC={relic:['聖物','#f2c46d'],fusion:['融合','#f2c46d'],burst:['共鳴爆發','#f2c46d'],weather:['天候','#9fdcef'],blast:['爆炸','#ff9a4d']};
 /* 無盡模式 5:00 之後每 2 分鐘進入新的一層：換景色、加入新敵人、選一個詛咒 */
 const LAYERS=[
   {n:'灰燼荒原',c:'#ff9f43',bg:'#1f0d08',grid:'rgba(255,122,61,0.11)'},
@@ -998,6 +1006,7 @@ function bossMul(e,isR){
   return 1;
 }
 function hit(e,dmg,src,phys,dot){
+  if(S.rl.heart&&e.st.frozen>0) dmg*=2;   // 聖物：絕對零度
   if(e.dead)return;
   const isR=!!REACT[src]||src==='fusion';   // 融合傷害和反應一樣無視甲殼
   if(e.st.vuln>0) dmg*=1.5; else if(e.armor&&!isR) dmg*=e.armor;
@@ -1015,20 +1024,20 @@ function hit(e,dmg,src,phys,dot){
     if(e.st.frozen>0) react('shatter',e,0);
     else if(S.res.superconduct&&e.st.vuln>0){ e.st.vuln=0; react('shatter',e,0.5); }
   }
-  if(S.rl.prism&&!dot&&SK[src]&&!e.dead&&Math.random()<0.12) applyStatus(e,ANY5[(Math.random()*5)|0],3,src,2*dMult());
+  if(S.rl.prism&&!dot&&SK[src]&&!e.dead&&Math.random()<0.35) applyStatus(e,ANY5[(Math.random()*5)|0],3,src,2*dMult());
   if(phys&&!dot&&SK[src]&&e.hp>0){ fuseTouch(e,'phys'); (e.tc||(e.tc={})).phys=S.t; }
   if(e.hp<=0&&!e.dead) kill(e,src);
 }
 function kill(e,src){
   e.dead=true; S.kills++;
   const st=e.st;
-  if(S.rl.rod&&st.shock>0) for(const o of nearestN(e.x,e.y,2,200,e)){ fxBolt(e.x,e.y,o.x,o.y,COL.shock,0.2); applyStatus(o,'shock',3,'weather'); }
-  if(S.rl.heart&&st.frozen>0){ fxRing(e.x,e.y,90,COL.chill,0.3); for(const o of query(e.x,e.y,90)) if(o!==e) applyStatus(o,'chill',2.5,'weather'); }
-  if(S.rl.well&&st.oil>0) addZone({k:'oil',x:e.x,y:e.y,r:50,l:3,m:3},40);
-  if(S.rl.chain&&REACT[src]){ const o=nearestN(e.x,e.y,1,180,e)[0]; if(o) for(const k of ANY5) if(st[k]>0&&!o.dead) applyStatus(o,k,3,'weather',2*dMult()); }
+  if(S.rl.flame&&st.burn>0) for(const o of nearestN(e.x,e.y,3,130,e)){ fxBolt(e.x,e.y,o.x,o.y,COL.burn,0.2); applyStatus(o,'burn',3,'relic',Math.max(e.bd,3*dMult())); }
+  if(S.rl.heart&&st.frozen>0){ fxRing(e.x,e.y,140,COL.chill,0.4); let n=0; for(const o of query(e.x,e.y,140)) if(o!==e&&!o.dead&&!(o.st.frozen>0)&&n++<6) react('freeze',o,0); }
+  if(S.rl.well&&st.oil>0){ fxBoom(e.x,e.y,85,'#ff9a4d'); addZone({k:'oil',x:e.x,y:e.y,r:55,l:3,m:3},40); later(0.08,()=>{ for(const o of query(e.x,e.y,85)) if(!o.dead){ hit(o,18*dMult(),'relic'); if(!o.dead) applyStatus(o,'oil',3,'relic'); if(!o.dead) applyStatus(o,'burn',3,'relic',4*dMult()); } }); }
+  if(S.rl.chain&&REACT[src]){ const dm=e.max*0.3; fxBoom(e.x,e.y,90,'#7cffb2'); later(0.06,()=>{ for(const o of query(e.x,e.y,90)) if(!o.dead){ hit(o,dm,'relic'); if(!o.dead) for(const k of ANY5) if(st[k]>0) applyStatus(o,k,3,'relic',2*dMult()); } }); }
   if(e.boss){
     const B=BOSS[e.boss]; S.slain++; S.H=[]; S.shake=0.6;
-    if(S.endless){ S.p.inv=Math.max(S.p.inv,1.5); S.p.hp=Math.min(S.p.max,S.p.hp+S.p.max*0.3); S.G.push({k:'chest',x:e.x,y:e.y,m:false,s:0}); S.nextBoss=Math.max(S.nextBoss,S.t+25); }
+    if(S.endless||e.mid){ S.p.inv=Math.max(S.p.inv,1.5); S.p.hp=Math.min(S.p.max,S.p.hp+S.p.max*0.3); S.G.push({k:'chest',x:e.x,y:e.y,m:false,s:0}); if(e.mid){ if(S.boss===e) S.boss=null; } else S.nextBoss=Math.max(S.nextBoss,S.t+25); }
     else { S.bossDown=S.t; S.p.inv=9; }
     banner('討伐：'+B.n,'#f2c46d'); sfx('res');
     for(let i=0;i<4;i++) fxRing(e.x,e.y,60+i*55,B.c,0.5+i*0.15);
@@ -1037,7 +1046,7 @@ function kill(e,src){
   if(e.tp==='bomber') blast(e.x,e.y,62,16);
   else if(S.mu.volatile&&!e.elite&&e.tp!=='mite'&&Math.random()<0.25*S.mu.volatile) blast(e.x,e.y,50,12);
   if(e.split){ for(let i=0;i<e.split;i++){ const a=i*TAU/e.split+rand(-.3,.3); spawnAt('mite',e.x+Math.cos(a)*10,e.y+Math.sin(a)*10,e); } }
-  if(e.elite) S.G.push({k:'chest',x:e.x,y:e.y,m:false,s:0});
+  if(e.elite){ S.G.push({k:'food',x:e.x,y:e.y,m:false,s:0}); burst(e.x,e.y,AFX[e.af]?AFX[e.af].c:'#ff2d55',24,260,3); for(let i=0;i<3;i++) fxRing(e.x,e.y,40+i*35,AFX[e.af]?AFX[e.af].c:'#ff2d55',0.4+i*0.1); }
   else if(e.xp>0){ const r=Math.random();
     if(r<0.006) S.G.push({k:'food',x:e.x,y:e.y,m:false,s:0});
     else if(r<0.0085) S.G.push({k:'mag',x:e.x,y:e.y,m:false,s:0}); }
@@ -1048,8 +1057,12 @@ function kill(e,src){
   }
   burst(e.x,e.y,e.c,e.elite?16:5,e.elite?200:110,2.5);
 }
+function phoenixRise(){ const p=S.p; p.hp=p.max; p.inv=3; S.flash=0.6; S.shake=0.8; sfx('burst'); banner('浴火重生','#ff5a3d');
+  for(let i=0;i<4;i++) fxRing(p.x,p.y,80+i*70,i%2?'#ffd27a':'#ff5a3d',0.5+i*0.12); burst(p.x,p.y,'#ff9a4d',40,420,4);
+  for(const e of query(p.x,p.y,320)){ hit(e,e.boss?e.max*0.06:300*dMult(),'relic'); if(!e.dead){ applyStatus(e,'burn',4,'relic',6*dMult()); knock(e,p.x,p.y,320); } } }
 function hurtPlayer(dmg){
   const p=S.p; let d=dmg;
+  if(S.rl.charm&&S.iceSh){ S.iceSh=0; S.iceT=6; p.inv=0.8; sfx('break'); fxRing(p.x,p.y,160,'#bfeaff',0.5); burst(p.x,p.y,'#e9fbff',24,300,3); let n=0; for(const o of query(p.x,p.y,160)) if(!o.dead&&n++<10) react('freeze',o,0); return; }   // 冰晶壁壘
   p.shT=3; p.inv=0.5;
   if(p.sh>0){ const a=Math.min(p.sh,d); p.sh-=a; d-=a; if(p.sh<=0.01){ p.sh=0; shieldBreak(); } else sfx('block'); }
   if(d>0){ p.hp-=d; S.shake=0.3; S.hurt=0.4; sfx('hurt'); } else S.shake=Math.max(S.shake,0.1);
@@ -1089,12 +1102,12 @@ function applyStatus(e,st,dur,src,dps){
 }
 function later(t,fn){ S.Q.push({t,fn}); }
 const burstMax=()=>80+S.p.lv*6;
-function addCharge(v){ S.bc=Math.min(burstMax(),S.bc+v*(S.rl.core?2:1)); }
+function addCharge(v){ S.bc=Math.min(burstMax(),S.bc+v*(S.rl.core?3:1)); }
 function myEls(){ const u=new Set(); for(const id of S.order) for(const a of SK[id].ap) if(a!=='phys') u.add(a); return [...u]; }
 /* 共鳴爆發：周圍敵人一次沾上你所有的元素，讓你的組合在一瞬間全部反應 */
 function doBurst(){
   if(!S||S.mode!=='play'||S.bc<burstMax()||S.bcd>0)return;
-  S.bc=0; S.bcd=10; const p=S.p, R=230, els=myEls(), ts=query(p.x,p.y,R);
+  S.bc=0; S.bcd=10; S.bbT=S.t+5; const p=S.p, R=230, els=myEls(), ts=query(p.x,p.y,R);
   p.inv=Math.max(p.inv,0.5); S.shake=0.5; S.flash=0.35; sfx('burst');
   fxRing(p.x,p.y,R,'#f2c46d',0.6); fxRing(p.x,p.y,R*0.55,'#fff3d6',0.45); burst(p.x,p.y,'#ffe6a8',24,320,3);
   txt(p.x,p.y-p.r-16,'共鳴爆發','#f2c46d',1.2);
@@ -1120,9 +1133,10 @@ function updWeather(dt){
     }
     if(S.wxT<=0){ S.wx=null; S.wxNext=t+rand(50,70); }
   }
-  if(S.rl.rain){ S.rainT-=dt; if(S.rainT<=0){ S.rainT=3; const ts=shuffle(query(p.x,p.y,360)).slice(0,3);
-    for(const e of ts){ applyStatus(e,'wet',4,'weather'); fxRing(e.x,e.y,e.r+8,COL.wet,0.3); } } }
-  if(S.rl.charm&&p.sh>0){ S.charmT-=dt; if(S.charmT<=0){ S.charmT=0.5; for(const e of query(p.x,p.y,p.r+50)) applyStatus(e,'chill',1.5,'weather'); } }
+  if(S.rl.rain){ S.rainT-=dt; if(S.rainT<=0){ S.rainT=2; const ts=shuffle(query(p.x,p.y,360)).slice(0,6);
+    for(const e of ts){ applyStatus(e,'wet',4,'weather'); fxBolt(e.x+rand(-20,20),e.y-240,e.x,e.y,'#bfe6ff',0.25); later(0.1,()=>{ if(!e.dead){ hit(e,8*dMult(),'relic'); if(!e.dead) applyStatus(e,'shock',3,'relic'); } }); } } }
+  if(S.rl.charm&&!S.iceSh){ S.iceT=(S.iceT==null?6:S.iceT)-dt; if(S.iceT<=0){ S.iceSh=1; S.iceT=6; fxRing(p.x,p.y,40,'#bfeaff',0.4); } }
+  if(S.rl.crown){ S.crT=(S.crT==null?8:S.crT)-dt; if(S.crT<=0){ S.crT=8; S.bc=burstMax(); S.bcd=0; doBurst(); } }
 }
 /* 範圍反應對同一個敵人有受擊間隔：一群敵人互相引爆時，傷害隨人數線性成長，而不是平方 */
 function rHit(o,dmg,type,gap){ const k='h_'+type; if((o.rc[k]||0)>S.t) return false; o.rc[k]=S.t+gap; hit(o,dmg,type); return true; }
@@ -1142,9 +1156,9 @@ function react(type,e,casc,el){
   if(e.dead)return;
   if((e.rc[type]||0)>S.t)return;
   e.rc[type]=S.t+(type==='combust'?0.7:type==='crystal'||type==='swirl'?1.0:0.2);
-  const R=REACT[type], m=rMult()*(casc||1)*(1+0.2*(S.ms[type]||0)), s=e.st;
+  const R=REACT[type], m=rMult()*(casc||1)*(1+0.2*(S.ms[type]||0))*(S.rl.core&&S.bbT>S.t?2:1), s=e.st;
   S.rc[type]=(S.rc[type]||0)+1; addCharge(casc?0.5:1);
-  const keep=S.rl.stone&&Math.random()<0.25?{...s}:null;
+  const keep=S.rl.stone&&Math.random()<0.6?{...s}:null;
   // 油瓶 Lv5 媒介：油膩的敵人觸發範圍反應時範圍 +50%，消耗油膩（爆燃本來就吃油，不受影響）
   const ol=S.sk.oil, amp=ol&&ol.lv>=5&&s.oil>0&&AMP_RX[type]?1.5:1;
   if(amp>1){ s.oil=0; fxRing(e.x,e.y,AMP_RX[type]*amp,COL.oil,0.35); }
@@ -1224,7 +1238,10 @@ function react(type,e,casc,el){
     } break;
   }
   if(keep&&!e.dead){ for(const k of ANY5) if(keep[k]>0&&s[k]<=0) s[k]=keep[k]; }
-  if(S.rl.mirror&&!casc&&Math.random()<0.15) later(0.25,()=>react(type,e,0.6,el));
+  if(S.rl.mirror&&!casc) later(0.22,()=>{ if(!e.dead) react(type,e,0.7,el); });
+  if(!casc&&S.rl.leech) S.p.hp=Math.min(S.p.max,S.p.hp+S.p.max*0.008);
+  if(S.rl.rod&&!casc&&(S.rodT||0)<=S.t){ S.rodT=S.t+0.15; let cur=e; const hs=new Set([e]);
+    for(let i=0;i<4;i++){ const o=nearestN(cur.x,cur.y,5,190,cur).find(o=>!hs.has(o)); if(!o) break; hs.add(o); fxBolt(cur.x,cur.y,o.x,o.y,'#ffe04a',0.22); hit(o,14*dMult(),'relic'); if(!o.dead) applyStatus(o,'shock',3,'relic'); cur=o; } }
   txt(e.x,e.y-e.r-8,R.n+(label?'·'+STN[label]:'')+' '+Math.round(shown),R.c,casc?0.8:1);
   sfx(type);
   if(!S.seen[type]){ S.seen[type]=1; banner('第一次觸發：'+R.n,R.c); }
@@ -1288,12 +1305,21 @@ function spawnElite(k){
   else if(k==='purge'){ e.purge=3.5; e.pg=3.5; }
   else if(k==='crystal'){ e.sh=e.shMax=e.max*0.5; }
   else if(k==='brood'){ e.brT=3; }
+  else if(k==='storm'){ e.res='shock'; e.stT=2; }
+  else if(k==='frost'){ e.res='chill'; e.stT=2.5; }
+  else if(k==='swift'){ e.stT=2; }
   return e;
 }
 function spawnElites(n){
   const ks=[]; while(ks.length<n) ks.push(...shuffle(Object.keys(AFX))); ks.length=n;
   ks.forEach(spawnElite);
   banner(ks.map(k=>AFX[k].n).join('・')+(n>1?' 菁英':'菁英出現'),'#ff4d6d');
+}
+function spawnMidBoss(){   // 標準模式 2:30：守門強敵，打倒掉落三選一聖物，遊戲繼續
+  const ks=Object.keys(BOSS).filter(k=>k!==S.bossK), k=ks[(Math.random()*ks.length)|0], B=BOSS[k], e=spawnEnemy('boss',null,spawnDist()*0.8);
+  e.boss=k; e.mid=1; e.hp=e.max=B.hp*0.35; e.spd=B.spd; e.c=B.c; e.f=B.f; e.at=3; e.plT=1; e.t0=S.t;
+  if(k==='magma'){ e.aura='burn'; e.st.burn=1; } if(k==='eye'){ e.purge=3.5; e.pg=3.5; } if(k==='queen'){ e.brT=1; e.dr=1; e.nb=0; }
+  S.boss=e; banner('守門強敵：'+B.n+'（擊敗掉落聖物）',B.c); sfx('slam'); S.shake=0.5;
 }
 function spawnBoss(){
   const k=S.bossK, B=BOSS[k], e=spawnEnemy('boss',null,spawnDist()*0.8);
@@ -1306,6 +1332,8 @@ function spawnBoss(){
 function ringSpawn(type,n){ const o=rand(0,TAU); for(let i=0;i<n;i++) spawnEnemy(type,o+i/n*TAU,spawnDist()*0.92); }
 const EVENTS=[
   [60,()=>spawnElites(1)],
+  [90,()=>spawnElites(1)],
+  [150,()=>{ if(!S.endless) spawnMidBoss(); }],
   [100,()=>{ringSpawn('crawler',24);banner('被包圍了','#ff6fb0')}],
   [120,()=>spawnElites(2)],
   [145,()=>{ringSpawn('bubble',16);banner('泡沫潮','#5fbcff')}],
@@ -1313,6 +1341,7 @@ const EVENTS=[
   [180,()=>{spawnElites(2);ringSpawn('crawler',20)}],
   [205,()=>{ringSpawn('splitter',14);banner('孢囊潮','#9be36b')}],
   [222,()=>{ringSpawn('brute',14);banner('巨殼包圍','#ff6fb0')}],
+  [210,()=>spawnElites(2)],
   [270,()=>{ringSpawn('crawler',36);banner(S.endless?'屍潮':'最後 30 秒','#f2c46d')}],
 ];
 function pickType(t){
@@ -1428,7 +1457,7 @@ function updHaz(dt){
 function updSkills(dt){
   const p=S.p;
   S.vq=clamp(1.25-(S.FX.length+S.Z.length*1.5+S.P.length)/650,0.35,1)*(FXL?0.55:1);   // 畫面負載越高，特效越收斂
-  if(S.haste>S.t) dt*=1.25;   // 融合「油刃」
+  if(S.haste>S.t) dt*=1.25; if(S.rl.twin) dt*=1.54;   // 聖物：時之沙漏   // 融合「油刃」
   for(const id of S.order.flatMap(x=>SK[x]&&SK[x].fz?S.sk[x].parts:[x])){   // 融合欄位：裡面的技能照常攻擊
     const s=S.sk[id], L=s.lv;
     if(SK[id].run){ SK[id].run(id,s,L,dt); continue; }
@@ -1639,7 +1668,7 @@ function updEnemies(dt){
     if(e.dead)continue;
     const s=e.st;
     const hold=e.hold>S.t;   // 領域 Lv5 凝滯
-    if(s.burn>0){ if((!S.rl.flame||e.aura==='burn')&&!hold) s.burn-=dt; if(e.aura!=='burn') hit(e,e.bd*dt,e.bs,false,true); if(e.dead)continue;
+    if(s.burn>0){ if((!S.rl.flame||e.aura==='burn')&&!hold) s.burn-=dt; if(e.aura!=='burn') hit(e,e.bd*dt*(S.rl.flame?3:1),e.bs,false,true); if(e.dead)continue;
       if(s.burn<=0&&e.seed>0){ const n=e.seed-1; e.seed=0;   // 餘燼彈 Lv5 火種：自然熄滅就跳到別人身上
         const o=nearestN(e.x,e.y,4,150,e).find(o=>!(o.st.burn>0)&&o.aura!=='burn');
         if(o){ fxBolt(e.x,e.y,o.x,o.y,COL.burn,0.2); applyStatus(o,'burn',5,'ember',e.bd); if(!o.dead&&o.st.burn>0&&n>0) o.seed=n; } } }
@@ -1659,6 +1688,10 @@ function updEnemies(dt){
       e.bzT-=dt; if(e.bzT<=0){ e.bzT=2; for(const o of nearestN(e.x,e.y,3,140,e)) if(!o.elite) applyStatus(o,'burn',3,'ember',0); }
       e.plT-=dt; if(e.plT<=0){ e.plT=1.6; addHaz({k:'pool',x:e.x,y:e.y,r:24,l:4,m:4,dmg:7,c:'255,106,42'}); }
     }
+    if(e.af==='storm'){ e.stT-=dt; if(e.stT<=0){ e.stT=3.2; for(let i=0;i<3;i++){ const a=rand(0,TAU), d=i?rand(35,85):0; addHaz({k:'mark',x:p.x+Math.cos(a)*d,y:p.y+Math.sin(a)*d,r:34,t:0,dur:1.0,dmg:9,c:'255,224,74',l:9}); } } }
+    else if(e.af==='frost'){ e.stT-=dt; if(e.stT<=0){ e.stT=4; for(let i=0;i<6;i++){ const a=i*TAU/6+rand(-0.2,0.2); addHaz({k:'mark',x:e.x+Math.cos(a)*90,y:e.y+Math.sin(a)*90,r:30,t:0,dur:1.1,dmg:8,c:'127,208,255',l:9}); } } }
+    else if(e.af==='swift'){ if(e.cs==='wind'){ e.cw-=dt; if(e.cw<=0){ e.cs=null; e.kx=e.cdx*950; e.ky=e.cdy*950; burst(e.x,e.y,'#ff6fb0',10,200,2.5); } }
+      else { e.stT-=dt; if(e.stT<=0&&!(s.frozen>0)&&!(e.stun>0)){ e.stT=3.2; const dx=p.x-e.x, dy=p.y-e.y, d=Math.hypot(dx,dy)||1; e.cdx=dx/d; e.cdy=dy/d; e.cs='wind'; e.cw=0.7; } } }
     if(e.boss) bossAI(e,dt);
     if(e.bcd>0)e.bcd-=dt; if(e.fl>0)e.fl-=dt;
     let sp=e.spd; if(s.chill>0)sp*=0.55; if(s.oil>0)sp*=0.72; if(s.frozen>0||e.stun>0)sp=0; if(e.slw>S.t)sp*=e.slwF;
@@ -1773,6 +1806,7 @@ function update(dt){
   S.E=S.E.filter(e=>!e.dead);
   updHUD();
   if(S.bossDown&&S.t-S.bossDown>1.6){ endGame(true); return; }
+  if(S.p.hp<=0&&S.rl.phoenix&&!S.phx){ S.phx=1; phoenixRise(); }
   if(S.p.hp<=0){ endGame(false); return; }
   if(!S.endless&&S.t>=WIN_T){ endGame(true); return; }
   if(S.muPick) openMutation(); else if(S.pend>0) openLevelUp();
@@ -1950,7 +1984,7 @@ function showPick(keep){
   if(S.evoMode){ const [a,b]=S.choices[0].evo;
     h+=`<h2>選擇融合方向</h2><p class="sub">${SK[a].n}＋${SK[b].n} 會合成一格，兩個技能原本的攻擊和 Lv${SKMAX} 質變都保留。選誰主導：主導技能打中敵人時，在命中處接著放出另一個技能，最後引發主導元素的收尾爆。</p>`; }
   else if(S.muMode){ const L=LAYERS[S.pal], ne=S.newE;
-    h+=`<h2 style="color:${L.c}">深淵第 ${S.layer} 層</h2><p class="sub">${L.n}。${ne?`新敵人<b style="color:${ET[ne].c}">${ET[ne].n}</b>${NEWD[ne]}。`:''}選一個詛咒：敵人會因此改變，你會回復 30% 生命並得到一個寶箱。</p>`; }
+    h+=`<h2 style="color:${L.c}">深淵第 ${S.layer} 層</h2><p class="sub">${L.n}。${ne?`新敵人<b style="color:${ET[ne].c}">${ET[ne].n}</b>${NEWD[ne]}。`:''}選一個詛咒：敵人會因此改變，你會回復 30% 生命。</p>`; }
   else if(start) h+=`<h2>選一個起手技能</h2><p class="sub">每個技能單獨都不強。把兩種元素疊在同一個敵人身上觸發反應，才是真正的輸出。</p>`;
   else if(S.pc>0) h+=`<h2>寶箱</h2><p class="sub">選一件聖物。聖物會改寫規則，整局有效。</p>`;
   else h+=`<h2>升級了</h2><p class="sub">Lv ${S.p.lv-S.pend+1}${S.pend>1?`，後面還有 ${S.pend-1} 次`:''}。技能欄 ${slotsUsed()} / ${MAX_SLOTS}，被動欄 ${S.porder.length} / ${MAX_PV}</p>`;
@@ -1960,7 +1994,7 @@ function showPick(keep){
     else h+=`<p class="phint">點一張卡看完整效果，再點一次就選它</p>`; }
   if(!start&&!S.muMode&&!S.evoMode&&S.sel>=0) h+=`<p class="legend"><b>✦</b> 表示搭配你現有的技能就能觸發這個反應</p>`;
   if(S.evoMode) h+=`<button class="btn" data-act="evoback">先不要融合</button>`;
-  if(!start&&!S.muMode&&!S.evoMode) h+=`<button class="btn" data-act="reroll" ${S.rerolls<=0?'disabled':''}>重抽選項（剩 ${S.rerolls} 次）</button>`;
+  if(!start&&!S.muMode&&!S.evoMode) h+=`<button class="btn" data-act="reroll" ${S.rerolls<=0&&!S.rl.echo?'disabled':''}>重抽選項（${S.rl.echo?'無限':'剩 '+S.rerolls+' 次'}）</button>`;
   h+='</div>';
   S.pickAt=performance.now();
   showOv(h);
@@ -1974,7 +2008,7 @@ function choose(i){
   const p=S.p;
   if(c.mu){
     S.mu[c.mu]=(S.mu[c.mu]||0)+1; S.muMode=0; p.hp=Math.min(p.max,p.hp+p.max*0.3);
-    S.G.push({k:'chest',x:p.x+30,y:p.y,m:true,s:0}); banner('詛咒：'+MU[c.mu].n,MU[c.mu].c);
+    banner('詛咒：'+MU[c.mu].n,MU[c.mu].c);
     if(S.pend>0){ S.mode='levelup'; S.choices=genChoices(); showPick(); } else { S.mode='play'; p.inv=Math.max(p.inv,1); hideOv(); }
     updHUD(); return;
   }
@@ -2158,7 +2192,7 @@ function howtoHTML(){
     <div class="hstep"><b>3</b><div><em>共鳴爆發</em>反應會充能右下角的「鳴」，充滿後點它，讓周圍敵人一次沾上你所有的元素。</div></div>
     <div class="hstep"><b>4</b><div><em>共鳴</em>同一種反應觸發 ${RES_NEED} 次，可以選擇它的共鳴，強化這個反應。</div></div>
     <div class="hstep"><b>5</b><div><em>質變與融合</em>技能練到 Lv${SKMAX} 會質變；兩個不同元素的 Lv${SKMAX} 技能可以在技能欄裡二合一（最多 ${FZ_MAX} 個），兩種元素相遇時觸發融合效果。</div></div>
-    <div class="hstep"><b>6</b><div><em>聖物與天候</em>打倒菁英掉落寶箱，聖物會改寫規則；戰場天候會輪流讓不同組合吃香。</div></div>
+    <div class="hstep"><b>6</b><div><em>聖物與天候</em>打倒強敵掉落寶箱，三選一的聖物效果極強；戰場天候會輪流讓不同組合吃香。</div></div>
     <button class="btn primary" data-act="home">回到主頁</button></div>`;
 }
 function codexHTML(){
@@ -2275,7 +2309,7 @@ function endGame(win){
     const top=rEntries[0][0]; school=SCHOOL[top]; sc=REACT[top].c;
     sub=rEntries.slice(0,2).map(([k])=>REACT[k].n).join('與')+'為主的打法';
   }
-  const slain=!!S.bossDown, B=BOSS[S.bossK], met=!!S.boss;
+  const slain=!!S.bossDown, B=BOSS[S.boss&&S.boss.mid?S.boss.boss:S.bossK], met=!!S.boss;
   const best=loadBest(), score=(slain?2e6:win?1e6:0)+S.t;
   if(!S.endless&&(!best||score>(best.slain?2e6:best.win?1e6:0)+best.time)) saveBest({time:S.t,win,slain,school});
   const bars=entries.slice(0,7).map(([k,v])=>{
@@ -2314,7 +2348,7 @@ el.ov.addEventListener('click',e=>{
   else if(a==='sound'){ AU.on=!AU.on; try{localStorage.setItem('resonance-sound',AU.on?'on':'off')}catch(_){} if(S&&S.mode==='pause') showOv(pauseHTML()); }
   else if(a==='sel'){ const i=+b.dataset.i; if(S.sel===i){ if(performance.now()-S.pickAt<250)return; choose(i); } else { S.sel=i; showPick(true); } }
   else if(a==='pick'){ if(performance.now()-S.pickAt<350)return; choose(+b.dataset.i); }
-  else if(a==='reroll'){ if(S.rerolls>0){ S.rerolls--; S.choices=genChoices(); showPick(); } }
+  else if(a==='reroll'){ if(S.rerolls>0||S.rl.echo){ if(!S.rl.echo) S.rerolls--; S.choices=genChoices(); showPick(); } }
   else if(a==='codex'){ codexBack=S&&S.mode==='pause'?'pause':'title'; showOv(codexHTML()); }
   else if(a==='back'){ if(codexBack==='pause'&&S) showOv(pauseHTML()); else showTitle(); }
   else if(a==='resume') resume();
@@ -2482,6 +2516,39 @@ const ART={
     g.globalAlpha=0.6; g.lineWidth=r*0.06; g.beginPath(); g.moveTo(-r,0); g.lineTo(r*1.3,0); g.moveTo(0,-r*0.85); g.lineTo(0,r*0.85); g.stroke(); g.globalAlpha=1;
     for(const q of [[-1.35,-0.55,0.22],[-1.5,0.45,0.16]]){ aPoly(g,[q[0]*r,q[1]*r-q[2]*r,q[0]*r+q[2]*r,q[1]*r,q[0]*r,q[1]*r+q[2]*r,q[0]*r-q[2]*r,q[1]*r]); g.fillStyle=hexA(c,0.6); g.fill(); }
     aEye(g,r*0.45,-r*0.15,r*0.1,'#ffffff'); aEye(g,r*0.45,r*0.15,r*0.1,'#ffffff'); },
+  el_blaze:(g,r,c,f)=>{ for(let i=0;i<6;i++){ const a=Math.PI*0.6+i*(Math.PI*0.8/5), L=r*(1.35+(i%2?0.15:0.38)); g.beginPath(); g.moveTo(Math.cos(a-0.16)*r*0.8,Math.sin(a-0.16)*r*0.8); g.quadraticCurveTo(Math.cos(a)*r*1.25,Math.sin(a)*r*1.25+r*0.1,Math.cos(a)*L,Math.sin(a)*L); g.quadraticCurveTo(Math.cos(a)*r*1.1,Math.sin(a)*r*1.1-r*0.1,Math.cos(a+0.16)*r*0.8,Math.sin(a+0.16)*r*0.8); g.closePath();
+      const gr=g.createRadialGradient(0,0,r*0.7,0,0,L); gr.addColorStop(0,'#fff0a0'); gr.addColorStop(0.5,c); gr.addColorStop(1,'#ff3a10'); gFill(g,c,r*0.6,gr); }
+    for(const sd of [-1,1]){ g.beginPath(); g.moveTo(r*0.45,sd*r*0.6); g.quadraticCurveTo(r*1.35,sd*r*1.15,r*1.65,sd*r*0.45); g.quadraticCurveTo(r*1.15,sd*r*0.7,r*0.75,sd*r*0.3); g.closePath(); gFill(g,c,r*0.4,'#3a1206'); g.strokeStyle=c; g.lineWidth=r*0.06; g.stroke(); }
+    aCirc(g,0,0,r*0.95); const bg=g.createRadialGradient(-r*0.2,-r*0.2,r*0.1,0,0,r); bg.addColorStop(0,'#5a1a08'); bg.addColorStop(1,f); gFill(g,c,r*0.8,bg); g.strokeStyle=c; g.lineWidth=r*0.09; g.stroke();
+    g.save(); g.shadowColor='#ffb347'; g.shadowBlur=r*0.5; g.strokeStyle='#ffc070'; g.lineWidth=r*0.07; g.lineCap='round'; for(const q of [[0.5,-0.5],[-0.4,0.55],[-0.55,-0.35],[0.45,0.45]]){ g.beginPath(); g.moveTo(q[0]*r*0.2,q[1]*r*0.2); g.lineTo(q[0]*r*0.85,q[1]*r*0.85); g.stroke(); } g.restore();
+    aCirc(g,0,0,r*0.3); gFill(g,'#ffcc66',r*0.8,'#fff0b0'); aEye(g,r*0.62,-r*0.22,r*0.11,'#ffe066'); aEye(g,r*0.62,r*0.22,r*0.11,'#ffe066'); },
+  el_purge:(g,r,c,f)=>{ for(const sd of [-1,1]) for(let i=0;i<3;i++){ g.save(); g.rotate(Math.PI+sd*(0.9+i*0.42)); g.beginPath(); g.ellipse(r*1.0,0,r*0.75,r*0.16,0,0,TAU); const gr=g.createLinearGradient(r*0.3,0,r*1.75,0); gr.addColorStop(0,'#ffffff'); gr.addColorStop(1,hexA(c,0.1)); gFill(g,c,r*0.4,gr); g.restore(); }
+    g.save(); g.shadowColor='#ffe9a0'; g.shadowBlur=r*0.6; g.strokeStyle='#fff4c8'; g.lineWidth=r*0.07; aCirc(g,-r*0.2,0,r*1.25); g.stroke(); g.restore();
+    aPoly(g,[r*1.0,0,0,-r*0.75,-r*0.8,0,0,r*0.75]); gFill(g,c,r*0.8,f); g.strokeStyle=c; g.lineWidth=r*0.08; g.lineJoin='round'; g.stroke();
+    g.beginPath(); g.moveTo(-r*0.45,0); g.quadraticCurveTo(r*0.15,-r*0.42,r*0.7,0); g.quadraticCurveTo(r*0.15,r*0.42,-r*0.45,0); g.fillStyle='#fbf7ff'; g.fill();
+    aCirc(g,r*0.15,0,r*0.2); g.fillStyle=c; g.fill(); aCirc(g,r*0.18,0,r*0.08); g.fillStyle='#1a1430'; g.fill(); },
+  el_crystal:(g,r,c,f)=>{ for(const q of [[0.8,-0.25,1.55],[0.1,-0.9,1.35],[-0.7,-0.55,1.4],[-0.8,0.45,1.35],[0.15,0.95,1.4],[0.85,0.35,1.25]]){ const a=Math.atan2(q[1],q[0]);
+      aPoly(g,[Math.cos(a-0.25)*r*0.7,Math.sin(a-0.25)*r*0.7,Math.cos(a)*r*q[2],Math.sin(a)*r*q[2],Math.cos(a+0.25)*r*0.7,Math.sin(a+0.25)*r*0.7]); const gr=g.createLinearGradient(0,0,Math.cos(a)*r*q[2],Math.sin(a)*r*q[2]); gr.addColorStop(0,hexA(c,0.5)); gr.addColorStop(1,'#ffffff'); gFill(g,c,r*0.5,gr); g.strokeStyle=c; g.lineWidth=r*0.04; g.stroke(); }
+    const hx=[]; for(let i=0;i<6;i++){ const a=i*TAU/6+Math.PI/6; hx.push(Math.cos(a)*r*0.85,Math.sin(a)*r*0.85); } aPoly(g,hx); gFill(g,c,r*0.8,f); g.strokeStyle=c; g.lineWidth=r*0.08; g.lineJoin='round'; g.stroke();
+    g.globalAlpha=0.6; g.lineWidth=r*0.04; g.beginPath(); for(let i=0;i<6;i++){ g.moveTo(0,0); g.lineTo(hx[i*2],hx[i*2+1]); } g.stroke(); g.globalAlpha=1;
+    aCirc(g,0,0,r*0.28); gFill(g,c,r*0.7,'#e9fdff'); aEye(g,r*0.55,-r*0.18,r*0.08,'#ffffff'); aEye(g,r*0.55,r*0.18,r*0.08,'#ffffff'); },
+  el_brood:(g,r,c,f,k)=>{ g.strokeStyle=c; g.lineWidth=r*0.08; g.lineCap='round'; for(let i=0;i<4;i++) for(const sd of [-1,1]){ const bx=(i-1.5)*r*0.35; g.beginPath(); g.moveTo(bx,sd*r*0.6); g.lineTo(bx+(k?0.18:-0.18)*r,sd*r*1.2); g.stroke(); }
+    g.beginPath(); g.ellipse(-r*0.2,0,r*1.0,r*0.8,0,0,TAU); gFill(g,c,r*0.7,f); g.lineWidth=r*0.08; g.stroke();
+    for(const q of [[-0.6,-0.35,0.2],[-0.25,0.4,0.17],[-0.75,0.3,0.15],[0.05,-0.35,0.15],[-0.4,-0.05,0.18]]){ aCirc(g,q[0]*r,q[1]*r,q[2]*r); gFill(g,c,r*0.5,hexA(c,0.9)); g.fillStyle='#f0ffd8'; aCirc(g,q[0]*r-q[2]*r*0.3,q[1]*r-q[2]*r*0.3,q[2]*r*0.35); g.fill(); }
+    aCirc(g,r*0.85,0,r*0.35); g.fillStyle=f; g.fill(); g.stroke(); aEye(g,r*0.98,-r*0.13,r*0.08,c); aEye(g,r*0.98,r*0.13,r*0.08,c); },
+  el_storm:(g,r,c,f)=>{ for(let i=0;i<8;i++){ const a=i*TAU/8+0.2, L=r*(1.25+(i%2)*0.3); g.beginPath(); g.moveTo(Math.cos(a-0.12)*r*0.8,Math.sin(a-0.12)*r*0.8); g.lineTo(Math.cos(a+0.06)*r*1.05,Math.sin(a+0.06)*r*1.05); g.lineTo(Math.cos(a-0.05)*r*1.1,Math.sin(a-0.05)*r*1.1); g.lineTo(Math.cos(a)*L,Math.sin(a)*L); g.lineTo(Math.cos(a+0.12)*r*0.8,Math.sin(a+0.12)*r*0.8); g.closePath(); gFill(g,c,r*0.6,'#fff6c0'); }
+    aCirc(g,0,0,r*0.9); const bg=g.createRadialGradient(0,0,r*0.2,0,0,r*0.9); bg.addColorStop(0,'#3a3410'); bg.addColorStop(1,f); gFill(g,c,r*0.9,bg); g.strokeStyle=c; g.lineWidth=r*0.08; g.stroke();
+    g.save(); g.shadowColor=c; g.shadowBlur=r*0.5; g.strokeStyle='#fff3a0'; g.lineWidth=r*0.07; g.lineJoin='round'; g.beginPath(); g.moveTo(-r*0.5,-r*0.45); g.lineTo(-r*0.05,-r*0.05); g.lineTo(-r*0.3,r*0.1); g.lineTo(r*0.25,r*0.55); g.stroke(); g.restore();
+    aEye(g,r*0.55,-r*0.2,r*0.1,'#ffffff'); aEye(g,r*0.55,r*0.2,r*0.1,'#ffffff'); },
+  el_frost:(g,r,c,f)=>{ g.strokeStyle=c; g.lineCap='round'; for(let i=0;i<6;i++){ const a=i*TAU/6, x=Math.cos(a), y=Math.sin(a); g.lineWidth=r*0.12; g.beginPath(); g.moveTo(x*r*0.6,y*r*0.6); g.lineTo(x*r*1.45,y*r*1.45); g.stroke(); g.lineWidth=r*0.07;
+      for(const s2 of [-1,1]){ const bx=x*r*1.05, by=y*r*1.05, b=a+s2*0.7; g.beginPath(); g.moveTo(bx,by); g.lineTo(bx+Math.cos(b)*r*0.3,by+Math.sin(b)*r*0.3); g.stroke(); }
+      aPoly(g,[x*r*1.45-y*r*0.1,y*r*1.45+x*r*0.1,x*r*1.72,y*r*1.72,x*r*1.45+y*r*0.1,y*r*1.45-x*r*0.1]); gFill(g,c,r*0.4,'#ffffff'); }
+    const hx=[]; for(let i=0;i<6;i++){ const a=i*TAU/6+Math.PI/6; hx.push(Math.cos(a)*r*0.75,Math.sin(a)*r*0.75); } aPoly(g,hx); gFill(g,c,r*0.8,f); g.lineWidth=r*0.08; g.lineJoin='round'; g.stroke();
+    aCirc(g,0,0,r*0.3); gFill(g,c,r*0.6,'#e6faff'); aEye(g,r*0.5,-r*0.17,r*0.08,'#ffffff'); aEye(g,r*0.5,r*0.17,r*0.08,'#ffffff'); },
+  el_swift:(g,r,c,f,k)=>{ g.globalAlpha=0.5; g.strokeStyle=c; g.lineWidth=r*0.1; g.lineCap='round'; for(const sd of [-1,1]){ g.beginPath(); g.moveTo(-r*0.6,sd*r*0.25); g.quadraticCurveTo(-r*1.3,sd*r*(0.5+(k?0.15:0)),-r*1.8,sd*r*0.2); g.stroke(); } g.globalAlpha=1;
+    for(const sd of [-1,1]){ g.beginPath(); g.moveTo(r*0.2,sd*r*0.3); g.quadraticCurveTo(r*0.4,sd*r*1.5,-r*0.9,sd*r*1.25); g.quadraticCurveTo(-r*0.1,sd*r*1.05,0,sd*r*0.45); g.closePath(); const gr=g.createLinearGradient(0,0,-r*0.9,sd*r*1.25); gr.addColorStop(0,'#ffffff'); gr.addColorStop(1,c); gFill(g,c,r*0.5,gr); }
+    aPoly(g,[r*1.5,0,r*0.2,-r*0.55,-r*0.7,-r*0.3,-r*0.5,0,-r*0.7,r*0.3,r*0.2,r*0.55]); gFill(g,c,r*0.8,f); g.strokeStyle=c; g.lineWidth=r*0.08; g.lineJoin='round'; g.stroke();
+    g.lineWidth=r*0.05; g.beginPath(); g.moveTo(-r*0.3,0); g.lineTo(r*1.2,0); g.stroke(); aEye(g,r*0.6,0,r*0.13,'#ffffff'); },
   elite:(g,r,c,f)=>{ g.strokeStyle=c; g.lineWidth=r*0.07; g.lineJoin='round';
     for(let i=0;i<5;i++){ const a=Math.PI*0.62+i*(Math.PI*0.76/4); aPoly(g,[Math.cos(a-0.14)*r*0.85,Math.sin(a-0.14)*r*0.85,Math.cos(a)*r*1.5,Math.sin(a)*r*1.5,Math.cos(a+0.14)*r*0.85,Math.sin(a+0.14)*r*0.85]); gFill(g,c,r*0.4,f); g.stroke(); }
     for(const sd of [-1,1]){ g.beginPath(); g.moveTo(r*0.55,sd*r*0.55); g.quadraticCurveTo(r*1.25,sd*r*0.95,r*1.55,sd*r*0.35); g.quadraticCurveTo(r*1.1,sd*r*0.55,r*0.8,sd*r*0.25); g.closePath(); gFill(g,c,r*0.4,'#f8e7ea'); }
@@ -2489,15 +2556,15 @@ const ART={
     const gr=g.createRadialGradient(0,0,0,0,0,r*0.55); gr.addColorStop(0,hexA(c,0.7)); gr.addColorStop(1,hexA(c,0)); g.fillStyle=gr; aCirc(g,0,0,r*0.55); g.fill();
     aEye(g,r*0.62,0,r*0.13,'#ffffff'); aEye(g,r*0.42,-r*0.32,r*0.1,c); aEye(g,r*0.42,r*0.32,r*0.1,c); },
 };
-const LEGS={crawler:1,mite:1,bomber:1,bubble:1,runner:1};
+const LEGS={crawler:1,mite:1,bomber:1,bubble:1,runner:1,el_brood:1,el_swift:1};
 function eSpr(tp,r,c,f,k,v,ai){ const S2=r*3.4;
   return sprite(tp+'|'+Math.round(r)+'|'+c+'|'+f+'|'+k+'|'+v+'|'+(ai||0),S2,S2,g=>{ g.save(); g.rotate((ai||0)*TAU/ROTN); ART[tp](g,r,c,f,k); g.restore();
     if(v){ g.globalCompositeOperation='source-atop'; g.fillStyle=v===1?'rgba(255,255,255,0.5)':'rgba(190,240,255,0.55)'; g.fillRect(-S2/2,-S2/2,S2,S2); } }); }
 function drawEnemyArt(e,p,t){
-  const tp=ART[e.tp]?e.tp:'crawler', s=e.st, k=LEGS[tp]?((t*9+e.x*0.013)|0)&1:0, v=e.fl>0?1:s.frozen>0?2:0, S2=e.r*3.4*(e.r<14?1.22:1.08);   // 造型比判定範圍略大，看得清楚
+  const ea=e.af&&ART['el_'+e.af], tp=ea?'el_'+e.af:ART[e.tp]?e.tp:'crawler', cc=ea?AFX[e.af].c:e.c, ff=ea?EF[e.af]:e.f, s=e.st, k=LEGS[tp]?((t*9+e.x*0.013)|0)&1:0, v=e.fl>0?1:s.frozen>0?2:0, S2=e.r*3.4*(e.r<14?1.22:1.08);   // 造型比判定範圍略大，看得清楚
   const a=e.tp==='charger'&&e.cs?Math.atan2(e.cdy,e.cdx):Math.atan2(p.y-e.y,p.x-e.x);
   const ai=((Math.round(a/(TAU/ROTN))%ROTN)+ROTN)%ROTN;
-  ctx.drawImage(eSpr(tp,e.r,e.c,e.f,k,v,ai),e.x-S2/2,e.y-S2/2,S2,S2);
+  ctx.drawImage(eSpr(tp,e.r,cc,ff,k,v,ai),e.x-S2/2,e.y-S2/2,S2,S2);
 }
 /* ---- 首領：每隻都有自己的動態造型 ---- */
 /* ---- 首領：多層動態造型（地面符文、光暈、環繞物、粒子） ---- */
@@ -2689,6 +2756,7 @@ function render(now){
     if(e.tp==='spitter'&&e.fT!=null&&e.fT<0.5){ ctx.fillStyle=`rgba(255,92,138,${0.5-e.fT})`; circle(e.x,e.y,e.r+9); ctx.fill(); }
     ctx.globalAlpha=e.tp==='blinker'?(e.bl?Math.max(0.15,e.bl.t/0.65):0.8):1;
     if(e.aura&&s[e.aura]>0){ ctx.globalAlpha=0.26+0.1*Math.sin(t*6+e.x*0.1); ctx.fillStyle=COL[e.aura]; circle(e.x,e.y,e.r+8); ctx.fill(); ctx.globalAlpha=1; }
+    if(e.elite&&!e.boss&&e.af){ const ac=AFX[e.af].c; ctx.globalCompositeOperation='lighter'; bloom(e.x,e.y,e.r*2.5,ac,0.42); runeRing(e.x,e.y,e.r*1.6,ac,0.75,t,6,1); ctx.globalCompositeOperation='source-over'; }
     if(e.boss) drawBossArt(e,p,t); else drawEnemyArt(e,p,t);
     if(e.tp==='bomber'){ const fast=dd(p.x,p.y,e.x,e.y)<160*160; if(Math.sin(t*(fast?24:9))>0){ ctx.fillStyle='#fff3c0'; circle(e.x,e.y-e.r-4,2.6); ctx.fill(); } }
     ctx.globalAlpha=1;
@@ -2709,7 +2777,7 @@ function render(now){
     if(e.elite&&!e.boss){
       const w=44, hpP=Math.max(0,e.hp/e.max), y0=e.y-e.r-14;
       ctx.fillStyle='rgba(8,8,20,0.85)'; ctx.fillRect(e.x-w/2-1,y0-1,w+2,6);
-      ctx.fillStyle=e.c; ctx.fillRect(e.x-w/2,y0,w*hpP,4); ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.fillRect(e.x-w/2,y0,w*hpP,1.2);
+      ctx.fillStyle=e.af&&AFX[e.af]?AFX[e.af].c:e.c; ctx.fillRect(e.x-w/2,y0,w*hpP,4); ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.fillRect(e.x-w/2,y0,w*hpP,1.2);
       if(e.sh>0){ ctx.fillStyle='#9fe8ff'; ctx.fillRect(e.x-w/2,y0-4,w*e.sh/e.shMax,3); }
       if(e.af){ ctx.font=`900 11px ${SERIF}`; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,8,20,0.85)'; ctx.strokeText(AFX[e.af].n,e.x,y0-11); ctx.fillStyle=AFX[e.af].c; ctx.fillText(AFX[e.af].n,e.x,y0-11); }
     }
@@ -2718,6 +2786,7 @@ function render(now){
   // 玩家
   const blink=p.inv>0&&Math.floor(p.inv*20)%2===0;
   drawPlayerArt(p,t,blink);
+  if(S.iceSh){ ctx.globalCompositeOperation='lighter'; bloom(p.x,p.y,34,'#9fe8ff',0.45); ctx.strokeStyle='rgba(210,248,255,0.85)'; ctx.lineWidth=2; ctx.beginPath(); for(let i=0;i<6;i++){ const b=i*TAU/6+t*0.5; ctx.lineTo(p.x+Math.cos(b)*(p.r+13),p.y+Math.sin(b)*(p.r+13)); } ctx.closePath(); ctx.stroke(); ctx.globalCompositeOperation='source-over'; }
 
   if(p.sh>0.5){
     const k=Math.min(1,p.sh/shMax());
