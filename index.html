@@ -89,6 +89,9 @@ body{height:100%;margin:0;overflow:hidden;background:var(--ground);color:var(--i
 .pips{position:absolute;bottom:5px;left:0;right:0;display:flex;gap:3px;justify-content:center}
 .pips b{width:6px;height:3px;border-radius:2px;background:rgba(255,255,255,.16)}
 .pips b.on{background:var(--c)}
+.cgrp{margin:14px 0 2px;font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+.slot .pips{gap:2px}.slot .pips b{width:5px}
+.slot .pips b.q.on{background:#f2c46d;box-shadow:0 0 4px #f2c46d}
 #bossBar{margin-top:8px;padding:6px 9px 7px;border-radius:10px;background:rgba(13,15,31,.74);border:1px solid color-mix(in srgb,var(--c,#fff) 45%,transparent)}
 #bossBar.hidden{display:none}
 #bossBar .bh{display:flex;align-items:baseline;gap:8px}
@@ -193,6 +196,75 @@ h3{font-family:var(--serif);font-weight:900;font-size:18px;margin:22px 0 8px}
 .bar .pc{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
 .note{font-size:13px;color:#cfcbe0;text-align:center;margin:6px 0 0;line-height:1.6}
 @media (prefers-reduced-motion:reduce){#banner.show{animation-duration:2.4s}.hp i,.xp i{transition:none}}
+
+/* ===== HUD 美化 ===== */
+#resRow{display:none}
+#slots{gap:8px}
+.slot{width:44px;height:46px;border-radius:13px;border:none;background:linear-gradient(180deg,rgba(30,34,62,.9),rgba(11,13,26,.9));box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 1px color-mix(in srgb,var(--c,#666) 38%,transparent),0 6px 16px rgba(0,0,0,.35)}
+.slot::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--c,#666) 26%,transparent),transparent 70%);pointer-events:none}
+.slot.empty{background:rgba(255,255,255,.02);box-shadow:none;border:1px dashed rgba(255,255,255,.13)}
+.slot.empty::before{display:none}
+.slot.duo{font-size:15px;letter-spacing:-1px;border:1.5px solid transparent;background:linear-gradient(180deg,rgba(30,34,62,.95),rgba(11,13,26,.95)) padding-box,linear-gradient(135deg,var(--c),var(--c2)) border-box;box-shadow:0 0 14px color-mix(in srgb,var(--c) 40%,transparent),0 6px 16px rgba(0,0,0,.35);padding-bottom:0;animation:fzglow 2.4s ease-in-out infinite}
+.slot.duo.tri{font-size:11px;letter-spacing:-1.5px}
+.slot .fzm{position:absolute;top:-7px;right:-7px;width:17px;height:17px;border-radius:50%;background:linear-gradient(135deg,#ffe29a,#d9a441);color:#2a1c05;font-style:normal;font-size:10px;font-weight:900;display:grid;place-items:center;box-shadow:0 0 8px rgba(242,196,109,.7);font-family:var(--serif)}
+@keyframes fzglow{50%{box-shadow:0 0 22px color-mix(in srgb,var(--c2) 55%,transparent),0 6px 16px rgba(0,0,0,.35)}}
+.pslot{width:32px;height:32px;border:none;background:linear-gradient(180deg,rgba(30,34,62,.85),rgba(11,13,26,.85));box-shadow:0 0 0 1px color-mix(in srgb,var(--c,#666) 40%,transparent),0 4px 10px rgba(0,0,0,.3)}
+.pslot.empty{background:rgba(255,255,255,.02);box-shadow:none;border:1px dashed rgba(255,255,255,.12)}
+.badge.duo.tri{font-size:13px;letter-spacing:-1px}
+.card.fzcard{border:1.5px solid transparent;background:linear-gradient(180deg,rgba(30,28,20,.96),rgba(14,15,30,.96)) padding-box,linear-gradient(135deg,var(--c),#f2c46d,var(--c2)) border-box}
+/* ===== 暫停畫面 ===== */
+.panel.pz{max-width:440px}
+.pzsec{display:flex;align-items:center;gap:8px;margin:16px 0 7px;font-size:13px;font-weight:800;letter-spacing:.08em;color:#e9e6f5}
+.pzsec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.14),transparent)}
+.pzsec small{font-weight:600;color:var(--muted);letter-spacing:0}
+.pzrow{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);margin-bottom:6px}
+.pzrow .bd{flex:0 0 36px;height:36px;border-radius:10px;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:16px;color:var(--c);background:rgba(11,13,26,.8);box-shadow:0 0 0 1px color-mix(in srgb,var(--c) 45%,transparent);letter-spacing:-1px}
+.pzrow .bd.sm{font-size:12px}
+.pzrow .tx{flex:1;min-width:0}
+.pzrow .nm{font-weight:800;font-size:13.5px;color:var(--c)}
+.pzrow .nm em{font-style:normal;font-weight:600;font-size:11px;color:var(--muted);margin-left:6px}
+.pzrow .ds{font-size:12px;line-height:1.6;color:#c6c8dc;margin-top:2px}
+.pzrow .ds .q{color:#f2c46d}
+.pzrow .ds .mu{color:#8a8ca6}
+.pzhint{font-size:12px;color:var(--muted);text-align:left;margin:2px 0 6px}
+.pzbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.pzbtns .btn{margin:0}
+.pzbtns .btn.primary{grid-column:1/-1}
+
+/* ===== 升級卡牌 ===== */
+.pcards{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px;margin:18px 0 8px;align-items:end}
+.pcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;min-height:214px;padding:11px 7px 10px;border-radius:15px;border:1.5px solid color-mix(in srgb,var(--c) 60%,transparent);
+  background:radial-gradient(120% 65% at 50% 0%,color-mix(in srgb,var(--c) 30%,transparent),transparent 62%),linear-gradient(180deg,#1b1e3a,#0b0c1b);color:#eeedf8;font:inherit;text-align:center;cursor:pointer;overflow:hidden;
+  transform:rotate(var(--r)) translateY(var(--y));transition:transform .2s cubic-bezier(.2,.9,.3,1.2),box-shadow .2s,opacity .2s;box-shadow:0 10px 24px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.09)}
+.pcard::before{content:'';position:absolute;inset:4px;border-radius:11px;border:1px solid rgba(255,255,255,.08);pointer-events:none}
+.pcard::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.14) 48%,transparent 60%);transform:translateX(-130%);pointer-events:none}
+.pcard.on::after{animation:pcshine 1s ease-out}
+@keyframes pcshine{to{transform:translateX(130%)}}
+.pcards.anim .pcard{animation:pcin .45s cubic-bezier(.2,.9,.3,1.25) both;animation-delay:var(--d)}
+@keyframes pcin{from{opacity:0;transform:translateY(46px) rotate(0) scale(.88)}}
+.pcard.on{transform:translateY(-12px) scale(1.05);z-index:2;box-shadow:0 0 0 1.5px var(--c),0 0 28px color-mix(in srgb,var(--c) 55%,transparent),0 16px 30px rgba(0,0,0,.5)}
+.pcard.dim{opacity:.6}
+.pcard:active{filter:brightness(1.15)}
+.pc-kind{font-size:9.5px;font-weight:800;letter-spacing:.2em;color:color-mix(in srgb,var(--c) 70%,#fff)}
+.pc-badge{width:56px;height:56px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:28px;color:var(--c);margin:3px 0 2px;
+  background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--c) 32%,#0b0c1a),#0b0c1a 72%);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--c) 70%,transparent),0 0 20px color-mix(in srgb,var(--c) 38%,transparent)}
+.pc-badge.duo{font-size:18px;letter-spacing:-1px}.pc-badge.duo.tri{font-size:13px}
+.pc-badge.rl{border-radius:50% 50% 14px 14px}.pc-badge.pv{border-radius:16px}
+.pc-name{font-weight:900;font-size:14px;line-height:1.25;word-break:break-all}
+.pc-tag{font-size:9.5px;font-weight:700;padding:1px 7px;border-radius:999px;background:color-mix(in srgb,var(--c) 18%,transparent);color:color-mix(in srgb,var(--c) 78%,#fff)}
+.pc-sum{font-size:10.5px;line-height:1.45;color:#b8bad2;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;margin-top:1px}
+.pc-els{display:flex;gap:4px;margin-top:auto;padding-top:5px}.pc-els i{width:7px;height:7px;border-radius:50%;box-shadow:0 0 6px currentColor}
+.pcard.sk.new .pc-kind::before{content:'✦ '}
+.pcard.rl{border-color:#f2c46d;background:radial-gradient(120% 65% at 50% 0%,rgba(242,196,109,.28),transparent 62%),linear-gradient(180deg,#22203a,#0c0c1a)}
+.pcard.rl::before{border-color:rgba(242,196,109,.25)}
+.pcard.fz{border:1.5px solid transparent;background:radial-gradient(120% 65% at 50% 0%,rgba(242,196,109,.26),transparent 62%) padding-box,linear-gradient(180deg,#221f34,#0c0c1a) padding-box,linear-gradient(160deg,var(--c),#f2c46d,var(--c)) border-box}
+.pcard.res::before{border:1px double color-mix(in srgb,var(--c) 40%,transparent);inset:3px}
+.pcard.ct,.pcard.mu{border-style:dashed}
+.pcards.n4 .pcard{min-height:200px;padding:10px 5px}.pcards.n4 .pc-badge{width:46px;height:46px;font-size:23px}.pcards.n4 .pc-name{font-size:12.5px}.pcards.n4 .pc-sum{font-size:10px;-webkit-line-clamp:4}
+.pdetail{margin-top:6px;animation:pdin .22s ease-out}
+@keyframes pdin{from{opacity:0;transform:translateY(10px)}}
+.pconfirm{margin-top:10px}
+.phint{font-size:12px;color:var(--muted);text-align:center;margin:12px 0 4px}
 </style>
 </head>
 <body>
@@ -217,6 +289,9 @@ h3{font-family:var(--serif);font-weight:900;font-size:18px;margin:22px 0 8px}
 (()=>{
 'use strict';
 const TAU=Math.PI*2, WIN_T=300, MAX_SLOTS=5, MAX_PV=4, CELL=64;
+/* 技能 5 級：Lv1 本體／Lv2 數值／Lv3 形狀斷點／Lv4 關係數值（附著、持續、覆蓋）／Lv5 質變（和其他狀態、反應的新關係）。被動維持 3 級 */
+const SKMAX=5, PVMAX=3;
+const LV=(a,L)=>a[Math.min(L,a.length)-1];
 const rand=(a,b)=>a+Math.random()*(b-a);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const dd=(ax,ay,bx,by)=>{const x=ax-bx,y=ay-by;return x*x+y*y};
@@ -244,17 +319,17 @@ const REACT={
   crystal:{n:'結晶',c:'#e7b04f',pair:['geo','ele'],d:'岩打中有燃燒、濕潤、寒冷或帶電的敵人時，把那個狀態凝成晶體。撿起晶體獲得 8 點護盾，場上最多 8 顆。'},
 };
 const SK={
-  ember:{ch:'燼',n:'餘燼彈',c:COL.burn,ap:['burn'],st:1,d:['每 1.2 秒向最近的敵人射出火球，施加燃燒。','同時射出 2 顆，冷卻 1.0 秒。','同時射出 3 顆，冷卻 0.85 秒，燃燒更痛。']},
-  surge:{ch:'潮',n:'潮湧',c:COL.wet,ap:['wet'],d:['每 3.2 秒從身上擴散一圈水環，推開敵人並施加濕潤。','水環更大，冷卻 2.7 秒。','水環最大，冷卻 2.2 秒。']},
-  frost:{ch:'霜',n:'霜徑',c:COL.chill,ap:['chill'],d:['移動時在腳下留下冰霜，踩到的敵人寒冷、減速。','冰霜更寬、停留更久。','冰霜最寬，停留 4 秒。']},
-  arc:{ch:'弧',n:'電弧',c:COL.shock,ap:['shock'],st:1,d:['每 1.5 秒電擊附近隨機敵人並彈射 1 次，施加帶電。','彈射 2 次，冷卻 1.25 秒。','每次放出 2 道電弧，各彈射 3 次。']},
-  oil:{ch:'油',n:'油瓶',c:COL.oil,ap:['oil'],d:['每 3.5 秒往敵群丟油瓶，油池讓敵人油膩、減速。本身沒有傷害。','油池更大，冷卻 3 秒。','一次丟 2 瓶，油池最大。']},
-  blades:{ch:'刃',n:'環刃',c:COL.phys,ap:['phys'],st:1,d:['2 把刀刃繞著你轉，造成物理傷害。','3 把刀刃，範圍與傷害提升。','4 把刀刃，轉得更快。']},
-  lance:{ch:'錐',n:'冰錐',c:'#7fd6ff',ap:['phys','chill'],st:1,d:['朝最近的敵人射出會貫穿一整排的冰錐：物理傷害加寒冷。','一次 2 發，貫穿更多敵人。','一次 3 發，冷卻更短、傷害更高。']},
-  gale:{ch:'旋',n:'旋風',c:COL.wind,ap:['wind'],d:['每 3 秒朝敵群放出一道旋風，把沿途敵人往前推開。風會把敵人身上的狀態擴散給旁邊的敵人。','旋風更大，冷卻 2.6 秒。','同時放出 2 道旋風。']},
-  rock:{ch:'岩',n:'落石',c:COL.geo,ap:['geo','phys'],st:1,d:['每 2.6 秒往敵群砸下巨石，造成範圍物理傷害。帶有元素的敵人會結晶，掉出護盾晶體。','範圍更大，冷卻 2.3 秒。','一次砸下 2 顆。']},
-  gravity:{ch:'引',n:'引力核',c:'#b58cff',ap:[],sup:'把敵人吸成一團，範圍反應一次打更多',d:['每 5 秒在敵群中生成引力井，把敵人吸在一起。本身沒有傷害。','範圍更大、持續更久。','同時生成 2 個引力井。']},
-  cascade:{ch:'連',n:'連鎖',c:'#7cffb2',ap:[],sup:'反應會跳到其他敵人身上再觸發',d:['觸發反應時，對最近的 1 名敵人再觸發一次同樣的反應（60% 傷害）。','連鎖到 2 名敵人。','連鎖到 3 名敵人，傷害提高到 80%。']},
+  ember:{ch:'燼',n:'餘燼彈',c:COL.burn,ap:['burn'],st:1,d:['每 1.2 秒向最近的敵人射出火球，施加燃燒。','同時射出 2 顆，冷卻 1.0 秒。','同時射出 3 顆，冷卻 0.85 秒，燃燒更痛。','燃燒持續 5 秒，留給水、油、電更長的反應時間。','質變「火種」：被餘燼彈點燃的敵人，燃燒如果自然熄滅、沒被反應用掉，火會跳到附近另一名敵人身上（最多跳 2 次）。火會自己去找燃料。']},
+  surge:{ch:'潮',n:'潮湧',c:COL.wet,ap:['wet'],d:['每 3.2 秒從身上擴散一圈水環，推開敵人並施加濕潤。','水環更大，冷卻 2.7 秒。','水環最大，冷卻 2.2 秒。','濕潤持續 6 秒，更容易等到下一種元素。','質變「退潮」：水環擴到最大後會收回來，把外圈的敵人拉回中距離擠成一圈，並再施加一次濕潤。推散變成聚攏，範圍反應一次打更多。']},
+  frost:{ch:'霜',n:'霜徑',c:COL.chill,ap:['chill'],d:['移動時在腳下留下冰霜，踩到的敵人寒冷、減速。','冰霜更寬、停留更久。','冰霜最寬，停留 4 秒。','離開冰霜後，寒冷還會殘留 2 秒。','質變「凝油」：油膩的敵人踩到冰霜會直接凍結（消耗油膩），可以被物理打碎。油不再只能拿來爆燃。']},
+  arc:{ch:'弧',n:'電弧',c:COL.shock,ap:['shock'],st:1,d:['每 1.5 秒電擊附近隨機敵人並彈射 1 次，施加帶電。','彈射 2 次，冷卻 1.25 秒。','每次放出 2 道電弧，各彈射 3 次。','各彈射 4 次，彈射距離更遠。','質變「尋隙」：電弧優先跳向身上有濕潤、燃燒或寒冷的敵人，一碰就反應。小心：它也會搶走凍結、蒸發要用的狀態。']},
+  oil:{ch:'油',n:'油瓶',c:COL.oil,ap:['oil'],d:['每 3.5 秒往敵群丟油瓶，油池讓敵人油膩、減速。本身沒有傷害。','油池更大，冷卻 3 秒。','一次丟 2 瓶，油池最大。','油池停留 7 秒，離開油池後油膩還會殘留。','質變「媒介」：油膩的敵人觸發導電、過載、超導或擴散時，範圍擴大 50%（消耗油膩）。油可以拿去爆燃，也可以拿去放大別的反應。']},
+  blades:{ch:'刃',n:'環刃',c:COL.phys,ap:['phys'],st:1,d:['2 把刀刃繞著你轉，造成物理傷害。','3 把刀刃，範圍與傷害提升。','4 把刀刃，轉得更快。','5 把刀刃，範圍更大。','質變「借勢」：刀刃打中身上有任何元素狀態的敵人時無視甲殼。物理需要元素先鋪路。']},
+  lance:{ch:'錐',n:'冰錐',c:'#7fd6ff',ap:['phys','chill'],st:1,d:['朝最近的敵人射出會貫穿一整排的冰錐：物理傷害加寒冷。','一次 2 發，貫穿更多敵人。','一次 3 發，冷卻更短、傷害更高。','每發貫穿 8 名敵人，冷卻 1.0 秒。','質變「穿冰」：冰錐打碎凍結的敵人時不會停下，也不算貫穿次數。一整排凍住的敵人會一路碎到底。']},
+  gale:{ch:'旋',n:'旋風',c:COL.wind,ap:['wind'],d:['每 3 秒朝敵群放出一道旋風，把沿途敵人往前推開。風會把敵人身上的狀態擴散給旁邊的敵人。','旋風更大，冷卻 2.6 秒。','同時放出 2 道旋風。','旋風更大、走得更遠。','質變「挾帶」：旋風擴散出一種狀態後會帶著它前進，沿途碰到的敵人都會沾上。風從「傳染」變成「運送」。']},
+  rock:{ch:'岩',n:'落石',c:COL.geo,ap:['geo','phys'],st:1,d:['每 2.6 秒往敵群砸下巨石，造成範圍物理傷害。帶有元素的敵人會結晶，掉出護盾晶體。','範圍更大，冷卻 2.3 秒。','一次砸下 2 顆。','範圍更大、傷害更高。','質變「元素岩」：落石砸出晶體時會吸收那個元素，下一顆落石帶著它，讓砸到的所有敵人沾上。一個敵人的狀態變成一整片。']},
+  gravity:{ch:'引',n:'引力核',c:'#b58cff',ap:[],sup:'把敵人吸成一團，範圍反應一次打更多',d:['每 5 秒在敵群中生成引力井，把敵人吸在一起。本身沒有傷害。','範圍更大、持續更久。','同時生成 2 個引力井。','引力井持續 3 秒，吸力更強。','質變「坍縮」：引力井消失時，被吸在一起的敵人互相交換一種狀態，一整團同時反應。只有一種元素的組合用不上。']},
+  cascade:{ch:'連',n:'連鎖',c:'#7cffb2',ap:[],sup:'反應會跳到其他敵人身上再觸發',d:['觸發反應時，對最近的 1 名敵人再觸發一次同樣的反應（60% 傷害）。','連鎖到 2 名敵人。','連鎖到 3 名敵人，傷害提高到 80%。','連鎖距離更遠。','質變「共振」：連鎖到的敵人身上如果已經有這個反應需要的狀態，改為 100% 傷害。狀態鋪得越廣，連鎖越痛。']},
 };
 /* 被動：不佔技能欄，另有 4 格被動欄 */
 const PV={
@@ -322,7 +397,7 @@ const BOSS={
 };
 /* 共鳴：反應觸發夠多次後，可以讓反應「產生新的狀態」，反應開始互相餵養 */
 const RES_NEED=12;
-const resNeed=()=>S&&S.rl.alch?6:RES_NEED;
+const resNeed=()=>RES_NEED;
 /* 聖物：菁英寶箱的獎勵，改寫規則而不是加數字 */
 const RL={
   rain:{ch:'雨',n:'雷雨雲',c:'#3fa9ff',d:'每 3 秒讓身邊 3 名敵人濕潤。任何組合都多了一個水源。'},
@@ -333,18 +408,16 @@ const RL={
   heart:{ch:'凜',n:'冰心',c:'#9fe8ff',d:'凍結中的敵人死亡時，讓周圍敵人寒冷。'},
   well:{ch:'井',n:'燃料庫',c:'#b98a55',d:'油膩的敵人死亡時，在原地留下油池。'},
   charm:{ch:'霜',n:'霜晶護符',c:'#bfeaff',d:'身上有護盾時，靠近你的敵人會寒冷。'},
-  alch:{ch:'煉',n:'鍊金術',c:'#46f0b4',d:'共鳴只需要觸發 6 次反應就能解鎖。'},
   echo:{ch:'響',n:'殘響',c:'#ff9de2',d:'升級時多一個選項。'},
   prism:{ch:'稜',n:'稜鏡',c:'#ffffff',d:'技能命中時有 12% 機率附加一個隨機狀態。'},
   chain:{ch:'環',n:'連環',c:'#7cffb2',d:'被反應擊殺的敵人，會把身上剩下的狀態傳給最近的敵人。'},
   core:{ch:'核',n:'共振核心',c:'#f2c46d',d:'共鳴爆發的充能速度加倍。'},
 };
 /* 契約：可重複的風險換報酬，後期不會只剩補血 */
-const CT_MAX={blood:3,swarm:3,trial:99};
+const CT_MAX={blood:3,swarm:3};
 const CT={
   blood:{ch:'血',n:'血契',c:'#ff4d6d',d:'最大生命 −20%，換取所有反應傷害 +25%。最多 3 次。'},
   swarm:{ch:'潮',n:'獸潮契',c:'#ff6fb0',d:'敵人數量 +25%，換取經驗 +30%。最多 3 次。'},
-  trial:{ch:'試',n:'試煉契',c:'#ff2d55',d:'立刻召喚一隻菁英，打倒它就能開聖物寶箱。'},
 };
 const NUM=['','Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ','Ⅷ','Ⅸ','Ⅹ'];
 /* 天候：每隔一段時間改變戰場，讓不同組合輪流吃香 */
@@ -354,76 +427,355 @@ const WX={
   snow:{n:'寒潮',el:'chill',c:'#9fe8ff',d:'敵人會不斷變得寒冷'},
   storm:{n:'雷暴',el:'shock',c:'#ffe04a',d:'落雷會讓敵人帶電'},
 };
-/* ===== 融合進化：兩個滿級技能合成全新技能，三種進化方向 ===== */
-const PE={ember:'burn',surge:'wet',frost:'chill',arc:'shock',oil:'oil',blades:'phys',lance:'phys',gale:'wind',rock:'geo'};
-const NOUN={'burn|chill':'凍焰','burn|geo':'熔岩','burn|oil':'燎原','burn|phys':'熔刃','burn|shock':'雷火','burn|wet':'蒸汽','burn|wind':'火旋',
-  'chill|geo':'凍土','chill|oil':'霜膠','chill|phys':'冰刃','chill|shock':'極光','chill|wet':'冰晶','chill|wind':'暴雪',
-  'geo|oil':'瀝青','geo|phys':'碎岩','geo|shock':'磁石','geo|wet':'泥流','geo|wind':'沙暴',
-  'oil|phys':'黏刃','oil|shock':'電漿','oil|wet':'泥沼','oil|wind':'油霧',
-  'phys|shock':'雷刃','phys|wet':'潮刃','phys|wind':'風刃','shock|wet':'雷雨','shock|wind':'迅雷','wet|wind':'颶浪'};
-const FORMS={
-  arrow:{suf:'矢',tag:'追蹤彈',d:(L,x)=>`每 1.1 秒朝最近的敵人射出 ${[2,3,4][L]} 枚追蹤彈，命中時附加${x}。單體爆發。`},
-  field:{suf:'領域',tag:'領域',d:(L,x)=>`每 4 秒在敵群中展開半徑 ${[75,90,105][L]} 的領域，持續 3.5 秒，每 0.8 秒對裡面最多 ${[8,10,12][L]} 名敵人輪流附加${x}。範圍控場。`},
-  ring:{suf:'之環',tag:'環繞',d:(L,x)=>`${[3,4,5][L]} 顆光球環繞你旋轉，碰到的敵人輪流被附加${x}。近身防禦。`},
-};
+/* ===== 技能引擎：新技能與元素融合共用的投放形狀 =====
+   形狀決定「怎麼打到敵人」，模組決定「打到之後和狀態發生什麼關係」。 */
+const PE={ember:'burn',surge:'wet',frost:'chill',arc:'shock',oil:'oil',blades:'phys',lance:'chill',gale:'wind',rock:'geo',
+  frain:'burn',wblade:'wet',jail:'wet',iwall:'chill',spear:'shock',cloud:'shock',mist:'oil',knives:'phys',hammer:'phys',wcut:'wind',spike:'geo'};
 const hexA=(h,a)=>{ const n=parseInt(h.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
-function makeFused(a,b,form){
-  const id='fx_'+[a,b].sort().join('_')+'_'+form; if(SK[id]) return id;
-  const key=[PE[a],PE[b]].sort().join('|'), noun=NOUN[key]||(SK[a].ch+SK[b].ch);
-  const tags=[...new Set([...SK[a].ap,...SK[b].ap])];
-  const els=[...ANY5.filter(x=>tags.includes(x)),...tags.filter(x=>x==='wind'||x==='geo')], phys=tags.includes('phys');
-  const xt=els.map(x=>STN[x]).join('＋')+(phys?(els.length?'＋':'')+'物理傷害':'');
-  SK[id]={ch:noun,n:noun+FORMS[form].suf,c:SK[a].c,c2:SK[b].c,ap:tags,hidden:1,fused:{a,b,form,els,phys,noun},d:[0,1,2].map(L=>FORMS[form].d(L,xt))};
-  return id;
-}
-function fuseNote(F){
-  const E=new Set(F.els), rs=[];
-  for(const k in REACT){ const pr=REACT[k].pair;
-    if(pr.every(x=>x==='any'?ANY5.some(y=>E.has(y)):x==='ele'?ELE4.some(y=>E.has(y)):x!=='frozen'&&E.has(x))) rs.push(k); }
-  const ph=F.phys?'物理傷害能打碎凍結的敵人。':'';
-  const rn=rs.map(k=>REACT[k].n).join('、'), en=F.els.map(x=>STN[x]).join('和');
-  if(F.form==='arrow') return (rs.length?`每次命中都直接觸發${rn}。`:F.els.length>1?`一次幫敵人疊好${en}，等其他技能來引爆。`:'')+ph;
-  return (rs.length?`同一個敵人被打到兩次就會觸發${rn}。`:F.els.length>1?`輪流疊上${en}，等其他技能來引爆。`:'')+ph;
-}
-function fuseHit(e,F,dmg,src,one){
-  if(e.dead) return; hit(e,dmg,src,F.phys);
-  if(one!=null){ if(F.els.length&&!e.dead) applyStatus(e,F.els[one%F.els.length],3,src,4*dMult()); return; }   // 領域、環繞：每次只附加一種，輪流
-  for(const x of F.els){ if(e.dead) break; applyStatus(e,x,3,src,4*dMult()); }                                  // 追蹤彈：一次附加全部
-}
 function cyc(s,e){ if(!s.cy||s.cy.size>600) s.cy=new Map(); const k=(s.cy.get(e)||0); s.cy.set(e,k+1); return k; }
-function doFuse(a,b,form){
-  const id=makeFused(a,b,form);
-  S.order=S.order.filter(x=>x!==b); S.order[S.order.indexOf(a)]=id;
-  delete S.sk[a]; delete S.sk[b];
-  S.sk[id]={lv:1,cd:0.5,ang:0,acc:0,pos:[]};
-  banner('融合：'+SK[id].n,SK[id].c); sfx('res'); fxRing(S.p.x,S.p.y,130,SK[id].c,0.5); fxRing(S.p.x,S.p.y,90,SK[id].c2,0.4);
+function hasEl(e){ return ANY5.some(k=>e.st[k]>0); }
+function isBurn(e){ return e.st.burn>0; } function isWet(e){ return e.st.wet>0; } function isOily(e){ return e.st.oil>0; }
+function isCold(e){ return e.st.frozen>0||e.st.vuln>0; } function isVuln(e){ return e.st.vuln>0; }
+function gz(x,y,el,r,l,src){ if(S.Z.length<420) S.Z.push({k:'gz',x,y,r,l,m:l,el,src}); }
+/* 命中模組：els 附加狀態（alt＝每次只附加一種、輪流）、phys 物理、kb 擊退（負數＝拉近）、stun 暈眩、vuln 易傷、slow 額外減速、
+   wk 削弱攻擊、ext 延長其他狀態、gz 留下元素地面、jump 跳到附近敵人、gel 油膩直接凍結、vs/vx 對特定狀態加倍、pre/on 特殊效果 */
+function eHit(e,dmg,m,src,ox,oy,s){
+  if(e.dead) return;
+  if(m.gel&&e.st.oil>0&&!(e.st.frozen>0)&&(e.rc.freeze||0)<=S.t){ e.st.oil=0; react('freeze',e,0); hit(e,dmg,src,m.phys); return; }
+  if(m.pre){ m.pre(e,s); if(e.dead) return; }
+  hit(e,m.vs&&m.vs(e)?dmg*(m.vx||2):dmg,src,m.phys);
+  if(e.dead) return;
+  const els=m.els, bd=(m.bd||3)*dMult();
+  if(els&&els.length){
+    if(m.alt) applyStatus(e,els[cyc(s,e)%els.length],m.sd||3,src,bd);
+    else for(const x of els){ if(e.dead) break; applyStatus(e,x,m.sd||3,src,bd); }
+  }
+  if(e.dead) return;
+  if(m.kb) knock(e,ox,oy,m.kb);
+  if(m.stun) e.stun=Math.max(e.stun||0,m.stun*(e.boss?0.15:e.elite?0.4:1));
+  if(m.vuln) e.st.vuln=Math.max(e.st.vuln,m.vuln);
+  if(m.slow){ e.slw=S.t+m.slow; e.slwF=m.slowF||0.5; }
+  if(m.wk) e.wk=S.t+m.wk;
+  if(m.ext) for(const k of ANY5) if(k!=='oil'&&e.st[k]>0) e.st[k]+=m.ext;
+  if(m.gz&&!((s.gzT||0)>S.t)){ s.gzT=S.t+(m.gz.gap||0.3); gz(e.x,e.y,m.gz.el,m.gz.r,m.gz.l,src); }
+  if(m.jump){ const J=m.jump;
+    for(const o of nearestN(e.x,e.y,6,J.rr||120,e).filter(o=>!J.need||o.st[J.need]>0).slice(0,J.n||2)){
+      fxBolt(e.x,e.y,o.x,o.y,COL[J.el]||'#ffffff',0.18); hit(o,dmg*(J.f||0.5),src,m.phys); if(!o.dead) applyStatus(o,J.el,3,src,bd); } }
+  if(m.on) m.on(e,s);
 }
-function updFused(id,s,L,dt){
-  const F=SK[id].fused, p=S.p;
-  if(F.form==='arrow'){
-    s.cd-=dt; if(s.cd>0) return;
-    const ts=nearestN(p.x,p.y,[2,3,4][L-1],420,null); if(!ts.length){ s.cd=0.3; return; }
-    s.cd=1.1; const n=[2,3,4][L-1], dm=[12,15,18][L-1]*dMult();
-    for(let i=0;i<n;i++){ const t=ts[i%ts.length];
-      later(i*0.22,()=>{ if(!S||t.dead) return; const a=Math.atan2(t.y-p.y,t.x-p.x)+(i%2?0.35:-0.35);
-        S.P.push({k:'fo',x:p.x,y:p.y,vx:Math.cos(a)*380,vy:Math.sin(a)*380,t,id,l:1.6,pierce:1,hs:new Set(),dmg:dm}); }); }
-  } else if(F.form==='field'){
-    s.cd-=dt; s.f=s.f||[]; if(!s.hs||s.hs.size>600) s.hs=new Map();
-    if(s.cd<=0){ const c=query(p.x,p.y,320); if(!c.length) s.cd=0.3; else { s.cd=4; const t=densest(c); s.f.push({x:t.x,y:t.y,l:3.5,r:[75,90,105][L-1]}); } }
-    for(const z of s.f){ z.l-=dt; z.tk=(z.tk||0)-dt; } s.f=s.f.filter(z=>z.l>0);
-    const cap=[8,10,12][L-1], dm=[6,7,8][L-1]*dMult();
-    for(const z of s.f){ if(z.tk>0) continue; z.tk=0.8; z.k=(z.k||0)+1;
-      const ts=query(z.x,z.y,z.r).sort((u,v)=>dd(u.x,u.y,z.x,z.y)-dd(v.x,v.y,z.x,z.y)).slice(0,cap);
-      for(const e of ts) fuseHit(e,F,dm,id,z.k); }
+/* ---- 投放形狀 ---- */
+function shShot(id,s,p,m,dt){
+  s.cd-=dt; if(s.cd>0) return;
+  const pl=S.p, n=p.n||1, ts=nearestN(pl.x,pl.y,n,p.rng||420); if(!ts.length){ s.cd=0.2; return; }
+  s.cd=p.cd; const base=Math.atan2(ts[0].y-pl.y,ts[0].x-pl.x); s.ang=(s.ang||0)+0.41;
+  for(let i=0;i<n;i++){ const t=ts[i%ts.length], v=p.spd||380;
+    const a=p.radial?s.ang+i*TAU/n:p.fan?base+(i-(n-1)/2)*p.fan:Math.atan2(t.y-pl.y,t.x-pl.x)+(i>=ts.length?rand(-0.4,0.4):0);
+    S.P.push({k:'xs',id,x:pl.x,y:pl.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,v,tg:p.home?t:null,l:p.life||1.5,pr:p.pr||0,r:p.r||8,sz:p.sz||5,dmg:p.dmg*dMult(),hs:new Set(),m,c:p.c,c2:p.c2}); }
+}
+function shNova(id,s,p,m,dt){
+  s.cd-=dt; if(s.cd>0) return; const pl=S.p;
+  if(!query(pl.x,pl.y,p.R).length){ s.cd=0.25; return; }
+  s.cd=p.cd; S.P.push({k:'xn',id,t:0,dur:p.dur||0.35,R:p.R,rad:0,hs:new Set(),dmg:p.dmg*dMult(),m,c:p.c,l:1});
+  if(p.after) p.after(pl.x,pl.y,s,p,id);
+}
+function shZone(id,s,p,m,dt){
+  s.cd-=dt; if(s.cd>0) return; const pl=S.p, c=query(pl.x,pl.y,p.rng||320);
+  if(!c.length){ s.cd=0.3; return; }
+  s.cd=p.cd;
+  for(let k=0;k<(p.n||1);k++){ const t=p.self?pl:k?c[(Math.random()*c.length)|0]:densest(c);
+    if(S.Z.length<420) S.Z.push({k:'xz',id,x:t.x,y:t.y,r:p.r,l:p.life,m:p.life,tk:0.05,dmg:(p.dmg||0)*dMult(),mod:m,P:p,c:p.c,c2:p.c2,st:s,fol:p.fol}); }
+}
+function xLine(id,s,x,y,a,len,w,dmg,m,c){
+  const ux=Math.cos(a), uy=Math.sin(a), hits=[];
+  for(const e of query(x+ux*len/2,y+uy*len/2,len/2+w)){ const rx=e.x-x, ry=e.y-y, t=rx*ux+ry*uy; if(t<0||t>len) continue;
+    if(Math.abs(rx*uy-ry*ux)<w+e.r) hits.push(e); }
+  fx({k:'ln',x1:x,y1:y,x2:x+ux*len,y2:y+uy*len,w,c,l:0.28,m:0.28});
+  for(const e of hits) eHit(e,dmg,m,id,x,y,s);
+  return hits;
+}
+function shBeam(id,s,p,m,dt){
+  s.cd-=dt; if(s.cd>0) return; const pl=S.p, tg=nearestN(pl.x,pl.y,1,p.len)[0]; if(!tg){ s.cd=0.2; return; }
+  s.cd=p.cd; const base=Math.atan2(tg.y-pl.y,tg.x-pl.x), n=p.n||1;
+  for(let i=0;i<n;i++){ const a=base+(i-(n-1)/2)*(p.fan||0.3); xLine(id,s,pl.x,pl.y,a,p.len,p.w||12,p.dmg*dMult(),m,p.c); if(p.after) p.after(pl.x,pl.y,a,p.len,s,id); }
+}
+function shCone(id,s,p,m,dt){
+  s.cd-=dt; if(s.cd>0) return; const pl=S.p, tg=nearestN(pl.x,pl.y,1,p.len+20)[0]; if(!tg){ s.cd=0.2; return; }
+  s.cd=p.cd; const a=Math.atan2(tg.y-pl.y,tg.x-pl.x);
+  fx({k:'cone',x:pl.x,y:pl.y,a,len:p.len,ang:p.ang,c:p.c,l:0.3,m:0.3});
+  for(const e of query(pl.x,pl.y,p.len)){ let da=Math.atan2(e.y-pl.y,e.x-pl.x)-a; da=Math.atan2(Math.sin(da),Math.cos(da)); if(Math.abs(da)<=p.ang/2) eHit(e,p.dmg*dMult(),m,id,pl.x,pl.y,s); }
+  if(p.after) p.after(pl.x,pl.y,a,p.len,s,id);
+}
+/* 投射物（xs 飛行物、xk 落點衝擊、xn 擴散環） */
+function updX(o,dt){
+  const pl=S.p, s=S.sk[o.id]||o;
+  if(o.k==='xs'){
+    if(o.tg&&!o.tg.dead){ const cur=Math.atan2(o.vy,o.vx); let da=Math.atan2(o.tg.y-o.y,o.tg.x-o.x)-cur; da=Math.atan2(Math.sin(da),Math.cos(da));
+      const na=cur+clamp(da,-7*dt,7*dt); o.vx=Math.cos(na)*o.v; o.vy=Math.sin(na)*o.v; }
+    o.x+=o.vx*dt; o.y+=o.vy*dt; o.l-=dt;
+    for(const e of query(o.x,o.y,o.r)){ if(o.hs.has(e)) continue; o.hs.add(e);
+      eHit(e,o.dmg,o.m,o.id,o.x-o.vx*0.05,o.y-o.vy*0.05,s);
+      if(o.pr--<=0){ o.l=0; break; } }
+  } else if(o.k==='xk'){
+    o.t+=dt; if(o.t<o.dur) return;
+    o.l=0; const P=o.P||{}; fxBoom(o.x,o.y,o.r,o.c||'#ffffff'); burst(o.x,o.y,o.c2||o.c||'#ffffff',P.spk?3:8,150,3); if(!P.spk) S.shake=Math.max(S.shake,0.06);
+    for(const e of query(o.x,o.y,o.r)) eHit(e,o.dmg,o.m,o.id,o.x,o.y,s);
+    if(P.shard){ const H=P.shard, n=H.n||6, a0=rand(0,TAU);
+      for(let i=0;i<n;i++){ const a=a0+i*TAU/n; S.P.push({k:'xs',id:o.id,x:o.x,y:o.y,vx:Math.cos(a)*360,vy:Math.sin(a)*360,v:360,l:0.55,pr:1,r:7,sz:3.5,dmg:H.dmg*dMult(),hs:new Set(),m:H.m||{phys:1},c:o.c2||o.c,c2:o.c}); } }
+    if(P.after) P.after(o,s);
   } else {
-    s.ang=(s.ang||0)+2.6*dt; if(!s.hs||s.hs.size>400) s.hs=new Map();
-    const n=[3,4,5][L-1], R=[85,95,105][L-1], dm=[8,10,12][L-1]*dMult();
-    for(let i=0;i<n;i++){ const a=s.ang+i*TAU/n, ox=p.x+Math.cos(a)*R, oy=p.y+Math.sin(a)*R;
-      for(const e of query(ox,oy,14)){ if((s.hs.get(e)||0)>S.t) continue; s.hs.set(e,S.t+1.2); fuseHit(e,F,dm,id,cyc(s,e)); } }
+    o.t+=dt; const k=Math.min(1,o.t/o.dur), cx=o.cx!=null?o.cx:pl.x, cy=o.cy!=null?o.cy:pl.y; o.rad=o.R*(1-(1-k)*(1-k));
+    for(const e of query(cx,cy,o.rad)){ if(o.hs.has(e)) continue; o.hs.add(e); eHit(e,o.dmg,o.m,o.id,cx,cy,s); }
+    if(o.t>=o.dur+0.12) o.l=0;
   }
 }
-const badgeHTML=d=>d.fused?`<span style="color:${d.c}">${d.ch[0]}</span><span style="color:${d.c2}">${d.ch[1]}</span>`:d.ch;
-const MISC={burst:['共鳴爆發','#f2c46d'],weather:['天候','#9fdcef'],blast:['爆炸','#ff9a4d']};
+/* 區域（xz）：跟隨、追敵、吸引、沿路留下地面、定時命中 */
+function updXZ(z,dt){
+  const pl=S.p, P=z.P;
+  if(z.fol){ z.x=pl.x; z.y=pl.y; }
+  else if(P.mv){ if(!z.tg||z.tg.dead||(z.rt=(z.rt||0)-dt)<=0){ const c=query(z.x,z.y,280); z.tg=c.length?densest(c):null; z.rt=0.8; }
+    if(z.tg){ const dx=z.tg.x-z.x, dy=z.tg.y-z.y, d=Math.hypot(dx,dy); if(d>4){ z.x+=dx/d*P.mv*dt; z.y+=dy/d*P.mv*dt; } } }
+  const ins=query(z.x,z.y,z.r);
+  if(P.pull) for(const e of ins){ if(e.boss) continue; const dx=z.x-e.x, dy=z.y-e.y, d=Math.hypot(dx,dy); if(d>10){ const f=P.pull*(e.elite?0.35:1)*dt; e.x+=dx/d*f; e.y+=dy/d*f; } }
+  if(P.drop&&(z.dp=(z.dp||0)-dt)<=0){ const D=P.drop; z.dp=D.gap||0.4;
+    if(D.k==='oil') addZone({k:'oil',x:z.x,y:z.y,r:D.r,l:D.l,m:D.l,od:0.5},D.r*0.7);
+    else if(D.k==='scorch') addZone({k:'scorch',x:z.x,y:z.y,r:D.r,l:D.l,m:D.l},D.r*0.7);
+    else gz(z.x,z.y,D.el,D.r,D.l,z.id); }
+  if(P.every) P.every(z,ins,dt);
+  z.tk-=dt; if(z.tk>0) return; z.tk=P.tick||0.6;
+  const ts=(P.rand?shuffle(ins):ins.sort((u,v)=>dd(u.x,u.y,z.x,z.y)-dd(v.x,v.y,z.x,z.y))).slice(0,P.cap||12);
+  for(const e of ts){ if(P.bolt) fxBolt(e.x+rand(-30,30),e.y-220,e.x,e.y,COL.shock,0.22); eHit(e,z.dmg,z.mod,z.id,z.x,z.y,z.st); }
+  if(P.tickFx) P.tickFx(z,ts);
+}
+function drawZ(z,a,t){
+  const c=z.c||COL[z.el]||'#ffffff';
+  a*=0.55+0.45*(S.vq||1);
+  if(z.k==='gz'){ ctx.fillStyle=hexA(c,0.11*a); circle(z.x,z.y,z.r); ctx.fill(); return; }
+  ctx.fillStyle=hexA(c,(z.trail?0.09:0.08)*a); circle(z.x,z.y,z.r); ctx.fill();
+  if(z.trail) return;
+  const c2=z.c2||c, P=z.P||{};
+  ctx.strokeStyle=hexA(c2,0.6*a); ctx.lineWidth=2; ctx.setLineDash([7,6]); ctx.lineDashOffset=-t*30; circle(z.x,z.y,z.r); ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset=0;
+  if(P.pull||P.mv){ for(let i=0;i<2;i++){ const k=1-((i/2+t*1.1)%1); ctx.strokeStyle=hexA(c,0.4*k*a); circle(z.x,z.y,z.r*k); ctx.stroke(); } }
+}
+/* ---- 新單技能的特殊機制 ---- */
+function runWall(id,s,L,dt){
+  const pl=S.p; s.w=s.w||[]; s.cd-=dt;
+  if(s.cd<=0){ const ts=nearestN(pl.x,pl.y,2,230); if(!ts.length) s.cd=0.3; else { s.cd=LV([6,5.4,5],L);
+    const len=LV([80,95,110],L), life=L>=4?4.5:3;
+    for(let k=0;k<(L>=3?Math.min(2,ts.length):1);k++){ const t=ts[k], a=Math.atan2(t.y-pl.y,t.x-pl.x), d=clamp(Math.hypot(t.x-pl.x,t.y-pl.y)*0.5,40,75),
+      mx=pl.x+Math.cos(a)*d, my=pl.y+Math.sin(a)*d, px=-Math.sin(a), py=Math.cos(a);
+      s.w.push({x1:mx-px*len/2,y1:my-py*len/2,x2:mx+px*len/2,y2:my+py*len/2,mx,my,nx:Math.cos(a),ny:Math.sin(a),len,l:life}); fxRing(mx,my,30,COL.chill,0.3); } } }
+  for(const w of s.w){ w.l-=dt;
+    for(const e of query(w.mx,w.my,w.len/2+20)){ if(e.boss) continue; const rx=e.x-w.mx, ry=e.y-w.my, along=-rx*w.ny+ry*w.nx; if(Math.abs(along)>w.len/2) continue;
+      const dist=rx*w.nx+ry*w.ny, lim=e.r+5; if(Math.abs(dist)<lim){ const sg=dist>=0?1:-1; e.x+=w.nx*(sg*lim-dist); e.y+=w.ny*(sg*lim-dist); e.kx*=0.3; e.ky*=0.3;
+        if(!(e.wcT>S.t)){ e.wcT=S.t+0.4; applyStatus(e,'chill',L>=4?3:2,'iwall'); } } } }
+  s.w=s.w.filter(w=>w.l>0);
+}
+function wallBurst(x,y,R){
+  const s=S.sk.iwall; if(!s||!s.w||s.lv<5) return;
+  for(const w of s.w){ if(w.l<=0||dd(w.mx,w.my,x,y)>(R+w.len/2)**2) continue; w.l=0;
+    fxRing(w.mx,w.my,50,COL.chill,0.4); burst(w.mx,w.my,'#e9fbff',14,220,3); sfx('break');
+    for(const o of nearestN(w.mx,w.my,6,220,null)){ fxBolt(w.mx,w.my,o.x,o.y,'#e9fbff',0.16); hit(o,9*dMult(),'iwall',true); if(!o.dead) applyStatus(o,'chill',2.5,'iwall'); } }
+}
+function runSpike(id,s,L,dt){
+  s.cd-=dt; if(s.cd>0) return; const pl=S.p, ts=nearestN(pl.x,pl.y,2,260); if(!ts.length){ s.cd=0.2; return; }
+  s.cd=LV([2.4,2.2,2.0],L); const n=L>=4?7:5, dm=LV([6,7,8,9],L)*dMult(), m={phys:1,els:['geo'],pre:L>=5?spikePre:null};
+  for(let k=0;k<(L>=3?2:1);k++){ const t=ts[k%ts.length], a=Math.atan2(t.y-pl.y,t.x-pl.x)+(k&&ts.length<2?0.5:0);
+    for(let i=0;i<n;i++){ const d=30+i*30; S.P.push({k:'xk',id,x:pl.x+Math.cos(a)*d,y:pl.y+Math.sin(a)*d,t:0,dur:0.08+i*0.06,r:22,dmg:dm,m,P:{spk:1},l:1,c:COL.geo,c2:'#f3d39a'}); } }
+}
+function spikePre(e){ if((e.rc.crystal||0)>S.t) return; const x=ELE4.find(k=>e.st[k]>0); if(x) gz(e.x,e.y,x,40,3,'spike'); }
+function meltPre(e){ if(e.st.chill>0&&!(e.st.burn>0)){ e.st.wet=Math.max(e.st.wet,e.st.chill); e.st.chill=0; } }
+function anchorEvery(z,ins){ for(const e of ins) e.anch=S.t+0.2; }
+function puddle(x,y,a,len,s,id){ for(const f of [0.35,0.65,0.95]) gz(x+Math.cos(a)*len*f,y+Math.sin(a)*len*f,'wet',34,3,id); }
+function spearCharge(x,y,a,len){ const ux=Math.cos(a), uy=Math.sin(a);
+  for(const z of S.Z){ if(!(z.k==='oil'||z.k==='steam'||(z.k==='gz'&&z.el==='wet')||(z.k==='xz'&&z.id==='jail'))) continue;
+    const rx=z.x-x, ry=z.y-y, t=rx*ux+ry*uy; if(t<-z.r||t>len+z.r) continue; if(Math.abs(rx*uy-ry*ux)<z.r+10) z.ch=S.t+3; } }
+function cloudSeek(z,ins,dt){ let best=null,bd=300*300;
+  for(const o of S.Z){ if(o.l<=0||!(o.k==='well'||(o.k==='xz'&&o.id==='jail'))) continue; const q=dd(o.x,o.y,z.x,z.y); if(q<bd){bd=q;best=o;} }
+  if(!best) return; const d=Math.sqrt(bd); if(d>6){ z.x+=(best.x-z.x)/d*90*dt; z.y+=(best.y-z.y)/d*90*dt; } if(d<best.r) z.tk-=dt; }
+function bleed(e){ if(hasEl(e)) e.st.vuln=Math.max(e.st.vuln,1.5); }
+function quake(x,y,s,p){ for(const z of S.Z){ if(!(z.k==='oil'||z.k==='steam'||z.k==='scorch'||z.k==='gz')) continue; if(dd(z.x,z.y,x,y)>(p.R+z.r)**2) continue;
+  z.r0=z.r0||z.r; z.r=Math.min(z.r0*1.6,z.r*1.25); z.l=Math.max(z.l,z.m*0.7); } fxRing(x,y,p.R*1.2,COL.geo,0.4); }
+function vacuum(e){ e.swp=S.t+0.05; }
+/* ===== 新單技能：每個元素補一種「投放形狀」，Lv5 質變都要靠別的元素才有價值 ===== */
+Object.assign(SK,{
+  frain:{ch:'雨',n:'火雨',c:COL.burn,ap:['burn'],d:['每 4 秒在敵群降下火雨 2.5 秒，範圍內的敵人持續燃燒。','範圍更大，冷卻 3.6 秒。','同時降下 2 片火雨。','燃燒持續 5 秒。','質變「熱對流」：火雨會把敵人身上的寒冷融成濕潤，立刻蒸發。冰系組合會被它打斷，水系組合多了一個引爆點。'],
+    run:(id,s,L,dt)=>shZone(id,s,{cd:LV([4,3.6],L),n:L>=3?2:1,r:LV([55,65,70],L),life:2.5,tick:0.45,cap:14,dmg:2,c:COL.burn,c2:'#ffd166'},{els:['burn'],sd:L>=4?5:3,pre:L>=5?meltPre:null},dt)},
+  wblade:{ch:'湍',n:'水刃',c:COL.wet,ap:['wet'],d:['每 1.8 秒朝最近的敵人揮出扇形水刃，前方的敵人全部濕潤。','冷卻 1.6 秒，扇形更寬。','冷卻 1.4 秒，射程更遠。','濕潤持續 6 秒。','質變「積水」：水刃在前方留下 3 個水窪（3 秒），經過的敵人一直濕潤。電和冰可以在水窪上反覆反應。'],
+    run:(id,s,L,dt)=>shCone(id,s,{cd:LV([1.8,1.6,1.4],L),len:LV([130,130,155],L),ang:LV([0.8,1.0],L),dmg:LV([4,5,6],L),c:COL.wet,after:L>=5?puddle:null},{els:['wet'],sd:L>=4?6:4},dt)},
+  jail:{ch:'牢',n:'水牢',c:'#5fbcff',ap:['wet'],d:['每 5 秒在敵群生成水牢 2 秒，裡面的敵人幾乎動不了，並且濕潤。本身沒有傷害。','水牢更大、持續更久，冷卻 4.6 秒。','同時生成 2 個水牢。','水牢持續 3 秒。','質變「定錨」：水牢裡的敵人不會被任何效果擊退或炸飛。過載、潮湧、環刃不會再把敵人推出範圍反應外。'],
+    run:(id,s,L,dt)=>shZone(id,s,{cd:LV([5,4.6],L),n:L>=3?2:1,r:LV([50,58,62],L),life:LV([2,2.4,2.4,3],L),tick:0.3,cap:16,dmg:0,c:COL.wet,c2:'#bfe6ff',every:L>=5?anchorEvery:null},{els:['wet'],sd:L>=4?5:3,slow:0.35,slowF:0.2},dt)},
+  iwall:{ch:'壁',n:'冰牆',c:'#bfeaff',ap:['chill'],d:['每 6 秒在你和最近的敵人之間立起冰牆 3 秒，敵人過不去，碰到會寒冷。強敵不受阻擋。','冰牆更長，冷卻 5.4 秒。','同時立起 2 道冰牆，冷卻 5 秒。','冰牆持續 4.5 秒，寒冷更久。','質變「冰爆」：冰牆被爆燃或過載波及時碎成冰片，射向附近 6 名敵人，物理傷害並寒冷（能打碎凍結）。火和雷有了借冰的理由。'],
+    run:runWall},
+  spear:{ch:'槍',n:'雷槍',c:'#ffd84a',ap:['shock'],st:1,d:['每 2 秒朝最近的敵人擲出雷槍，貫穿一整條線上的敵人並施加帶電。','冷卻 1.8 秒，射程更長。','一次擲出 2 支，冷卻 1.6 秒。','帶電持續 4.5 秒。','質變「充能」：雷槍穿過的油池、水窪、蒸汽雲、水牢會帶電 3 秒，裡面的敵人持續帶電。地面區域變成雷場。'],
+    run:(id,s,L,dt)=>shBeam(id,s,{cd:LV([2,1.8,1.6],L),len:LV([200,220],L),w:12,dmg:LV([7,8,9],L),n:L>=3?2:1,fan:0.25,c:COL.shock,after:L>=5?spearCharge:null},{els:['shock'],sd:L>=4?4.5:3},dt)},
+  cloud:{ch:'雲',n:'雷雲',c:'#e8d860',ap:['shock'],d:['每 6 秒在敵群上方生成雷雲 5 秒，雲會跟著敵群飄，每秒對雲下 1 名敵人落雷並帶電。','雷雲更大，落雷更快，冷卻 5.5 秒。','每次落雷打 2 名敵人。','雷雲持續 7 秒。','質變「聚雷」：雷雲會飄到引力井或水牢上方，在那裡落雷速度加倍。控場技能有了輸出搭檔。'],
+    run:(id,s,L,dt)=>shZone(id,s,{cd:LV([6,5.5,5],L),r:LV([70,80,85],L),life:L>=4?7:5,tick:LV([1,0.85,0.7],L),cap:L>=3?2:1,dmg:9,mv:40,rand:1,bolt:1,c:COL.shock,c2:'#fff3a0',every:L>=5?cloudSeek:null},{els:['shock']},dt)},
+  mist:{ch:'幕',n:'油幕',c:'#c99a62',ap:['oil'],d:['每 3 秒朝最近的敵人噴出油霧，扇形內的敵人油膩、減速。本身沒有傷害。','冷卻 2.7 秒，扇形更寬。','冷卻 2.4 秒，射程更遠。','油膩持續 5 秒。','質變「黏附」：被油霧噴到的敵人，身上其他狀態的持續時間 +2.5 秒。油把別人的狀態黏住，等下一個元素來反應。'],
+    run:(id,s,L,dt)=>shCone(id,s,{cd:LV([3,2.7,2.4],L),len:LV([120,120,150],L),ang:LV([1.0,1.2],L),dmg:0,c:COL.oil},{els:['oil'],sd:L>=4?5:3,ext:L>=5?2.5:0},dt)},
+  knives:{ch:'飛',n:'飛刃',c:'#d9d9e6',ap:['phys'],st:1,d:['每 2.2 秒向四周擲出 6 把飛刃，造成物理傷害。','8 把，冷卻 2.0 秒。','10 把，每把貫穿 2 名敵人，冷卻 1.8 秒。','每把貫穿 3 名敵人。','質變「放血」：飛刃打中身上有元素狀態的敵人時，讓它易傷 1.5 秒（受到的所有傷害 +50%）。元素鋪得越多，飛刃越像增傷器。'],
+    run:(id,s,L,dt)=>shShot(id,s,{cd:LV([2.2,2,1.8],L),n:LV([6,8,10],L),radial:1,spd:420,life:0.7,pr:LV([0,0,1,2],L),r:8,sz:4,dmg:LV([5,6,7],L),c:COL.phys,c2:'#9aa0b4'},{phys:1,on:L>=5?bleed:null},dt)},
+  hammer:{ch:'錘',n:'震擊錘',c:'#c8c8d8',ap:['phys'],d:['每 3.5 秒震擊地面，周圍敵人受到物理傷害並被大幅震開。','範圍更大，冷卻 3.2 秒。','冷卻 2.8 秒，震擊讓敵人暈眩 0.4 秒。','範圍更大。','質變「地動」：震擊會把附近的油池、焦土、蒸汽雲、水窪震開，範圍擴大 25% 並延長時間（最多 1.6 倍大）。地面區域越多越好用。'],
+    run:(id,s,L,dt)=>shNova(id,s,{cd:LV([3.5,3.2,2.8],L),R:LV([75,85,85,100],L),dmg:LV([8,9,10],L),dur:0.25,c:'#e6e6ee',after:L>=5?quake:null},{phys:1,kb:260,stun:L>=3?0.4:0},dt)},
+  wcut:{ch:'風',n:'風刃',c:'#7ff0dc',ap:['wind'],d:['每 1.5 秒朝最近的敵人射出高速風刃，把敵人往後推，並把它身上的狀態擴散給旁邊的敵人。','同時射出 2 道，冷卻 1.3 秒。','3 道，每道貫穿 2 名敵人。','每道貫穿 3 名敵人，冷卻 1.1 秒。','質變「真空」：風刃擴散狀態時，優先傳給身上已經有別種元素的敵人，擴散出去幾乎一定會接上反應。'],
+    run:(id,s,L,dt)=>shShot(id,s,{cd:LV([1.5,1.3,1.3,1.1],L),n:LV([1,2,3],L),spd:520,home:1,pr:LV([0,0,1,2],L),r:8,sz:4,dmg:4,life:1,c:COL.wind,c2:'#bff7ee'},{els:['wind'],kb:60,pre:L>=5?vacuum:null},dt)},
+  spike:{ch:'棘',n:'岩槍',c:'#d9a04a',ap:['geo','phys'],st:1,d:['每 2.4 秒從腳下朝最近的敵人刺出一排岩槍，造成物理傷害；帶元素的敵人會結晶，掉出護盾晶體。','冷卻 2.2 秒，傷害提升。','同時刺出 2 排，冷卻 2.0 秒。','岩槍更長（7 根）。','質變「晶柱」：岩槍結晶敵人時，原地留下晶柱 3 秒，持續讓周圍敵人沾上那個元素。一個敵人的狀態變成一片區域。'],
+    run:runSpike},
+});
+
+/* ===== 元素融合 v4 =====
+   兩種元素都有 Lv5（質變）技能 → 升級時可以解鎖這一組「融合」（類似 Hades 的雙神祝福）。
+   解鎖後，兩種元素在同一個敵人身上相遇就觸發：先在敵人身上的叫「底」，後到的叫「觸發」，順序不同效果不同
+   （類似原神反應有正反向）。原本的技能、反應照常運作，融合只多一個簡單、看得懂的效果。
+   風、岩、物理不會留在敵人身上，所以打中後 1.2 秒內算「在先」。 */
+const EL_N={burn:'火',wet:'水',chill:'冰',shock:'雷',oil:'油',phys:'物理',wind:'風',geo:'岩'};
+const FZ_ELS=['burn','wet','chill','shock','oil','phys','wind','geo'];
+const fzLabel=k=>k.split('|').map(x=>EL_N[x]).join('×');
+function pres(e,x){ return ANY5.includes(x)?e.st[x]>0:!!(e.tc&&e.tc[x]>S.t-1.2); }
+function dirPt(x,y,a,d){ return {x:x+Math.cos(a)*d,y:y+Math.sin(a)*d}; }
+/* ---- 融合效果的五種積木：爆、碎片、地面、連鎖、直線／扇形 ---- */
+function fzB(x,y,r,dmg,o){ o=o||{}; fxBoom(x,y,r,o.c||'#ffffff'); fxRing(x,y,r+12,o.c2||o.c||'#ffffff',0.4);
+  for(const e of query(x,y,r)){ if(e.dead) continue; hit(e,dmg*dMult(),'fusion',o.p); if(e.dead) continue;
+    if(o.el) applyStatus(e,o.el,3,'fusion',3*dMult()); if(e.dead) continue;
+    if(o.kb) knock(e,x,y,o.kb); if(o.st) e.stun=Math.max(e.stun||0,o.st*(e.boss?0.15:e.elite?0.4:1));
+    if(o.v) e.st.vuln=Math.max(e.st.vuln,o.v); if(o.sl){ e.slw=S.t+o.sl; e.slwF=o.slF||0.5; } } }
+function fzSh(x,y,n,dmg,o){ o=o||{}; const a0=rand(0,TAU);
+  for(let i=0;i<n;i++){ const a=a0+i*TAU/n; S.P.push({k:'xs',id:'fusion',x,y,vx:Math.cos(a)*380,vy:Math.sin(a)*380,v:380,l:0.6,pr:o.pr||1,r:8,sz:4,dmg:dmg*dMult(),hs:new Set(),
+    m:{phys:o.p,els:o.el?[o.el]:null,slow:o.sl,slowF:0.5},c:o.c||'#ffffff',c2:o.c2||o.c||'#ffffff'}); } }
+function fzZ(x,y,p){ if(S.Z.length>=420) return;
+  S.Z.push({k:'xz',id:'fusion',x,y,r:p.r,l:p.l,m:p.l,tk:0.05,dmg:(p.dmg||0)*dMult(),
+    mod:{els:p.els,alt:p.alt,phys:p.p,slow:p.sl,slowF:p.slF,stun:p.st,wk:p.wk,kb:p.kb,jump:p.jump},
+    P:{tick:p.tick||0.5,cap:p.cap||14,pull:p.pull,mv:p.mv,drop:p.drop,rand:p.rand,bolt:p.bolt},c:p.c,c2:p.c2,st:{}}); }
+function fzCh(x,y,n,dmg,el,pref,rr){ const hs=new Set(); let px=x, py=y, d=dmg*dMult();
+  const pk=a=>{ if(pref){ const f=a.filter(pref); if(f.length) a=f; } return a.length?a[(Math.random()*a.length)|0]:null; };
+  let cur=pk(query(x,y,rr||140));
+  for(let i=0;i<n&&cur;i++){ fxBolt(px,py,cur.x,cur.y,COL[el],0.22); hs.add(cur); hit(cur,d,'fusion'); if(!cur.dead) applyStatus(cur,el,3,'fusion');
+    px=cur.x; py=cur.y; d*=0.9; cur=pk(query(px,py,rr||140).filter(o=>!hs.has(o))); } }
+function fzLn(x,y,a,len,dmg,o){ xLine('fusion',{},x,y,a,len,o.w||14,dmg*dMult(),{phys:o.p,els:o.el?[o.el]:null,kb:o.kb,slow:o.sl,slowF:0.5},o.c||'#ffffff'); }
+function fzCn(x,y,a,len,ang,dmg,o){ fx({k:'cone',x,y,a,len,ang,c:o.c,l:0.3,m:0.3});
+  for(const e of query(x,y,len)){ let da=Math.atan2(e.y-y,e.x-x)-a; da=Math.atan2(Math.sin(da),Math.cos(da)); if(Math.abs(da)<=ang/2) eHit(e,dmg*dMult(),{phys:o.p,kb:o.kb},'fusion',x,y,{}); } }
+function fzAp(x,y,r,el,o){ fxRing(x,y,r,COL[el],0.45); for(const e of query(x,y,r)){ applyStatus(e,el,3,'fusion'); if(o&&o.sl&&!e.dead){ e.slw=S.t+o.sl; e.slwF=0.5; } } }
+const C=COL;
+/* ---- 28 組 × 2 方向：FZ[組合][先在敵人身上的元素] ---- */
+const FZ={
+'burn|chill':{chill:{n:'熱脹冷縮',d:'冰在先、火觸發：瞬間爆裂，小範圍高傷害並易傷 2 秒。',f:(e,x,y)=>fzB(x,y,55,18,{c:C.burn,c2:C.chill,v:2})},
+              burn:{n:'冰火爆裂',d:'火在先、冰觸發：冰火碰撞炸開，範圍傷害並擊退。',f:(e,x,y)=>fzB(x,y,80,12,{c:C.chill,c2:C.burn,kb:220})}},
+'burn|geo':{burn:{n:'熔岩裂痕',d:'火在先、岩觸發：地面裂成熔岩 3 秒，持續燃燒並減速。',f:(e,x,y)=>fzZ(x,y,{r:55,l:3,dmg:3,els:['burn'],sl:0.6,slF:0.6,c:C.burn,c2:C.geo})},
+            geo:{n:'炎岩爆',d:'岩在先、火觸發：岩石爆裂，向四周噴出 6 塊炎岩碎片。',f:(e,x,y)=>{ fzB(x,y,50,10,{c:C.burn,c2:C.geo,p:1}); fzSh(x,y,6,7,{p:1,el:'burn',c:C.burn,c2:C.geo}); }}},
+'burn|oil':{oil:{n:'燎原',d:'油在先、火觸發：火焰沿著附近 5 名敵人蔓延。',f:(e,x,y)=>{ fxRing(x,y,130,C.burn,0.35); for(const o of nearestN(x,y,5,130,e)){ fxBolt(x,y,o.x,o.y,C.burn,0.25); applyStatus(o,'burn',4,'fusion',4*dMult()); } }},
+            burn:{n:'油爆彈',d:'火在先、油觸發：油被瞬間引爆，一次強力爆炸。',f:(e,x,y)=>fzB(x,y,65,24,{c:C.oil,c2:C.burn})}},
+'burn|phys':{burn:{n:'灼熱斬',d:'火在先、物理觸發：追加一道火焰斬擊，往後劈穿一排敵人。',f:(e,x,y,a)=>fzLn(x,y,a,110,16,{p:1,el:'burn',c:C.burn,w:16})},
+             phys:{n:'熔刃',d:'物理在先、火觸發：額外火焰傷害，命中處留下灼熱地面 2.5 秒。',f:(e,x,y)=>{ hit(e,8*dMult(),'fusion'); fzZ(x,y,{r:40,l:2.5,tick:0.4,dmg:4,els:['burn'],c:C.burn,c2:C.phys}); }}},
+'burn|shock':{burn:{n:'雷炎',d:'火在先、雷觸發：電火花炸開，再電擊附近 3 名敵人。',f:(e,x,y)=>{ fzB(x,y,45,10,{c:C.shock,c2:C.burn}); fzCh(x,y,3,8,'shock'); }},
+              shock:{n:'電爆',d:'雷在先、火觸發：瞬間高傷害的小爆炸。',f:(e,x,y)=>fzB(x,y,40,28,{c:C.burn,c2:C.shock})}},
+'burn|wet':{wet:{n:'蒸發炮',d:'水在先、火觸發：高壓蒸汽向前噴射，扇形傷害並擊退。',f:(e,x,y,a)=>fzCn(x,y,a,130,1.0,12,{kb:200,c:'#e8f4ff'})},
+            burn:{n:'沸霧',d:'火在先、水觸發：沸騰霧氣 3 秒，持續傷害並減速，敵人難以接近。',f:(e,x,y)=>fzZ(x,y,{r:70,l:3,dmg:4,sl:0.6,slF:0.6,c:'#dfe9f2',c2:C.burn})}},
+'burn|wind':{burn:{n:'火風暴',d:'火在先、風觸發：旋轉火圈 3 秒，持續點燃。',f:(e,x,y)=>fzZ(x,y,{r:70,l:3,dmg:3,els:['burn'],c:C.burn,c2:C.wind})},
+             wind:{n:'火焰龍捲',d:'風在先、火觸發：火焰龍捲追著敵群 3 秒，燃燒並推開敵人。',f:(e,x,y)=>fzZ(x,y,{r:50,l:3,tick:0.4,dmg:4,els:['burn'],kb:60,mv:90,c:C.burn,c2:C.wind})}},
+'chill|geo':{chill:{n:'冰岩',d:'冰在先、岩觸發：冰晶碎片爆開，範圍傷害並減速。',f:(e,x,y)=>{ fzB(x,y,55,12,{p:1,sl:1.5,slF:0.5,c:C.chill,c2:C.geo}); fzSh(x,y,6,6,{p:1,el:'chill',c:C.chill,c2:C.geo}); }},
+             geo:{n:'凍土',d:'岩在先、冰觸發：地面凍結 4 秒，大範圍減速。',f:(e,x,y)=>fzZ(x,y,{r:95,l:4,dmg:0,els:['chill'],sl:0.6,slF:0.4,cap:20,c:C.chill,c2:C.geo})}},
+'chill|oil':{oil:{n:'寒油陷阱',d:'油在先、冰觸發：油凍成滑面 4 秒，敵人減速並不時打滑。',f:(e,x,y)=>fzZ(x,y,{r:70,l:4,tick:0.7,dmg:0,sl:0.8,slF:0.5,st:0.3,c:C.chill,c2:C.oil})},
+             chill:{n:'霜膠',d:'冰在先、油觸發：黏稠冰膜讓附近敵人定身 1 秒。',f:(e,x,y)=>fzB(x,y,55,4,{st:1,c:C.oil,c2:C.chill})}},
+'chill|phys':{phys:{n:'冰刃',d:'物理在先、冰觸發：射出一道穿透冰刃，傷害並減速。',f:(e,x,y,a)=>fzLn(x,y,a,170,12,{p:1,el:'chill',sl:1.5,c:C.chill})},
+              chill:{n:'碎冰',d:'冰在先、物理觸發：冰層碎裂，向四周散射 10 塊冰片。',f:(e,x,y)=>fzSh(x,y,10,7,{p:1,el:'chill',c:C.chill,c2:'#ffffff'})}},
+'chill|shock':{chill:{n:'冰雷',d:'冰在先、雷觸發：冰晶存住雷電，0.8 秒後放電，連鎖 4 名敵人。',f:(e,x,y)=>{ fxRing(x,y,30,C.shock,0.8); later(0.8,()=>fzCh(e.dead?x:e.x,e.dead?y:e.y,4,10,'shock')); }},
+               shock:{n:'雷霜',d:'雷在先、冰觸發：帶電冰霜擴散 3 秒，減速並持續電擊。',f:(e,x,y)=>fzZ(x,y,{r:75,l:3,tick:0.6,dmg:4,sl:0.6,slF:0.55,c:C.chill,c2:C.shock})}},
+'chill|wet':{wet:{n:'冰封',d:'水在先、冰觸發：凍結蔓延，附近濕潤的敵人一起凍住。',f:(e,x,y)=>{ fxRing(x,y,90,C.chill,0.5); for(const o of query(x,y,90)) if(o!==e&&o.st.wet>0&&!(o.st.frozen>0)&&(o.rc.freeze||0)<=S.t) react('freeze',o,0); }},
+             chill:{n:'冰霧',d:'冰在先、水觸發：水霧結冰 4 秒，減速並持續寒冷。',f:(e,x,y)=>fzZ(x,y,{r:80,l:4,tick:0.6,dmg:2,els:['chill'],sl:0.7,slF:0.6,c:'#cfefff',c2:C.wet})}},
+'chill|wind':{chill:{n:'暴風雪',d:'冰在先、風觸發：寒氣擴散成大範圍冰霜 3.5 秒。',f:(e,x,y)=>fzZ(x,y,{r:115,l:3.5,tick:0.6,dmg:2,els:['chill'],sl:0.7,slF:0.55,cap:20,c:C.chill,c2:C.wind})},
+              wind:{n:'冰風刃',d:'風在先、冰觸發：向四周射出 6 道冰風刃，穿透並減速。',f:(e,x,y)=>fzSh(x,y,6,8,{el:'chill',pr:2,sl:1.2,c:C.chill,c2:C.wind})}},
+'geo|oil':{oil:{n:'油石爆彈',d:'油在先、岩觸發：沾油的岩石爆炸，油液四散成油池。',f:(e,x,y)=>{ fzB(x,y,60,14,{p:1,c:C.geo,c2:C.oil}); addZone({k:'oil',x,y,r:60,l:4,m:4,od:0.8},20); }},
+           geo:{n:'油岩陷阱',d:'岩在先、油觸發：危險地面 4 秒，減速並持續傷害。',f:(e,x,y)=>fzZ(x,y,{r:60,l:4,dmg:5,p:1,sl:0.6,slF:0.45,c:C.oil,c2:C.geo})}},
+'geo|phys':{geo:{n:'岩碎',d:'岩在先、物理觸發：岩石碎裂，碎石向四周飛散。',f:(e,x,y)=>fzSh(x,y,8,9,{p:1,c:C.geo,c2:'#f3d39a'})},
+            phys:{n:'岩刃',d:'物理在先、岩觸發：壓縮的岩刃向前射穿一整排敵人。',f:(e,x,y,a)=>fzLn(x,y,a,210,16,{p:1,c:C.geo,w:14})}},
+'geo|shock':{shock:{n:'雷岩',d:'雷在先、岩觸發：留下帶電岩塊 4 秒，每 0.6 秒電擊附近 2 名敵人。',f:(e,x,y)=>fzZ(x,y,{r:120,l:4,tick:0.6,cap:2,dmg:6,rand:1,bolt:1,els:['shock'],c:C.shock,c2:C.geo})},
+             geo:{n:'雷柱',d:'岩在先、雷觸發：垂直落雷，範圍傷害並麻痺 0.5 秒。',f:(e,x,y)=>{ fxBolt(x+rand(-20,20),y-260,x,y,C.shock,0.3); fzB(x,y,55,16,{st:0.5,c:C.shock,c2:C.geo}); }}},
+'geo|wet':{wet:{n:'岩泥爆',d:'水在先、岩觸發：泥漿爆開，範圍傷害並減速。',f:(e,x,y)=>fzB(x,y,60,12,{p:1,sl:1.8,slF:0.45,c:C.geo,c2:C.wet})},
+           geo:{n:'泥濘',d:'岩在先、水觸發：大片泥地 4 秒，大幅減速。',f:(e,x,y)=>fzZ(x,y,{r:100,l:4,dmg:0,sl:0.6,slF:0.3,cap:20,c:'#9c7a4a',c2:C.wet})}},
+'geo|wind':{geo:{n:'岩旋',d:'岩在先、風觸發：碎石旋渦 3 秒，持續物理傷害。',f:(e,x,y)=>fzZ(x,y,{r:60,l:3,tick:0.35,dmg:5,p:1,c:C.geo,c2:C.wind})},
+            wind:{n:'岩塵風暴',d:'風在先、岩觸發：岩塵風暴 4 秒，持續傷害；裡面的敵人看不清，碰撞傷害 −40%。',f:(e,x,y)=>fzZ(x,y,{r:85,l:4,tick:0.6,dmg:3,mv:35,wk:0.8,c:'#c9a36a',c2:C.wind})}},
+'oil|phys':{oil:{n:'滑斬',d:'油在先、物理觸發：順著油滑出一道長距離斬擊。',f:(e,x,y,a)=>fzLn(x,y,a,190,13,{p:1,c:C.oil,w:12})},
+            phys:{n:'油刃',d:'物理在先、油觸發：所有技能冷卻加快 25%，持續 3 秒。',f:()=>{ S.haste=S.t+3; fxRing(S.p.x,S.p.y,40,C.oil,0.4); }}},
+'oil|shock':{oil:{n:'感應油場',d:'油在先、雷觸發：電流傳給附近所有油膩的敵人（最多 6 名）。',f:(e,x,y)=>{ for(const o of query(x,y,170).filter(o=>o!==e&&o.st.oil>0).slice(0,6)){ fxBolt(x,y,o.x,o.y,C.shock,0.22); hit(o,9*dMult(),'fusion'); if(!o.dead) applyStatus(o,'shock',3,'fusion'); } }},
+             shock:{n:'電燃',d:'雷在先、油觸發：油液被點燃，連續 3 次小爆炸。',f:(e,x,y)=>{ for(let i=0;i<3;i++) later(i*0.2,()=>fzB(x+rand(-30,30),y+rand(-30,30),40,8,{el:'burn',c:C.burn,c2:C.shock})); }}},
+'oil|wet':{wet:{n:'滑流',d:'水在先、油觸發：油水急流把附近敵人沖開。',f:(e,x,y)=>{ fxRing(x,y,90,C.wet,0.4); for(const o of query(x,y,90)) knock(o,S.p.x,S.p.y,260); }},
+           oil:{n:'油水漩渦',d:'油在先、水觸發：漩渦 3 秒，把敵人吸向中心並持續傷害。',f:(e,x,y)=>fzZ(x,y,{r:90,l:3,tick:0.6,dmg:3,pull:120,c:C.wet,c2:C.oil})}},
+'oil|wind':{wind:{n:'油旋風',d:'風在先、油觸發：油旋風追著敵群 3 秒，持續傷害並甩出油池。',f:(e,x,y)=>fzZ(x,y,{r:55,l:3,dmg:4,mv:80,drop:{k:'oil',r:35,l:3,gap:0.5},c:C.oil,c2:C.wind})},
+            oil:{n:'油霧',d:'油在先、風觸發：油被吹散，附近大範圍的敵人全部油膩，方便點火。',f:(e,x,y)=>fzAp(x,y,130,'oil')}},
+'phys|shock':{shock:{n:'雷刃',d:'雷在先、物理觸發：電流沿刀刃跳向附近 3 名敵人。',f:(e,x,y)=>fzCh(x,y,3,10,'shock')},
+              phys:{n:'電磁衝擊',d:'物理在先、雷觸發：電磁爆發，範圍傷害並擊退。',f:(e,x,y)=>fzB(x,y,70,12,{kb:220,c:C.shock,c2:C.phys})}},
+'phys|wet':{wet:{n:'水刃切割',d:'水在先、物理觸發：高速水刃向前穿透一整排敵人。',f:(e,x,y,a)=>fzLn(x,y,a,200,12,{p:1,el:'wet',c:C.wet})},
+            phys:{n:'水壓衝擊',d:'物理在先、水觸發：高壓水流向前爆發，強力擊退。',f:(e,x,y,a)=>fzCn(x,y,a,130,0.9,10,{p:1,kb:280,c:C.wet})}},
+'phys|wind':{wind:{n:'旋刃風暴',d:'風在先、物理觸發：刀刃旋風 2.5 秒，多段範圍傷害。',f:(e,x,y)=>fzZ(x,y,{r:60,l:2.5,tick:0.3,dmg:5,p:1,c:C.phys,c2:C.wind})},
+             phys:{n:'疾風刃',d:'物理在先、風觸發：疾風刃高速向前，射穿一長排敵人。',f:(e,x,y,a)=>fzLn(x,y,a,280,11,{p:1,c:C.wind,w:10})}},
+'shock|wet':{wet:{n:'雷池',d:'水在先、雷觸發：電場 4 秒，不斷電擊裡面的敵人。',f:(e,x,y)=>fzZ(x,y,{r:75,l:4,tick:0.5,cap:3,dmg:6,rand:1,bolt:1,c:C.shock,c2:C.wet})},
+             shock:{n:'導流',d:'雷在先、水觸發：水把雷電導向附近 5 名敵人，優先濕潤的。',f:(e,x,y)=>fzCh(x,y,5,8,'shock',o=>o.st.wet>0)}},
+'shock|wind':{shock:{n:'迅雷',d:'雷在先、風觸發：風加速雷電，快速連鎖 6 次、跳得更遠。',f:(e,x,y)=>fzCh(x,y,6,8,'shock',null,180)},
+              wind:{n:'電弧風刃',d:'風在先、雷觸發：雷電被拉成弧刃，向前穿透一排敵人。',f:(e,x,y,a)=>fzLn(x,y,a,220,12,{el:'shock',c:C.shock,w:12})}},
+'wet|wind':{wet:{n:'霧散',d:'水在先、風觸發：水霧擴散，附近大範圍的敵人濕潤並減速。',f:(e,x,y)=>fzAp(x,y,130,'wet',{sl:1.5})},
+            wind:{n:'水龍捲',d:'風在先、水觸發：水龍捲追著敵群 3 秒，吸引並持續傷害。',f:(e,x,y)=>fzZ(x,y,{r:60,l:3,dmg:4,pull:110,mv:70,c:C.wet,c2:C.wind})}},
+};
+/* ---- 三元素融合：只有 6 組。已解鎖其中兩組融合才會出現 ---- */
+const FZ3={
+'burn|shock|wet':{n:'蒸汽雷暴',d:'火＋水＋雷：高壓蒸汽大爆炸，接著雷電連鎖 6 次。',f:(e,x,y)=>{ fzB(x,y,110,22,{c:'#e8f4ff',c2:C.shock}); fzCh(x,y,6,10,'shock'); }},
+'burn|shock|wind':{n:'焚天龍捲',d:'火＋風＋雷：火雷龍捲追著敵群 4 秒，燃燒、吸引並不斷落雷。',f:(e,x,y)=>fzZ(x,y,{r:80,l:4,tick:0.45,cap:3,rand:1,bolt:1,dmg:9,els:['burn'],mv:85,pull:60,c:C.burn,c2:C.shock})},
+'chill|wet|wind':{n:'極地風暴',d:'冰＋水＋風：大範圍暴風雪 4 秒，大幅減速並持續冰霜傷害。',f:(e,x,y)=>fzZ(x,y,{r:150,l:4,dmg:4,els:['chill'],sl:0.7,slF:0.35,cap:26,c:C.chill,c2:C.wind})},
+'chill|geo|phys':{n:'冰晶碎岩',d:'冰＋岩＋物理：冰晶岩炸開，16 塊碎片向四周散射。',f:(e,x,y)=>{ fzB(x,y,70,16,{p:1,c:C.chill,c2:C.geo}); fzSh(x,y,16,9,{p:1,el:'chill',c:C.chill,c2:C.geo}); }},
+'shock|wet|wind':{n:'雷霆風暴',d:'雷＋風＋水：移動的雷霆風暴 4 秒，大範圍落雷，並沿濕潤的敵人連鎖。',f:(e,x,y)=>fzZ(x,y,{r:130,l:4,tick:0.4,cap:3,rand:1,bolt:1,dmg:9,els:['wet'],mv:55,jump:{n:3,rr:150,need:'wet',el:'shock',f:0.8},c:C.shock,c2:C.wet})},
+'burn|geo|shock':{n:'熔裂',d:'火＋岩＋雷：熔岩與雷電同時爆裂，強力範圍爆炸並噴出 10 塊碎岩。',f:(e,x,y)=>{ fzB(x,y,100,26,{c:C.burn,c2:C.shock}); fzSh(x,y,10,9,{p:1,el:'burn',c:C.geo,c2:C.burn}); }},
+};
+/* 元素碰到敵人時檢查融合：每次最多觸發一個；同方向冷卻 1.5 秒、三元素 3.5 秒；全畫面每秒最多 4 次，避免後期洗版 */
+function fuseTouch(e,el){
+  const U=S.fu; if(!U) return; const t=S.t;
+  S.fcd=S.fcd||{};
+  // 三元素：三種元素在 2 秒內都打中同一個敵人（反應會吃掉狀態，所以看 2 秒內有沒有碰過）
+  for(const k in S.fu3||{}){ const es=k.split('|'); if(!es.includes(el)||(S.fcd[k]||0)>t) continue;
+    if(es.every(x=>x===el||pres(e,x)||(e.tc&&e.tc[x]>t-2))){ S.fcd[k]=t+3.5; fireFz(FZ3[k],e,'#f2c46d',1); return; } }
+  // 兩元素：「底」必須還在敵人身上；全畫面每秒最多 4 次，後期不洗版
+  if(t>(S.fzr||0)){ S.fzr=t+1; S.fzn=0; } if(S.fzn>=4) return;
+  for(const x of FZ_ELS){ if(x===el||!pres(e,x)) continue; const k=[x,el].sort().join('|'); if(!U[k]) continue; const ck=k+'>'+x; if((S.fcd[ck]||0)>t) continue;
+    S.fcd[ck]=t+1.5; fireFz(FZ[k][x],e,COL[el]); return; }
+}
+function fireFz(D,e,c,big){
+  S.fzn=(S.fzn||0)+1; S.fzc=S.fzc||{}; S.fzc[D.n]=(S.fzc[D.n]||0)+1;
+  const x=e.x, y=e.y, a=Math.atan2(y-S.p.y,x-S.p.x);
+  D.f(e,x,y,a); txt(x,y-26,D.n,big?'#f2c46d':c,big?1.3:1.05);
+  if(big){ fxRing(x,y,140,'#f2c46d',0.6); S.shake=Math.max(S.shake,0.12); sfx('res'); }
+}
+const FZ_MAX=5;
+function fuseOpts(){
+  const out=[], base=S.order.filter(id=>PE[id]&&!SK[id].hidden&&S.sk[id].lv>=SKMAX), U=S.fu||{}, U3=S.fu3||{}, seen=new Set();
+  if(S.order.filter(id=>SK[id].fz).length<FZ_MAX)
+    for(let i=0;i<base.length;i++) for(let j=i+1;j<base.length;j++){ const a=base[i], b=base[j], k=[PE[a],PE[b]].sort().join('|');
+      if(PE[a]!==PE[b]&&FZ[k]&&!U[k]&&!seen.has(k)){ seen.add(k); out.push({fz:[a,b]}); } }
+  for(const f of S.order){ const d=SK[f]; if(!d.fz||d.tri) continue; const es=d.key.split('|');
+    for(const c of base){ const z=PE[c]; if(es.includes(z)) continue; const tk=[...es,z].sort().join('|'); if(FZ3[tk]&&!U3[tk]) out.push({fz3:[f,c,tk]}); } }
+  return out;
+}
+function regFz(id,ps,key,tri){
+  SK[id]={ch:ps.map(x=>SK[x].ch).join(''),n:tri?FZ3[key].n:ps.map(x=>SK[x].n).join('＋'),c:SK[ps[0]].c,c2:SK[ps[1]].c,c3:ps[2]?SK[ps[2]].c:null,
+    ap:[...new Set(ps.flatMap(x=>SK[x].ap))],hidden:1,fused:1,fz:1,tri:!!tri,key,parts:ps,d:Array(SKMAX).fill('')};
+}
+function doFuse(a,b){
+  const k=[PE[a],PE[b]].sort().join('|'), id='fz_'+a+'_'+b; regFz(id,[a,b],k);
+  S.order=S.order.filter(x=>x!==b); S.order[S.order.indexOf(a)]=id;
+  S.sk[a].in=id; S.sk[b].in=id; S.sk[id]={lv:SKMAX,parts:[a,b],id};
+  (S.fu||(S.fu={}))[k]=1;
+  banner('融合：'+SK[a].n+'＋'+SK[b].n,'#f2c46d'); sfx('res'); fxRing(S.p.x,S.p.y,130,SK[a].c,0.5); fxRing(S.p.x,S.p.y,90,SK[b].c,0.4);
+}
+function doTri(f,c,tk){
+  const ps=[...S.sk[f].parts,c], id='tz_'+ps.join('_'); regFz(id,ps,tk,1);
+  S.order=S.order.filter(x=>x!==c); S.order[S.order.indexOf(f)]=id;
+  delete S.sk[f]; for(const x of ps) S.sk[x].in=id; S.sk[id]={lv:SKMAX,parts:ps,id};
+  S.fu=S.fu||{}; for(const x of ps.slice(0,2)) S.fu[[PE[x],PE[c]].sort().join('|')]=1;
+  (S.fu3||(S.fu3={}))[tk]=1;
+  banner('三元素融合：'+FZ3[tk].n,'#f2c46d'); sfx('res'); for(let i=0;i<3;i++) fxRing(S.p.x,S.p.y,90+i*45,[SK[ps[0]].c,SK[ps[1]].c,SK[c].c][i],0.5+i*0.1);
+}
+/* 技能依元素排列 */
+{ const ORD=['ember','frain','surge','wblade','jail','frost','lance','iwall','arc','spear','cloud','oil','mist','blades','knives','hammer','gale','wcut','rock','spike','gravity','cascade'];
+  const t={}; for(const k of ORD) if(SK[k]) t[k]=SK[k]; for(const k in SK) if(!t[k]) t[k]=SK[k]; for(const k in SK) delete SK[k]; Object.assign(SK,t); }
+
+const badgeHTML=d=>d.fused?[...d.ch].slice(0,3).map((ch,i)=>`<span style="color:${[d.c,d.c2,d.c3||d.c][i]}">${ch}</span>`).join(''):d.ch;
+const MISC={fusion:['融合','#f2c46d'],burst:['共鳴爆發','#f2c46d'],weather:['天候','#9fdcef'],blast:['爆炸','#ff9a4d']};
 /* 無盡模式 5:00 之後每 2 分鐘進入新的一層：換景色、加入新敵人、選一個詛咒 */
 const LAYERS=[
   {n:'灰燼荒原',c:'#ff9f43',bg:'#1f0d08',grid:'rgba(255,122,61,0.11)'},
@@ -459,6 +811,7 @@ const SCHOOL={vaporize:'蒸汽術士',conduct:'雷澤行者',combust:'焚油爆�
 /* ---------- 音效（全部即時合成） ---------- */
 const AU={ctx:null,master:null,nb:null,last:{},on:true};
 try{ AU.on=localStorage.getItem('resonance-sound')!=='off'; }catch(_){}
+let FXL=false; try{ FXL=localStorage.getItem('resonance-fx')==='lite'; }catch(_){}
 function auInit(){
   if(AU.ctx){ if(AU.ctx.state!=='running') AU.ctx.resume().catch(()=>{}); return; }
   try{
@@ -590,7 +943,7 @@ function bossMul(e,isR){
 }
 function hit(e,dmg,src,phys,dot){
   if(e.dead)return;
-  const isR=!!REACT[src];
+  const isR=!!REACT[src]||src==='fusion';   // 融合傷害和反應一樣無視甲殼
   if(e.st.vuln>0) dmg*=1.5; else if(e.armor&&!isR) dmg*=e.armor;
   if(e.boss) dmg*=bossMul(e,isR);
   e.fl=0.07;
@@ -607,6 +960,7 @@ function hit(e,dmg,src,phys,dot){
     else if(S.res.superconduct&&e.st.vuln>0){ e.st.vuln=0; react('shatter',e,0.5); }
   }
   if(S.rl.prism&&!dot&&SK[src]&&!e.dead&&Math.random()<0.12) applyStatus(e,ANY5[(Math.random()*5)|0],3,src,2*dMult());
+  if(phys&&!dot&&SK[src]&&e.hp>0){ fuseTouch(e,'phys'); (e.tc||(e.tc={})).phys=S.t; }
   if(e.hp<=0&&!e.dead) kill(e,src);
 }
 function kill(e,src){
@@ -652,12 +1006,14 @@ function shieldBreak(){
   }
 }
 function knock(e,x0,y0,f){
+  if(e.anch>S.t) return;   // 水牢 Lv5 定錨
   let dx=e.x-x0, dy=e.y-y0, d=Math.hypot(dx,dy);
   if(d<1){ dx=e.x-S.p.x; dy=e.y-S.p.y; d=Math.hypot(dx,dy)||1; }
   const m=e.boss?0.08:e.elite?0.3:1; e.kx+=dx/d*f*m; e.ky+=dy/d*f*m;
 }
 function applyStatus(e,st,dur,src,dps){
   if(e.dead||(e.res&&e.res===st))return;
+  if(SK[src]){ fuseTouch(e,st); if(e.dead) return; (e.tc||(e.tc={}))[st]=S.t; }   // 元素融合：先檢查，再記錄這次接觸
   const s=e.st; let rt=null;
   if(st==='wind'||st==='geo'){
     const list=st==='wind'?ANY5:ELE4, r2=st==='wind'?'swirl':'crystal';
@@ -725,6 +1081,7 @@ function frostBurst(e){
   for(const o of query(e.x,e.y,85)){ rHit(o,5*m,'freeze',0.6); if(!o.dead&&o!==e) applyStatus(o,'chill',2.5,'freeze'); }
 }
 
+const AMP_RX={conduct:170,overload:64,superconduct:72,swirl:100};
 function react(type,e,casc,el){
   if(e.dead)return;
   if((e.rc[type]||0)>S.t)return;
@@ -732,6 +1089,9 @@ function react(type,e,casc,el){
   const R=REACT[type], m=rMult()*(casc||1)*(1+0.2*(S.ms[type]||0)), s=e.st;
   S.rc[type]=(S.rc[type]||0)+1; addCharge(casc?0.5:1);
   const keep=S.rl.stone&&Math.random()<0.25?{...s}:null;
+  // 油瓶 Lv5 媒介：油膩的敵人觸發範圍反應時範圍 +50%，消耗油膩（爆燃本來就吃油，不受影響）
+  const ol=S.sk.oil, amp=ol&&ol.lv>=5&&s.oil>0&&AMP_RX[type]?1.5:1;
+  if(amp>1){ s.oil=0; fxRing(e.x,e.y,AMP_RX[type]*amp,COL.oil,0.35); }
   let shown=0, label=null;
   switch(type){
     case 'vaporize':
@@ -741,7 +1101,7 @@ function react(type,e,casc,el){
       break;
     case 'conduct':{
       s.shock=0; s.wet=0;
-      const ts=query(e.x,e.y,170).filter(o=>o!==e&&o.st.wet>0).slice(0,8);
+      const ts=query(e.x,e.y,170*amp).filter(o=>o!==e&&o.st.wet>0).slice(0,amp>1?12:8);
       hit(e,10*m,type);
       for(const o of ts){ o.st.wet=0; fxBolt(e.x,e.y,o.x,o.y,COL.shock,0.25); hit(o,10*m,type); }
       fxRing(e.x,e.y,26,COL.shock,0.25);
@@ -751,7 +1111,7 @@ function react(type,e,casc,el){
     case 'combust':{
       s.oil=0; s.burn=0;
       const ts=query(e.x,e.y,70);
-      fxBoom(e.x,e.y,70,COL.burn); burst(e.x,e.y,'#ffb070',10,180,3);
+      fxBoom(e.x,e.y,70,COL.burn); wallBurst(e.x,e.y,70); burst(e.x,e.y,'#ffb070',10,180,3);
       for(const o of ts) rHit(o,14*m,type,0.8);
       for(const z of S.Z) if(z.k==='oil'&&z.l>0&&dd(z.x,z.y,e.x,e.y)<z.r*z.r){ z.l=0; fxBoom(z.x,z.y,z.r,'#ff9a4d'); }
       shown=14*m; S.shake=Math.max(S.shake,0.12);
@@ -776,8 +1136,8 @@ function react(type,e,casc,el){
       break;
     case 'overload':{
       s.shock=0; s.burn=0;
-      const ts=query(e.x,e.y,64);
-      fxBoom(e.x,e.y,64,'#ffb13d');
+      const ts=query(e.x,e.y,64*amp);
+      fxBoom(e.x,e.y,64*amp,'#ffb13d'); wallBurst(e.x,e.y,64*amp);
       for(const o of ts){ rHit(o,13*m,type,0.8); if(!o.dead) knock(o,e.x,e.y,o===e?170:260); }
       if(S.res.overload){ const bd=2*rMult(), ig=ts.slice().sort((u,v)=>dd(u.x,u.y,e.x,e.y)-dd(v.x,v.y,e.x,e.y)).slice(0,6); later(0.08,()=>{ for(const o of ig) if(!o.dead) applyStatus(o,'burn',2.5,'overload',bd); }); }
       shown=13*m; S.shake=Math.max(S.shake,0.12);
@@ -785,8 +1145,10 @@ function react(type,e,casc,el){
     case 'swirl':{
       const x=el||'burn'; s[x]=0; label=x;
       shown=3*m; hit(e,shown,type);
-      const ts=query(e.x,e.y,100).filter(o=>o!==e&&!(o.st[x]>0)).slice(0,4), bd=3*rMult();
-      fxRing(e.x,e.y,100,COL[x],0.4); burst(e.x,e.y,COL.wind,8,160,2.5);
+      const tl=query(e.x,e.y,100*amp).filter(o=>o!==e&&!(o.st[x]>0)), oth=o=>ANY5.some(k=>k!==x&&o.st[k]>0)?1:0;
+      if(e.swp>S.t) tl.sort((u,v)=>oth(v)-oth(u));   // 風刃 Lv5 真空
+      const ts=tl.slice(0,amp>1?6:4), bd=3*rMult();
+      fxRing(e.x,e.y,100*amp,COL[x],0.4); burst(e.x,e.y,COL.wind,8,160,2.5);
       for(const o of ts){ fxBolt(e.x,e.y,o.x,o.y,COL[x],0.18); o.rc.swirl=Math.max(o.rc.swirl||0,S.t+1.2); }
       later(0.08,()=>{ for(const o of ts) if(!o.dead){ applyStatus(o,x,3,'swirl',bd); if(S.res.swirl&&!o.dead) o.st.vuln=Math.max(o.st.vuln,2.5); } });
     } break;
@@ -799,10 +1161,10 @@ function react(type,e,casc,el){
     } break;
     case 'superconduct':{
       s.shock=0; s.chill=0;
-      const sts=query(e.x,e.y,72);
+      const sts=query(e.x,e.y,72*amp);
       for(const o of sts) o.st.vuln=Math.max(o.st.vuln,4);
       shown=6*m; hit(e,shown,type);
-      fxRing(e.x,e.y,72,'#c49bff',0.45);
+      fxRing(e.x,e.y,72*amp,'#c49bff',0.45);
     } break;
   }
   if(keep&&!e.dead){ for(const k of ANY5) if(keep[k]>0&&s[k]<=0) s[k]=keep[k]; }
@@ -813,10 +1175,12 @@ function react(type,e,casc,el){
   else if(S.rc[type]===resNeed()&&!S.res[type]){ banner('可以共鳴了：'+R.n,R.c); sfx('unlock'); }
   const c=S.sk.cascade;
   if(c&&!casc){
-    const mul=c.lv>=3?0.8:0.6;
-    for(const o of nearestN(e.x,e.y,c.lv,190,e)){
-      fxBolt(e.x,e.y,o.x,o.y,'#7cffb2',0.22);
-      later(0.12,()=>react(type,o,mul,el));
+    const mul=c.lv>=3?0.8:0.6, need=REACT[type].pair.flatMap(x=>x==='frozen'?[x]:EXP[x]||[x]);
+    for(const o of nearestN(e.x,e.y,LV([1,2,3],c.lv),c.lv>=4?260:190,e)){
+      // Lv5 共振：目標身上已經有這個反應需要的狀態 → 100%
+      const full=c.lv>=5&&need.some(x=>o.st[x]>0);
+      fxBolt(e.x,e.y,o.x,o.y,full?'#f2c46d':'#7cffb2',0.22);
+      later(0.12,()=>react(type,o,full?1:mul,el));
     }
   }
 }
@@ -826,14 +1190,17 @@ function fx(o){ if(S.FX.length<650) S.FX.push(o); }
 function fxBoom(x,y,r,c){ fx({k:'boom',x,y,r,c,l:0.35,m:0.35}); }
 function fxRing(x,y,r,c,l){ fx({k:'ring',x,y,r,c,l:l||0.4,m:l||0.4}); }
 function fxBolt(x1,y1,x2,y2,c,l){
+  if(S&&S.vq<0.7&&Math.random()>S.vq+0.25) return;
   const pts=[], n=Math.max(2,Math.ceil(Math.hypot(x2-x1,y2-y1)/18));
   for(let i=0;i<=n;i++){ const t=i/n, j=(i>0&&i<n)?1:0; pts.push(x1+(x2-x1)*t+rand(-7,7)*j, y1+(y2-y1)*t+rand(-7,7)*j); }
   fx({k:'bolt',pts,c,l:l||0.2,m:l||0.2});
 }
 function burst(x,y,c,n,sp,sz){
+  n=Math.max(1,Math.round(n*((S&&S.vq)||1)));
   for(let i=0;i<n;i++){ const a=rand(0,TAU),v=rand(sp*0.3,sp); fx({k:'pt',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,c,l:rand(.25,.55),m:.55,s:sz}); }
 }
-function txt(x,y,s,c,sc){ if(S.TX.length>34)S.TX.shift(); S.TX.push({x,y,s,c,l:0.9,m:0.9,sc:sc||1}); }
+function txt(x,y,s,c,sc){ const key=String(s).split(' ')[0]; for(const t of S.TX) if(String(t.s).split(' ')[0]===key&&t.l>t.m-0.5&&Math.abs(t.x-x)<120&&Math.abs(t.y-y)<90) return;   // 同種標籤靠太近就合併，後期畫面不再疊字
+  if(S.TX.length>(FXL?6:12))S.TX.shift(); S.TX.push({x,y,s,c,l:0.9,m:0.9,sc:sc||1}); }
 function banner(s,c){
   el.banner.textContent=s; el.banner.style.color=c||'#f2c46d';
   el.banner.classList.remove('show'); void el.banner.offsetWidth; el.banner.classList.add('show');
@@ -845,7 +1212,7 @@ function spawnEnemy(type,ang,dist,at){
   const T=ET[type], p=S.p, a=ang==null?rand(0,TAU):ang, r=dist==null?spawnDist():dist;
   const ex=S.endless&&S.t>300?(S.t-300):0; // 無盡模式 5:00 之後額外加壓
   const hp=T.hp*hpMult(S.t)*(1+(ex/200)**1.8)*1.006**Math.max(0,S.t-480)*(T.elite?1:rand(0.9,1.1));
-  const e={tp:type,x:at?at.x:p.x+Math.cos(a)*r,y:at?at.y:p.y+Math.sin(a)*r,r:T.r,hp,max:hp,spd:T.spd*(1+Math.min(S.t,600)/700)*(1+0.2*(S.mu.haste||0))*rand(0.92,1.08),dmg:T.dmg*1.1*(1+Math.min(S.t,600)/400),ai:T.ai||0,
+  const e={tp:type,x:at?at.x:p.x+Math.cos(a)*r,y:at?at.y:p.y+Math.sin(a)*r,r:T.r,hp,max:hp,spd:T.spd*0.85*(1+Math.min(S.t,600)/900)*(1+0.2*(S.mu.haste||0))*rand(0.92,1.08),dmg:T.dmg*1.1*(1+Math.min(S.t,600)/400),ai:T.ai||0,
     xp:T.xp,c:T.c,f:T.f,elite:!!T.elite,armor:T.armor||0,aura:T.aura||null,auT:0,split:T.split||0,purge:T.purge||0,pg:(T.purge||0)*rand(0.5,1),
     st:{burn:0,wet:0,chill:0,shock:0,oil:0,frozen:0,vuln:0},bd:0,bs:'ember',kx:0,ky:0,fl:0,bcd:0,rc:{},fb:0,stun:0,sh:0,dead:false};
   if(e.aura) e.st[e.aura]=1;
@@ -1004,99 +1371,106 @@ function updHaz(dt){
 /* ---------- 技能 ---------- */
 function updSkills(dt){
   const p=S.p;
-  for(const id of S.order){
+  S.vq=clamp(1.25-(S.FX.length+S.Z.length*1.5+S.P.length)/650,0.35,1)*(FXL?0.55:1);   // 畫面負載越高，特效越收斂
+  if(S.haste>S.t) dt*=1.25;   // 融合「油刃」
+  for(const id of S.order.flatMap(x=>SK[x]&&SK[x].fz?S.sk[x].parts:[x])){   // 融合欄位：裡面的技能照常攻擊
     const s=S.sk[id], L=s.lv;
-    if(SK[id].fused){ updFused(id,s,L,dt); continue; }
+    if(SK[id].run){ SK[id].run(id,s,L,dt); continue; }
     switch(id){
       case 'ember':
         s.cd-=dt; if(s.cd>0)break;{
-          const ts=nearestN(p.x,p.y,L,380); if(!ts.length){s.cd=0.15;break}
-          s.cd=[1.2,1.0,0.85][L-1];
-          const dmg=7*dMult(), bd=[3,3,5][L-1]*dMult();
-          for(let i=0;i<L;i++){
+          const n=LV([1,2,3],L), ts=nearestN(p.x,p.y,n,380); if(!ts.length){s.cd=0.15;break}
+          s.cd=LV([1.2,1.0,0.85],L);
+          const dmg=7*dMult(), bd=LV([3,3,5],L)*dMult(), bdur=L>=4?5:3, seed=L>=5?2:0;
+          for(let i=0;i<n;i++){
             const tg=ts[i%ts.length], a=Math.atan2(tg.y-p.y,tg.x-p.x)+(i>=ts.length?rand(-.5,.5):0);
-            S.P.push({k:'bolt',x:p.x,y:p.y,vx:Math.cos(a)*360,vy:Math.sin(a)*360,tg,l:1.4,dmg,bd});
+            S.P.push({k:'bolt',x:p.x,y:p.y,vx:Math.cos(a)*360,vy:Math.sin(a)*360,tg,l:1.4,dmg,bd,bdur,seed});
           }
         } break;
       case 'surge':
         s.cd-=dt; if(s.cd>0)break;
-        s.cd=[3.2,2.7,2.2][L-1];
-        S.P.push({k:'wave',t:0,dur:0.45,max:[110,140,170][L-1],rad:0,hs:new Set(),dmg:2*dMult(),l:1});
+        s.cd=LV([3.2,2.7,2.2],L);
+        S.P.push({k:'wave',t:0,dur:0.45,max:LV([110,140,170],L),rad:0,hs:new Set(),dmg:2*dMult(),l:1,wd:L>=4?6:4,ebb:L>=5});
         break;
       case 'frost':
         if(!p.mv)break;
         s.acc+=dt; if(s.acc<0.11)break; s.acc=0;
-        {const l=[2.5,3.2,4][L-1]; S.Z.push({k:'frost',x:p.x+rand(-3,3),y:p.y+rand(-3,3),r:[18,22,27][L-1],l,m:l});}
+        {const l=LV([2.5,3.2,4],L); S.Z.push({k:'frost',x:p.x+rand(-3,3),y:p.y+rand(-3,3),r:LV([18,22,27],L),l,m:l,cd:L>=4?2:1.2,gel:L>=5});}
         break;
       case 'arc':
         s.cd-=dt; if(s.cd>0)break;{
           const cands=query(p.x,p.y,260); if(!cands.length){s.cd=0.15;break}
-          s.cd=[1.5,1.25,1.0][L-1];
-          const strikes=L>=3?2:1;
+          s.cd=LV([1.5,1.25,1.0],L);
+          const strikes=L>=3?2:1, B=LV([1,2,3,4],L), rr=L>=4?150:110;
+          // Lv5 尋隙：優先挑一碰帶電就會反應的目標
+          const pk=a=>{ if(L>=5){ const f=a.filter(o=>o.st.wet>0||o.st.burn>0||o.st.chill>0); if(f.length) a=f; } return a.length?a[(Math.random()*a.length)|0]:null; };
           for(let k=0;k<strikes;k++){
-            let cur=cands[(Math.random()*cands.length)|0], px=p.x, py=p.y, dmg=7*dMult();
+            let cur=pk(cands), px=p.x, py=p.y, dmg=7*dMult();
             const hs=new Set();
-            for(let c=0;c<=L&&cur;c++){
+            for(let c=0;c<=B&&cur;c++){
               fxBolt(px,py,cur.x,cur.y,COL.shock,0.18); hs.add(cur);
               hit(cur,dmg,'arc'); if(!cur.dead) applyStatus(cur,'shock',3,'arc');
               px=cur.x; py=cur.y; dmg*=0.85;
-              const nx=query(px,py,110).filter(o=>!hs.has(o));
-              cur=nx.length?nx[(Math.random()*nx.length)|0]:null;
+              cur=pk(query(px,py,rr).filter(o=>!hs.has(o)));
             }
           }
         } break;
       case 'oil':
         s.cd-=dt; if(s.cd>0)break;{
           const cands=query(p.x,p.y,300); if(!cands.length){s.cd=0.2;break}
-          s.cd=[3.5,3.0,3.0][L-1];
+          s.cd=LV([3.5,3.0,3.0],L);
           for(let k=0;k<(L>=3?2:1);k++){
             const t=densest(cands);
-            S.P.push({k:'flask',sx:p.x,sy:p.y,tx:t.x+rand(-12,12),ty:t.y+rand(-12,12),t:0,dur:0.5,r:[55,70,82][L-1],l:1});
+            S.P.push({k:'flask',sx:p.x,sy:p.y,tx:t.x+rand(-12,12),ty:t.y+rand(-12,12),t:0,dur:0.5,r:LV([55,70,82],L),l:1,pl:L>=4?7:5,od:L>=4?1.5:0.5});
           }
         } break;
       case 'blades':{
-        const n=L+1, R=[58,66,74][L-1], dmg=[5,6,7][L-1]*dMult();
+        const n=LV([2,3,4,5],L), R=LV([58,66,74,80],L), dmg=LV([5,6,7],L)*dMult();
         s.ang+=(L>=3?3.9:3.2)*dt; s.pos=[];
         for(let i=0;i<n;i++){
           const a=s.ang+i*TAU/n, bx=p.x+Math.cos(a)*R, by=p.y+Math.sin(a)*R;
           s.pos.push(bx,by,a);
-          for(const e of query(bx,by,9)){ if(e.bcd>0)continue; e.bcd=0.45; hit(e,dmg,'blades',true); if(!e.dead) knock(e,p.x,p.y,50); }
+          for(const e of query(bx,by,9)){ if(e.bcd>0)continue; e.bcd=0.45;
+            // Lv5 借勢：身上有元素狀態就無視甲殼
+            const ig=L>=5&&e.armor&&!(e.st.vuln>0)&&(e.st.frozen>0||ANY5.some(k=>e.st[k]>0));
+            hit(e,ig?dmg/e.armor:dmg,'blades',true); if(!e.dead) knock(e,p.x,p.y,50); }
         }
       } break;
       case 'lance':
         s.cd-=dt; if(s.cd>0)break;{
-          s.cd=[1.4,1.3,1.1][L-1];
-          const tg=nearestN(p.x,p.y,1,420)[0], base=tg?Math.atan2(tg.y-p.y,tg.x-p.x):Math.atan2(p.fy,p.fx), dmg=[7,7,9][L-1]*dMult();
-          for(let i=0;i<L;i++){
-            const a=base+(i-(L-1)/2)*0.16;
-            S.P.push({k:'lance',x:p.x,y:p.y,vx:Math.cos(a)*430,vy:Math.sin(a)*430,l:1.0,pc:[3,5,6][L-1],dmg,hs:new Set()});
+          s.cd=LV([1.4,1.3,1.1,1.0],L);
+          const tg=nearestN(p.x,p.y,1,420)[0], base=tg?Math.atan2(tg.y-p.y,tg.x-p.x):Math.atan2(p.fy,p.fx), dmg=LV([7,7,9],L)*dMult(), n=LV([1,2,3],L);
+          for(let i=0;i<n;i++){
+            const a=base+(i-(n-1)/2)*0.16;
+            S.P.push({k:'lance',x:p.x,y:p.y,vx:Math.cos(a)*430,vy:Math.sin(a)*430,l:1.0,pc:LV([3,5,6,8],L),dmg,hs:new Set(),thru:L>=5});
           }
         } break;
       case 'gale':
         s.cd-=dt; if(s.cd>0)break;{
           const cands=query(p.x,p.y,320); if(!cands.length){s.cd=0.3;break}
-          s.cd=[3,2.6,2.6][L-1];
+          s.cd=LV([3,2.6],L);
           for(let k=0;k<(L>=3?2:1);k++){
             const t=densest(cands), a=Math.atan2(t.y-p.y,t.x-p.x)+(k?rand(-0.7,0.7):0);
-            S.P.push({k:'gale',x:p.x,y:p.y,vx:Math.cos(a)*120,vy:Math.sin(a)*120,r:[34,42,42][L-1],l:2.6,hs:new Map(),dmg:2*dMult()});
+            S.P.push({k:'gale',x:p.x,y:p.y,vx:Math.cos(a)*120,vy:Math.sin(a)*120,r:LV([34,42,42,48],L),l:L>=4?3.4:2.6,hs:new Map(),dmg:2*dMult(),bear:L>=5,carry:null});
           }
         } break;
       case 'rock':
         s.cd-=dt; if(s.cd>0)break;{
           const cands=query(p.x,p.y,300); if(!cands.length){s.cd=0.3;break}
-          s.cd=[2.6,2.3,2.3][L-1];
+          s.cd=LV([2.6,2.3],L);
           for(let k=0;k<(L>=3?2:1);k++){
             const t=densest(cands);
-            S.P.push({k:'rock',x:t.x+rand(-12,12),y:t.y+rand(-12,12),t:0,dur:0.45,r:[44,52,56][L-1],dmg:[5,6,7][L-1]*dMult(),l:1});
+            S.P.push({k:'rock',x:t.x+rand(-12,12),y:t.y+rand(-12,12),t:0,dur:0.45,r:LV([44,52,56,64],L),dmg:LV([5,6,7,8],L)*dMult(),l:1,absorb:L>=5,el:L>=5?s.el:null});
+            if(L>=5) s.el=null;
           }
         } break;
       case 'gravity':
         s.cd-=dt; if(s.cd>0)break;{
           const cands=query(p.x,p.y,280); if(!cands.length){s.cd=0.3;break}
-          s.cd=[5,4.5,4.5][L-1];
+          s.cd=LV([5,4.5],L);
           for(let k=0;k<(L>=3?2:1);k++){
-            const t=densest(cands), l=[2,2.5,2.5][L-1];
-            S.Z.push({k:'well',x:t.x,y:t.y,r:[140,165,185][L-1],l,m:l,str:[115,130,140][L-1]});
+            const t=densest(cands), l=LV([2,2.5,2.5,3],L);
+            S.Z.push({k:'well',x:t.x,y:t.y,r:LV([140,165,185],L),l,m:l,str:LV([115,130,140,155],L),col:L>=5});
           }
         } break;
     }
@@ -1115,44 +1489,62 @@ function updProj(dt){
       }
       o.x+=o.vx*dt; o.y+=o.vy*dt; o.l-=dt;
       const hs=query(o.x,o.y,5);
-      if(hs.length){ const e=hs[0]; hit(e,o.dmg,'ember'); if(!e.dead) applyStatus(e,'burn',3,'ember',o.bd); o.l=0; burst(o.x,o.y,COL.burn,4,80,2); }
+      if(hs.length){ const e=hs[0]; hit(e,o.dmg,'ember'); if(!e.dead){ applyStatus(e,'burn',o.bdur||3,'ember',o.bd); if(o.seed&&e.st.burn>0&&e.aura!=='burn') e.seed=Math.max(e.seed||0,o.seed); } o.l=0; burst(o.x,o.y,COL.burn,4,80,2); }
       else if(Math.random()<0.5) fx({k:'pt',x:o.x,y:o.y,vx:0,vy:0,c:COL.burn,l:.2,m:.2,s:2.5});
     } else if(o.k==='lance'){
       o.x+=o.vx*dt; o.y+=o.vy*dt; o.l-=dt;
       for(const e of query(o.x,o.y,6)){
         if(o.hs.has(e))continue; o.hs.add(e);
+        const wasF=o.thru&&e.st.frozen>0;   // Lv5 穿冰：打碎凍結的敵人不算貫穿
         hit(e,o.dmg,'lance',true); if(!e.dead) applyStatus(e,'chill',2,'lance');
-        if(--o.pc<=0){o.l=0;break}
+        if(!wasF&&--o.pc<=0){o.l=0;break}
       }
     } else if(o.k==='flask'){
       o.t+=dt;
-      if(o.t>=o.dur){ o.l=0; S.Z.push({k:'oil',x:o.tx,y:o.ty,r:o.r,l:5,m:5}); burst(o.tx,o.ty,COL.oil,10,140,3); }
-    } else if(o.k==='fo'){
-      if(o.t&&!o.t.dead){ const cur=Math.atan2(o.vy,o.vx); let da=Math.atan2(o.t.y-o.y,o.t.x-o.x)-cur; da=Math.atan2(Math.sin(da),Math.cos(da));
-        const na=cur+Math.max(-7*dt,Math.min(7*dt,da)); o.vx=Math.cos(na)*380; o.vy=Math.sin(na)*380; }
-      o.x+=o.vx*dt; o.y+=o.vy*dt; o.l-=dt;
-      const F=SK[o.id]&&SK[o.id].fused;
-      if(F) for(const e of query(o.x,o.y,10)){ if(o.hs.has(e)) continue; o.hs.add(e); fuseHit(e,F,o.dmg,o.id); if(--o.pierce<0){ o.l=0; break; } }
+      if(o.t>=o.dur){ o.l=0; const pl=o.pl||5; S.Z.push({k:'oil',x:o.tx,y:o.ty,r:o.r,l:pl,m:pl,od:o.od||0.5}); burst(o.tx,o.ty,COL.oil,10,140,3); }
+    } else if(o.k==='xs'||o.k==='xk'||o.k==='xn'){ updX(o,dt);
     } else if(o.k==='gale'){
       o.x+=o.vx*dt; o.y+=o.vy*dt; o.l-=dt;
       for(const e of query(o.x,o.y,o.r)){
         const w=e.elite?0.25:0.8; e.x+=o.vx*dt*w; e.y+=o.vy*dt*w;
         if((o.hs.get(e)||0)>S.t) continue; o.hs.set(e,S.t+0.8);
-        hit(e,o.dmg,'gale'); if(!e.dead) applyStatus(e,'wind',0,'gale');
+        hit(e,o.dmg,'gale'); if(e.dead) continue;
+        if(o.bear){   // Lv5 挾帶：記住第一個擴散出去的狀態，之後沿途附加
+          if(o.carry&&!(e.st[o.carry]>0)) applyStatus(e,o.carry,3,'gale',2*dMult());
+          else if(!o.carry&&(e.rc.swirl||0)<=S.t){ const x=ANY5.find(k=>e.st[k]>0); if(x) o.carry=x; }
+          if(e.dead) continue;
+        }
+        applyStatus(e,'wind',0,'gale');
       }
     } else if(o.k==='rock'){
       o.t+=dt;
       if(o.t>=o.dur){
         o.l=0; fxBoom(o.x,o.y,o.r,COL.geo); burst(o.x,o.y,'#f3d39a',10,160,3); S.shake=Math.max(S.shake,0.08); sfx('rock');
-        for(const e of query(o.x,o.y,o.r)){ hit(e,o.dmg,'rock',true); if(!e.dead){ applyStatus(e,'geo',0,'rock'); knock(e,o.x,o.y,70); } }
+        const rs=S.sk.rock, canAb=o.absorb&&!o.el&&rs;
+        for(const e of query(o.x,o.y,o.r)){ hit(e,o.dmg,'rock',true); if(!e.dead){
+          // Lv5 元素岩：吸收結晶的元素（落石自己帶出去的元素不算，避免自己餵自己）
+          if(canAb&&!o.got&&!(e.rkT>S.t)&&(e.rc.crystal||0)<=S.t){ const x=ELE4.find(k=>e.st[k]>0); if(x) o.got=x; }
+          applyStatus(e,'geo',0,'rock');
+          if(o.el&&!e.dead){ applyStatus(e,o.el,2.5,'rock',3*dMult()); e.rkT=S.t+2.5*(1+0.25*pvl('echo'))+0.2; }
+          if(!e.dead) knock(e,o.x,o.y,70); } }
+        if(o.el) fxRing(o.x,o.y,o.r+10,COL[o.el],0.4);
+        if(o.got&&rs&&!rs.el) rs.el=o.got;
       }
     } else if(o.k==='wave'){
       o.t+=dt; const k=Math.min(1,o.t/o.dur); o.rad=o.max*(1-(1-k)*(1-k));
       for(const e of query(p.x,p.y,o.rad)){
         if(o.hs.has(e))continue; o.hs.add(e);
-        hit(e,o.dmg,'surge'); if(!e.dead){ knock(e,p.x,p.y,110); applyStatus(e,'wet',4,'surge'); }
+        hit(e,o.dmg,'surge'); if(!e.dead){ knock(e,p.x,p.y,110); applyStatus(e,'wet',o.wd||4,'surge'); }
       }
-      if(o.t>=o.dur+0.15)o.l=0;
+      if(o.ebb&&!o.eb&&o.t>=o.dur+0.12){   // Lv5 退潮：收回到 62% 半徑，把外圈敵人拉回來擠成一圈
+        o.eb=1; const R0=o.max*0.62;
+        S.P.push({k:'ebb',t:0,dur:0.3,from:o.max,to:R0,rad:o.max,l:1});
+        for(const e of query(p.x,p.y,o.max+30)){ const d=Math.sqrt(dd(e.x,e.y,p.x,p.y)); if(d<=R0) continue;
+          knock(e,p.x,p.y,-Math.min(420,7*(d-R0))); if(!e.dead) applyStatus(e,'wet',o.wd||4,'surge'); }
+      }
+      if(o.t>=o.dur+0.15&&(!o.ebb||o.eb))o.l=0;
+    } else if(o.k==='ebb'){
+      o.t+=dt; const k=Math.min(1,o.t/o.dur); o.rad=o.from+(o.to-o.from)*k*(2-k); if(o.t>=o.dur)o.l=0;
     }
   }
   S.P=S.P.filter(o=>o.l>0);
@@ -1160,12 +1552,28 @@ function updProj(dt){
 function updZones(dt){
   for(const z of S.Z){
     z.l-=dt;
-    if(z.k==='frost'){ for(const e of query(z.x,z.y,z.r)) applyStatus(e,'chill',1.2,'frost'); }
-    else if(z.k==='oil'){ for(const e of query(z.x,z.y,z.r)) applyStatus(e,'oil',0.5,'oil'); }
+    if(z.ch>S.t&&(z.cht=(z.cht||0)-dt)<=0){ z.cht=0.5; for(const e of query(z.x,z.y,z.r)) applyStatus(e,'shock',2,'spear'); }   // 雷槍 Lv5 充能
+    if(z.k==='xz'){ updXZ(z,dt); continue; }
+    if(z.k==='gz'){ for(const e of query(z.x,z.y,z.r)) applyStatus(e,z.el,1.2,z.src||'weather',2*dMult()); continue; }
+    if(z.k==='frost'){ for(const e of query(z.x,z.y,z.r)){
+        if(z.gel&&e.st.oil>0&&!(e.st.frozen>0)&&(e.rc.freeze||0)<=S.t){ e.st.oil=0; react('freeze',e,0); continue; }   // Lv5 凝油
+        applyStatus(e,'chill',z.cd||1.2,'frost'); } }
+    else if(z.k==='oil'){ for(const e of query(z.x,z.y,z.r)) applyStatus(e,'oil',z.od||0.5,'oil'); }
+    else if(z.k==='well'&&z.col&&z.l<=0&&!z.done){ z.done=1; collapse(z); }
     else if(z.k==='steam'){ for(const e of query(z.x,z.y,z.r)) applyStatus(e,'wet',1.2,'vaporize'); }
     else if(z.k==='scorch'){ const bd=2*rMult(); for(const e of query(z.x,z.y,z.r)) applyStatus(e,'burn',1.5,'combust',bd); }
   }
   S.Z=S.Z.filter(z=>z.l>0);
+}
+
+/* 引力核 Lv5 坍縮：井裡的敵人互相交換一種狀態 */
+function collapse(z){
+  const ts=query(z.x,z.y,z.r*0.7).filter(e=>!e.dead).slice(0,18); if(ts.length<2) return;
+  const has=ts.map(e=>ANY5.filter(k=>e.st[k]>0));
+  fxRing(z.x,z.y,z.r*0.7,'#b58cff',0.45); fxRing(z.x,z.y,30,'#f2c46d',0.35); sfx('swirl');
+  const give=[];
+  ts.forEach((e,i)=>{ const pool=[]; has.forEach((h,j)=>{ if(j!==i) for(const k of h) if(!(e.st[k]>0)) pool.push(k); }); if(pool.length) give.push([e,pool[(Math.random()*pool.length)|0]]); });
+  later(0.06,()=>{ for(const [e,k] of give) if(!e.dead){ fxBolt(z.x,z.y,e.x,e.y,COL[k],0.15); applyStatus(e,k,3,'gravity',2*dMult()); } });
 }
 
 /* ---------- 敵人 ---------- */
@@ -1174,9 +1582,14 @@ function updEnemies(dt){
   for(const e of S.E){
     if(e.dead)continue;
     const s=e.st;
-    if(s.burn>0){ if(!S.rl.flame||e.aura==='burn') s.burn-=dt; if(e.aura!=='burn') hit(e,e.bd*dt,e.bs,false,true); if(e.dead)continue; }
-    if(s.wet>0)s.wet-=dt; if(s.chill>0)s.chill-=dt; if(s.shock>0)s.shock-=dt;
-    if(s.oil>0)s.oil-=dt; if(s.vuln>0)s.vuln-=dt;
+    const hold=e.hold>S.t;   // 領域 Lv5 凝滯
+    if(s.burn>0){ if((!S.rl.flame||e.aura==='burn')&&!hold) s.burn-=dt; if(e.aura!=='burn') hit(e,e.bd*dt,e.bs,false,true); if(e.dead)continue;
+      if(s.burn<=0&&e.seed>0){ const n=e.seed-1; e.seed=0;   // 餘燼彈 Lv5 火種：自然熄滅就跳到別人身上
+        const o=nearestN(e.x,e.y,4,150,e).find(o=>!(o.st.burn>0)&&o.aura!=='burn');
+        if(o){ fxBolt(e.x,e.y,o.x,o.y,COL.burn,0.2); applyStatus(o,'burn',5,'ember',e.bd); if(!o.dead&&o.st.burn>0&&n>0) o.seed=n; } } }
+    else if(e.seed) e.seed=0;
+    if(!hold){ if(s.wet>0)s.wet-=dt; if(s.chill>0)s.chill-=dt; if(s.shock>0)s.shock-=dt; if(s.oil>0)s.oil-=dt; }
+    if(s.vuln>0)s.vuln-=dt;
     if(s.frozen>0){ s.frozen-=dt; if(s.frozen<=0&&e.fb){ e.fb=0; frostBurst(e); if(e.dead)continue; } }
     // 天生狀態：被反應消耗後，過一段時間會重新出現（寒冷會拖慢火焰重燃）
     if(e.aura){ const k=e.aura;
@@ -1192,7 +1605,7 @@ function updEnemies(dt){
     }
     if(e.boss) bossAI(e,dt);
     if(e.bcd>0)e.bcd-=dt; if(e.fl>0)e.fl-=dt;
-    let sp=e.spd; if(s.chill>0)sp*=0.55; if(s.oil>0)sp*=0.72; if(s.frozen>0||e.stun>0)sp=0;
+    let sp=e.spd; if(s.chill>0)sp*=0.55; if(s.oil>0)sp*=0.72; if(s.frozen>0||e.stun>0)sp=0; if(e.slw>S.t)sp*=e.slwF;
     const dx=p.x-e.x, dy=p.y-e.y, d=Math.hypot(dx,dy)||1;
     if(d>far&&!e.boss){ const a=Math.atan2(-dy,-dx)+Math.PI+rand(-1,1), r=spawnDist(); e.x=p.x+Math.cos(a)*r; e.y=p.y+Math.sin(a)*r; continue; }
     if(e.boss&&d>380) sp*=3;
@@ -1207,7 +1620,7 @@ function updEnemies(dt){
     if(e.tp==='bomber'){ const rr=e.r+p.r+14; if(s.frozen<=0&&e.stun<=0&&dd(p.x,p.y,e.x,e.y)<rr*rr){ kill(e,'blast'); continue; } }
     else if(s.frozen<=0&&e.stun<=0&&p.inv<=0){
       const rr=e.r+p.r;
-      if(dd(p.x,p.y,e.x,e.y)<rr*rr) hurtPlayer(e.cs==='dash'?e.dmg*1.5:e.dmg);
+      if(dd(p.x,p.y,e.x,e.y)<rr*rr) hurtPlayer((e.cs==='dash'?e.dmg*1.5:e.dmg)*(e.wk>S.t?0.6:1));
     }
   }
   // 分離
@@ -1336,18 +1749,19 @@ function renderSlots(){
   let h='';
   for(let i=0;i<MAX_SLOTS;i++){
     const id=S.order[i];
-    if(id){ const d=SK[id], l=S.sk[id].lv; h+=`<div class="slot${d.fused?' duo':''}" style="--c:${d.c}">${badgeHTML(d)}<div class="pips">${[0,1,2].map(j=>`<b class="${j<l?'on':''}"></b>`).join('')}</div></div>`; }
+    if(id&&SK[id].fz){ const d=SK[id]; h+=`<div class="slot duo${d.tri?' tri':''}" style="--c:${d.c};--c2:${d.c3||d.c2}">${badgeHTML(d)}<i class="fzm">${d.tri?'三':'融'}</i></div>`; }
+    else if(id){ const d=SK[id], l=S.sk[id].lv; h+=`<div class="slot" style="--c:${d.c}">${badgeHTML(d)}<div class="pips">${[0,1,2,3,4].map(j=>`<b class="${j<l?'on':''}${j===SKMAX-1?' q':''}"></b>`).join('')}</div></div>`; }
     else h+='<div class="slot empty"></div>';
   }
   el.slots.innerHTML=h;
   let ph='';
   for(let i=0;i<MAX_PV;i++){
     const id=S.porder[i];
-    if(id){ const d=PV[id], l=S.pv[id]; ph+=`<div class="pslot" style="--c:${d.c}">${d.ch}<div class="pips">${[0,1,2].map(j=>`<b class="${j<l?'on':''}"></b>`).join('')}</div></div>`; }
+    if(id){ const d=PV[id], l=S.pv[id]; ph+=`<div class="pslot" style="--c:${d.c}">${d.ch}<div class="pips">${[...Array(PVMAX).keys()].map(j=>`<b class="${j<l?'on':''}"></b>`).join('')}</div></div>`; }
     else ph+='<div class="pslot empty"></div>';
   }
   el.pslots.innerHTML=ph;
-  el.resRow.innerHTML=Object.keys(S.res).map(k=>`<span style="--c:${REACT[k].c}">${RES[k].n}</span>`).join('');
+  el.resRow.innerHTML='';   // 共鳴、融合等資訊移到暫停畫面
 }
 
 /* ---------- 選擇 ---------- */
@@ -1356,9 +1770,12 @@ function genChoices(){
   const n=3+(S.rl.echo?1:0), pick=a=>a[(Math.random()*a.length)|0];
   if(S.pc>0){ const rl=shuffle(Object.keys(RL).filter(k=>!S.rl[k])).slice(0,n).map(k=>({rl:k})); if(rl.length>=2) return rl; }
   const fullS=slotsUsed()>=MAX_SLOTS, fullP=S.porder.length>=MAX_PV, sp=[], pp=[];
-  for(const id in SK){ const s=S.sk[id]; if(s){ if(s.lv<3)sp.push({id}); } else if(!fullS&&!SK[id].hidden) sp.push({id}); }
-  for(const id in PV){ const l=S.pv[id]||0; if(l){ if(l<3)pp.push({pv:id}); } else if(!fullP) pp.push({pv:id}); }
-  shuffle(sp); shuffle(pp);
+  const own=[], nw=[];
+  for(const id in SK){ const s=S.sk[id]; if(s){ if(s.lv<SKMAX)own.push({id}); } else if(!fullS&&!SK[id].hidden) nw.push({id}); }
+  shuffle(own); shuffle(nw);   // 技能池變大後，已擁有技能的升級優先（65%），新技能不會把 Build 稀釋掉
+  while(own.length||nw.length) sp.push(own.length&&(!nw.length||Math.random()<0.65)?own.shift():nw.shift());
+  for(const id in PV){ const l=S.pv[id]||0; if(l){ if(l<PVMAX)pp.push({pv:id}); } else if(!fullP) pp.push({pv:id}); }
+  shuffle(pp);
   const r=Math.random();
   let np=S.p.lv<=6?1:r<0.12?0:r<0.8?1:2; np=Math.min(np,pp.length);
   const specials=[], rp=Object.keys(REACT).filter(k=>(S.rc[k]||0)>=resNeed()&&!S.res[k]), fo=fuseOpts();
@@ -1366,10 +1783,10 @@ function genChoices(){
   if(rp.length&&Math.random()<0.65) specials.push({r:pick(rp)});
   let out=specials.slice(0,n-1).concat(pp.slice(0,np),sp,pp.slice(np)).slice(0,n);
   const cts=Object.keys(CT).filter(k=>(S.ct[k]||0)<CT_MAX[k]);
-  if(out.length===n&&S.p.lv>=12&&Math.random()<0.15) out[n-1]={ct:pick(cts)};
+  if(cts.length&&out.length===n&&S.p.lv>=12&&Math.random()<0.15) out[n-1]={ct:pick(cts)};
   // 後期：技能、被動都滿了以後，用聖物、契約、昇華補位，不再只剩補血
   if(out.length<n) out=out.concat(shuffle(Object.keys(RL).filter(k=>!S.rl[k])).slice(0,n-out.length).map(k=>({rl:k})));
-  if(out.length<n) out.push({ct:pick(cts)});
+  if(out.length<n&&cts.length) out.push({ct:pick(cts)});
   const mk=shuffle(Object.keys(REACT).filter(k=>S.rc[k]>0&&(S.ms[k]||0)<5)).slice(0,2);
   for(const k of mk) if(out.length<n) out.push({ms:k});
   const mine=S.order.filter(id=>!SK[id].hidden), other=Object.keys(SK).filter(id=>!S.sk[id]&&!SK[id].hidden);
@@ -1387,12 +1804,7 @@ function elSet(list){
   return s;
 }
 const slotsUsed=()=>S.order.length;
-/* 融合：兩個滿級技能、而且它們的反應已經共鳴，就能合成一格，空出技能欄 */
-function fuseOpts(){
-  const ids=S.order.filter(id=>PE[id]&&!SK[id].hidden&&S.sk[id].lv>=3), out=[];
-  for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++) if(PE[ids[i]]!==PE[ids[j]]) out.push({fu:[ids[i],ids[j]]});
-  return out;
-}
+/* 元素融合：兩種元素都有 Lv5 技能時可以解鎖；已解鎖兩組相關融合時，可以解鎖三元素融合 */
 function ownedEls(extra){
   const l=[]; for(const id of S.order) l.push(...SK[id].ap); if(extra) l.push(...extra);
   return elSet(l);
@@ -1423,6 +1835,22 @@ function resChain(k){
   }
   return res;
 }
+/* 卡牌摘要：從完整卡片內容取出名稱、標籤、圖示與摘要 */
+const stripT=x=>(x||'').replace(/<[^>]+>/g,'').trim();
+function pcInfo(c,i){
+  const h=cardHTML(c,i), g=re=>{ const m=h.match(re); return m?m[1]:''; };
+  const ct=g(/<div class="ct">([\s\S]*?)<\/div>/);
+  return {col:g(/style="--c:([^;"]+)/)||'#f2c46d', badge:g(/<div class="badge[^"]*">([\s\S]*?)<\/div><div class="cb">/), bcls:g(/<div class="badge([^"]*)"/),
+    name:stripT(ct.split('<span')[0]).replace(/^(融合|三元素融合)：/,''), tag:stripT(g(/<span class="lv[^"]*">([\s\S]*?)<\/span>/)), sum:stripT(g(/<div class="cd">([\s\S]*?)<\/div>/))};
+}
+function miniCard(c,i,sel,n){
+  const I=pcInfo(c,i);
+  const kind=c.fz?'融合':c.fz3?'三元素':c.rl?'聖物':c.pv?'被動':c.r?'共鳴':c.ct?'契約':c.ms?'精通':c.asc?'昇華':c.tm?'重組':c.mu?'詛咒':c.f?'補給':c.id?(S.sk[c.id]?'升級':'新技能'):'';
+  const fr=c.fz||c.fz3?'fz':c.rl?'rl':c.mu?'mu':c.ct?'ct':(c.r||c.ms||c.asc)?'res':c.pv?'pv':c.id&&!S.sk[c.id]?'sk new':'sk';
+  const els=c.id&&SK[c.id]?SK[c.id].ap.map(x=>`<i style="background:${COL[x]}"></i>`).join(''):'';
+  const rot=(i-(n-1)/2)*(n>3?2.4:3.4);
+  return `<button class="pcard ${fr}${i===sel?' on':''}${sel>=0&&i!==sel?' dim':''}" data-act="sel" data-i="${i}" style="--c:${I.col};--r:${rot}deg;--y:${Math.abs(rot)*1.6}px;--d:${i*80}ms"><span class="pc-kind">${kind}</span><span class="pc-badge${I.bcls}">${I.badge}</span><span class="pc-name">${I.name}</span>${I.tag?`<span class="pc-tag">${I.tag}</span>`:''}<span class="pc-sum">${I.sum}</span>${els?`<span class="pc-els">${els}</span>`:''}</button>`;
+}
 function cardBox(i,c,cls,ch,title,tag,desc,extra){
   return `<button class="card" data-act="pick" data-i="${i}" style="--c:${c}"><div class="badge ${cls}">${ch}</div><div class="cb"><div class="ct">${title}${tag}</div><div class="cd">${desc}</div>${extra||''}</div></button>`;
 }
@@ -1434,11 +1862,10 @@ function cardHTML(c,i){
   if(c.ms){ const R=REACT[c.ms], k=(S.ms[c.ms]||0)+1; return cardBox(i,R.c,'res',R.n[0],R.n+'精通 '+NUM[Math.min(k,10)],'<span class="lv">可重複</span>',`${R.n}傷害 +20%（最多 5 次）。專精你最常打出的反應。`,''); }
   if(c.tm){ const [a,b]=c.tm; return cardBox(i,SK[b].c,'',SK[b].ch,`重組：${SK[a].n} → ${SK[b].n}`,'<span class="lv new">轉向</span>',`把「${SK[a].n}」換成「${SK[b].n}」，等級保留。讓組合接上新的元素。`,
       `<div class="cl"><span class="lab">反應</span>${rxFor(b).map(r=>`<span class="chip ${r.on?'on':'dim'}" style="--c:${REACT[r.k].c}">${r.on?'✦ ':''}${REACT[r.k].n}</span>`).join('')}</div>`); }
-  if(c.evo){ const [a,b,f]=c.evo, id=makeFused(a,b,f), d=SK[id];
-    return `<button class="card" data-act="pick" data-i="${i}" style="--c:${d.c}"><div class="badge duo">${badgeHTML(d)}</div><div class="cb"><div class="ct">${d.n}<span class="lv new">${FORMS[f].tag}</span></div><div class="cd">${d.d[0]}</div><div class="cl"><span class="supt">${fuseNote(d.fused)}</span></div></div></button>`; }
-  if(c.fu){ const [a,b]=c.fu, noun=NOUN[[PE[a],PE[b]].sort().join('|')]||'';
-    return cardBox(i,SK[a].c,'res','融',`融合：${SK[a].n}＋${SK[b].n}`,'<span class="lv new">進化</span>',`兩個滿級技能合成全新的「${noun}」技能，原本兩格只剩一格。下一步選擇進化方向：追蹤彈、領域或環繞。`,
-      `<div class="cl"><span class="chip on" style="--c:${SK[a].c}">${SK[a].ch}</span><span class="chip on" style="--c:${SK[b].c}">${SK[b].ch}</span></div>`); }
+  if(c.fz){ const [a,b]=c.fz, k=[PE[a],PE[b]].sort().join('|'), es=k.split('|'), A=FZ[k][es[0]], B=FZ[k][es[1]], d={fused:1,ch:SK[a].ch+SK[b].ch,c:SK[a].c,c2:SK[b].c};
+    return `<button class="card fzcard" data-act="pick" data-i="${i}" style="--c:${SK[a].c};--c2:${SK[b].c}"><div class="badge duo">${badgeHTML(d)}</div><div class="cb"><div class="ct">融合：${SK[a].n}＋${SK[b].n}<span class="lv new">二合一</span></div><div class="cd">兩個技能合成一格，都照常攻擊。之後${EL_N[es[0]]}和${EL_N[es[1]]}在同一個敵人身上相遇，會觸發：</div><div class="cl"><span class="chip on" style="--c:${COL[es[1]]}">${A.n}</span><span class="supt">${A.d}</span></div><div class="cl"><span class="chip on" style="--c:${COL[es[0]]}">${B.n}</span><span class="supt">${B.d}</span></div><div class="cl"><span class="supt">融合 ${S.order.filter(x=>SK[x].fz).length+1} / ${FZ_MAX}</span></div></div></button>`; }
+  if(c.fz3){ const [f,cc,tk]=c.fz3, T3=FZ3[tk], d={fused:1,ch:SK[f].ch+SK[cc].ch,c:SK[f].c,c2:SK[f].c2,c3:SK[cc].c};
+    return `<button class="card fzcard" data-act="pick" data-i="${i}" style="--c:#f2c46d;--c2:${SK[cc].c}"><div class="badge duo tri">${badgeHTML(d)}</div><div class="cb"><div class="ct">三元素融合：${T3.n}<span class="lv new">三合一</span></div><div class="cd">${SK[f].n}和${SK[cc].n}合成一格，三個技能都照常攻擊。${T3.d}三種元素在 2 秒內打中同一個敵人時觸發。</div></div></button>`; }
   if(c.r){
     const R=REACT[c.r], Q=RES[c.r], ch=resChain(c.r);
     return `<button class="card" data-act="pick" data-i="${i}" style="--c:${R.c}"><div class="badge res">${R.n[0]}</div><div class="cb"><div class="ct">${Q.n}<span class="lv new">共鳴・${R.n}</span></div><div class="cd">${Q.d}</div>`+
@@ -1452,7 +1879,7 @@ function cardHTML(c,i){
     return `<button class="card" data-act="pick" data-i="${i}" style="--c:${d.c}"><div class="badge pv">${d.ch}</div><div class="cb"><div class="ct">${d.n}${tag}</div><div class="cd">${d.d[lv]}</div><div class="cl"><span class="supt">放進被動欄，不佔技能欄</span></div></div></button>`;
   }
   const d=SK[c.id], s=S.sk[c.id], lv=s?s.lv:0;
-  const tag=s?`<span class="lv">Lv ${lv} 升到 ${lv+1}</span>`:`<span class="lv new">新技能</span>`;
+  const tag=s?(lv+1>=SKMAX?`<span class="lv new">Lv ${lv} 升到 ${lv+1}・質變</span>`:`<span class="lv">Lv ${lv} 升到 ${lv+1}</span>`):`<span class="lv new">新技能</span>`;
   let extra='';
   if(d.ap.length){
     extra+='<div class="cl"><span class="lab">屬性</span>'+d.ap.map(chip).join('')+'</div>';
@@ -1461,18 +1888,21 @@ function cardHTML(c,i){
   } else extra+=`<div class="cl"><span class="lab">輔助</span><span class="supt">${d.sup}</span></div>`;
   return `<button class="card" data-act="pick" data-i="${i}" style="--c:${d.c}"><div class="badge${d.fused?' duo':''}">${badgeHTML(d)}</div><div class="cb"><div class="ct">${d.n}${tag}</div><div class="cd">${d.d[lv]}</div>${extra}</div></button>`;
 }
-function showPick(){
-  const start=S.startPick;
+function showPick(keep){
+  const start=S.startPick; if(!keep) S.sel=-1;
   let h=`<div class="panel">`;
   if(S.evoMode){ const [a,b]=S.choices[0].evo;
-    h+=`<h2>選擇進化方向</h2><p class="sub">${SK[a].n}＋${SK[b].n} 會合成全新的技能，原本兩個技能消失，空出一格技能欄。進化後的技能還能再升兩級。</p>`; }
+    h+=`<h2>選擇融合方向</h2><p class="sub">${SK[a].n}＋${SK[b].n} 會合成一格，兩個技能原本的攻擊和 Lv${SKMAX} 質變都保留。選誰主導：主導技能打中敵人時，在命中處接著放出另一個技能，最後引發主導元素的收尾爆。</p>`; }
   else if(S.muMode){ const L=LAYERS[S.pal], ne=S.newE;
     h+=`<h2 style="color:${L.c}">深淵第 ${S.layer} 層</h2><p class="sub">${L.n}。${ne?`新敵人<b style="color:${ET[ne].c}">${ET[ne].n}</b>${NEWD[ne]}。`:''}選一個詛咒：敵人會因此改變，你會回復 30% 生命並得到一個寶箱。</p>`; }
   else if(start) h+=`<h2>選一個起手技能</h2><p class="sub">每個技能單獨都不強。把兩種元素疊在同一個敵人身上觸發反應，才是真正的輸出。</p>`;
   else if(S.pc>0) h+=`<h2>寶箱</h2><p class="sub">選一件聖物。聖物會改寫規則，整局有效。</p>`;
   else h+=`<h2>升級了</h2><p class="sub">Lv ${S.p.lv-S.pend+1}${S.pend>1?`，後面還有 ${S.pend-1} 次`:''}。技能欄 ${slotsUsed()} / ${MAX_SLOTS}，被動欄 ${S.porder.length} / ${MAX_PV}</p>`;
-  h+=S.choices.map(cardHTML).join('');
-  if(!start&&!S.muMode&&!S.evoMode) h+=`<p class="legend"><b>✦</b> 表示搭配你現有的技能就能觸發這個反應</p>`;
+  { const n=S.choices.length, sel=S.sel;
+    h+=`<div class="pcards n${n}${keep?'':' anim'}" style="--n:${n}">${S.choices.map((c,i)=>miniCard(c,i,sel,n)).join('')}</div>`;
+    if(sel>=0&&S.choices[sel]){ h+=`<div class="pdetail">${cardHTML(S.choices[sel],sel)}<button class="btn primary pconfirm" data-act="pick" data-i="${sel}">選擇「${pcInfo(S.choices[sel],sel).name}」</button></div>`; }
+    else h+=`<p class="phint">點一張卡看完整效果，再點一次就選它</p>`; }
+  if(!start&&!S.muMode&&!S.evoMode&&S.sel>=0) h+=`<p class="legend"><b>✦</b> 表示搭配你現有的技能就能觸發這個反應</p>`;
   if(S.evoMode) h+=`<button class="btn" data-act="evoback">先不要融合</button>`;
   if(!start&&!S.muMode&&!S.evoMode) h+=`<button class="btn" data-act="reroll" ${S.rerolls<=0?'disabled':''}>重抽選項（剩 ${S.rerolls} 次）</button>`;
   h+='</div>';
@@ -1486,7 +1916,6 @@ function openLevelUp(){
 function choose(i){
   const c=S.choices[i]; if(!c)return;
   const p=S.p;
-  if(c.fu){ S.evoPrev=S.choices; S.evoMode=1; S.choices=['arrow','field','ring'].map(f=>({evo:[c.fu[0],c.fu[1],f]})); showPick(); return; }
   if(c.mu){
     S.mu[c.mu]=(S.mu[c.mu]||0)+1; S.muMode=0; p.hp=Math.min(p.max,p.hp+p.max*0.3);
     S.G.push({k:'chest',x:p.x+30,y:p.y,m:true,s:0}); banner('詛咒：'+MU[c.mu].n,MU[c.mu].c);
@@ -1505,7 +1934,8 @@ function choose(i){
   else if(c.asc){ S.asc++; sfx('res'); }
   else if(c.ms){ S.ms[c.ms]=(S.ms[c.ms]||0)+1; sfx('res'); }
   else if(c.tm){ const [a,b]=c.tm, i2=S.order.indexOf(a); if(i2>=0){ S.sk[b]={...S.sk[a],cd:0.4,pos:[]}; delete S.sk[a]; S.order[i2]=b; banner('重組：'+SK[a].ch+' → '+SK[b].ch,SK[b].c); sfx('res'); } }
-  else if(c.evo){ doFuse(...c.evo); S.evoMode=0; S.evoPrev=null; }
+  else if(c.fz){ doFuse(...c.fz); }
+  else if(c.fz3){ doTri(...c.fz3); }
   else if(c.pv){
     if(S.pv[c.pv]) S.pv[c.pv]++; else { S.pv[c.pv]=1; S.porder.push(c.pv); }
     if(c.pv==='vit'){ p.max+=25; p.hp=Math.min(p.max,p.hp+25); }
@@ -1680,18 +2110,19 @@ function codexHTML(){
     const Q=RES[k];
     h+=`<div class="rx" style="--c:${R.c}"><div class="rxh"><strong>${R.n}</strong>${chip(a)}<span class="plus">加</span>${cb}</div><div class="rxd">${R.d}</div><div class="rres">共鳴「<b>${Q.n}</b>」：${Q.d}</div></div>`;
   }
-  h+='<h3>技能</h3>';
+  h+=`<h3>技能</h3><p class="sub">技能最高 Lv${SKMAX}。Lv3 是形狀的斷點；Lv4 讓狀態附著得更久、更廣；Lv${SKMAX} 是「質變」，改變它和其他元素、反應之間的關係。兩個不同元素的質變技能可以二合一融合。</p>`;
+  let grp='';
   for(const k in SK){
     const d=SK[k]; if(d.hidden) continue;
     const tags=d.ap.length?d.ap.map(chip).join(' '):`<span class="supt">${d.sup}</span>`;
-    h+=`<div class="sk" style="--c:${d.c}"><div class="badge">${d.ch}</div><div class="cb"><div class="skn">${d.n}</div><div class="cl" style="margin-top:3px">${tags}</div></div></div>`;
+    { const g=PE[id]?EL_N[PE[id]]:'輔助'; if(g!==grp){ grp=g; h+=`<div class="cgrp">${g}</div>`; } }
+    h+=`<div class="sk" style="--c:${d.c}"><div class="badge">${d.ch}</div><div class="cb"><div class="skn">${d.n}</div><div class="cl" style="margin-top:3px">${tags}</div><div class="cd" style="margin-top:4px"><b style="color:#f2c46d">Lv${SKMAX}</b> ${d.d[SKMAX-1]}</div></div></div>`;
   }
   h+=`<h3>共鳴爆發</h3><p class="sub">每觸發一次反應就會充能右下角的「鳴」。充滿後點它（電腦按空白鍵）：周圍敵人被震開，並一次沾上你技能的所有元素，讓整個組合同時反應。危急時也能拿來脫困。</p>`;
-  h+=`<h3>融合進化</h3><p class="sub">兩個元素不同、都已滿級的技能，升級時可能出現「融合」。融合後兩個技能會變成一個全新技能，空出一格技能欄。名字由兩種元素決定（例如火＋冰＝凍焰、水＋雷＝雷雨），並從三種進化方向選一個：</p>
-    <div class="foe" style="--c:#f2c46d"><i></i><div><b>矢・追蹤彈</b><span>朝最近的敵人射出會轉彎的彈，單體爆發。</span></div></div>
-    <div class="foe" style="--c:#f2c46d"><i></i><div><b>領域</b><span>在敵群中展開一片區域，持續上狀態，範圍控場。</span></div></div>
-    <div class="foe" style="--c:#f2c46d"><i></i><div><b>之環・環繞</b><span>光球繞著你轉，近身防禦。</span></div></div>
-    <p class="sub">融合技能一次附加兩種元素：會互相反應的組合（例如蒸汽）每次命中都直接觸發反應；不會反應的組合（例如凍焰）則一次幫敵人疊好兩種狀態，等其他技能來引爆。</p>`;
+  h+=`<h3>元素融合</h3><p class="sub">兩個不同元素的 Lv${SKMAX} 技能可以在技能欄裡二合一（最多 ${FZ_MAX} 個），兩個技能都照常攻擊，同時解鎖這組元素的融合效果：這兩種元素在同一個敵人身上相遇就會觸發，先在敵人身上的是「底」，後到的是「觸發」，順序不同，效果不同。原本的技能和反應照常運作。風、岩、物理不會留在敵人身上，打中後 1.2 秒內算「在先」。</p>`;
+  for(const k in FZ){ const es=k.split('|'), A=FZ[k][es[0]], B=FZ[k][es[1]]; h+=`<div class="foe" style="--c:${COL[es[0]]}"><i></i><div><b>${fzLabel(k)}</b><span>「${A.n}」${A.d}<br>「${B.n}」${B.d}</span></div></div>`; }
+  h+=`<h3>三元素融合</h3><p class="sub">融合欄位再加上第三種元素的 Lv${SKMAX} 技能，可以三合一，解鎖三元素融合。三種元素在 2 秒內都打中同一個敵人時觸發。</p>`;
+  for(const k in FZ3){ const T3=FZ3[k]; h+=`<div class="foe" style="--c:#f2c46d"><i></i><div><b>${T3.n}</b><span>${T3.d}</span></div></div>`; }
   h+='<h3>天候</h3>';
   for(const k in WX){ const w=WX[k]; h+=`<div class="foe" style="--c:${w.c}"><i></i><div><b>${w.n}</b><span>${w.d}。持續 22 秒，對手上有對應反應的組合是大好機會。</span></div></div>`; }
   h+='<h3>深淵詛咒（無盡模式 5:00 後每 2 分鐘選一個）</h3>';
@@ -1711,23 +2142,41 @@ function codexHTML(){
   h+='<button class="btn" data-act="back">返回</button></div>';
   return h;
 }
+const txtOf=(v,l)=>Array.isArray(v)?v[Math.max(0,Math.min(v.length,l||1)-1)]:(typeof v==='string'?v:'');
+function pzRow(c,bd,nm,sub,ds,sm){ return `<div class="pzrow" style="--c:${c}"><div class="bd${sm?' sm':''}">${bd}</div><div class="tx"><div class="nm">${nm}${sub?`<em>${sub}</em>`:''}</div><div class="ds">${ds}</div></div></div>`; }
+/* 暫停畫面：戰鬥中只顯示主動、被動，其餘資訊都在這裡，並附上效果說明 */
 function pauseHTML(){
   const own=ownedEls(), act=Object.keys(REACT).filter(k=>REACT[k].pair.every(x=>own.has(x)));
-  let h=`<div class="panel"><h2>暫停</h2><p class="sub">${S.endless?'無盡模式，已存活 '+fmt(S.t):'剩餘 '+fmt(WIN_T-S.t)}，Lv ${S.p.lv}，${S.kills} 擊殺</p>`;
+  let h=`<div class="panel pz"><h2>暫停</h2><p class="sub">${S.endless?'無盡模式，已存活 '+fmt(S.t):'剩餘 '+fmt(WIN_T-S.t)}，Lv ${S.p.lv}，${S.kills} 擊殺</p>`;
   if(S.boss&&!S.boss.dead){ const B=BOSS[S.boss.boss]; h+=`<p class="note" style="text-align:left;color:${B.c}">${B.n}｜考驗：${B.test}</p><p class="sub">${B.tip}</p>`; }
-  const ownR=[...Object.keys(S.rl).map(k=>`<span class="chip on" style="--c:${RL[k].c}">${RL[k].n}</span>`),...Object.keys(S.ct).map(k=>`<span class="chip on" style="--c:${CT[k].c}">${CT[k].n} ×${S.ct[k]}</span>`),...(S.asc?[`<span class="chip on" style="--c:#f2c46d">昇華 ×${S.asc}</span>`]:[]),...Object.keys(S.ms).map(k=>`<span class="chip on" style="--c:${REACT[k].c}">${REACT[k].n}精通 ×${S.ms[k]}</span>`),...Object.keys(S.mu).map(k=>`<span class="chip on" style="--c:${MU[k].c}">詛咒：${MU[k].n}${S.mu[k]>1?' ×'+S.mu[k]:''}</span>`)];
-  if(ownR.length) h+=`<h3>聖物與契約</h3><div class="cl">${ownR.join('')}</div>`;
-  h+=`<h3>目前能觸發的反應</h3><div class="cl">${act.length?act.map(k=>`<span class="chip on" style="--c:${REACT[k].c}">${REACT[k].n}</span>`).join(''):'<span class="supt">還沒有。試著拿兩種不同元素的技能。</span>'}</div>`;
-  const prog=Object.keys(REACT).filter(k=>act.includes(k)||S.rc[k]);
-  if(prog.length){
-    h+=`<h3>共鳴進度</h3>`;
-    for(const k of prog){
-      const n=S.rc[k]||0, R=REACT[k], st=S.res[k]?`<span class="st ok">${RES[k].n}</span>`:n>=resNeed()?`<span class="st ok">可共鳴</span>`:`<span class="st">${n} / ${resNeed()}</span>`;
-      h+=`<div class="prog" style="--c:${R.c}"><span class="nm">${R.n}</span><span class="tr"><i style="width:${Math.min(100,n/resNeed()*100)}%"></i></span>${st}</div>`;
-       }
-    h+=`<div style="height:14px"></div>`;
+  h+=`<div class="pzsec">主動技能<small>${S.order.length} / ${MAX_SLOTS}</small></div>`;
+  for(const id of S.order){ const d=SK[id], s=S.sk[id];
+    if(d.fz) h+=pzRow(d.c,badgeHTML(d),d.n,d.tri?'三合一':'二合一',d.parts.map(p=>`<b style="color:${SK[p].c}">${SK[p].n}</b>　${SK[p].d[0]}<br><span class="q">${SK[p].d[SKMAX-1]}</span>`).join('<br>'),d.tri);
+    else h+=pzRow(d.c,d.ch,d.n,`Lv ${s.lv} / ${SKMAX}`,d.d[0]+(s.lv>=SKMAX?`<br><span class="q">${d.d[SKMAX-1]}</span>`:`<br><span class="mu">Lv${SKMAX}　${d.d[SKMAX-1]}</span>`));
   }
-  h+=`<button class="btn primary" data-act="resume">繼續</button><button class="btn" data-act="codex">反應圖鑑</button><button class="btn" data-act="sound">音效：${AU.on?'開':'關'}</button><button class="btn" data-act="restart">重新開始</button><button class="btn" data-act="home">回到標題</button></div>`;
+  if(S.porder.length){ h+=`<div class="pzsec">被動<small>${S.porder.length} / ${MAX_PV}</small></div>`;
+    for(const id of S.porder){ const d=PV[id], l=S.pv[id]; h+=pzRow(d.c,d.ch,d.n,`Lv ${l} / ${PVMAX}`,txtOf(d.d,l)); } }
+  const fk=Object.keys(S.fu||{}), tk=Object.keys(S.fu3||{});
+  h+=`<div class="pzsec">融合<small>${S.order.filter(x=>SK[x].fz).length} / ${FZ_MAX}</small></div>`;
+  if(!fk.length&&!tk.length) h+=`<p class="pzhint">兩個不同元素的技能都練到 Lv${SKMAX}，升級時可以在技能欄裡二合一，並解鎖這組元素的融合效果。</p>`;
+  for(const k of tk) h+=pzRow('#f2c46d','三',FZ3[k].n,'三元素',FZ3[k].d+'三種元素在 2 秒內打中同一個敵人時觸發。');
+  for(const k of fk){ const es=k.split('|'), A=FZ[k][es[0]], B=FZ[k][es[1]];
+    h+=pzRow('#f2c46d','融',fzLabel(k),'',`<b style="color:${COL[es[1]]}">${A.n}</b>　${A.d}<br><b style="color:${COL[es[0]]}">${B.n}</b>　${B.d}`); }
+  const rk=Object.keys(S.res), prog=Object.keys(REACT).filter(k=>!S.res[k]&&(act.includes(k)||S.rc[k]));
+  h+=`<div class="pzsec">共鳴<small>${rk.length}</small></div>`;
+  for(const k of rk) h+=pzRow(REACT[k].c,REACT[k].n[0],RES[k].n,REACT[k].n+'的共鳴',RES[k].d);
+  for(const k of prog){ const n=S.rc[k]||0, Rx=REACT[k], st=n>=resNeed()?`<span class="st ok">可共鳴</span>`:`<span class="st">${n} / ${resNeed()}</span>`;
+    h+=`<div class="prog" style="--c:${Rx.c}"><span class="nm">${Rx.n}</span><span class="tr"><i style="width:${Math.min(100,n/resNeed()*100)}%"></i></span>${st}</div>`; }
+  if(!rk.length&&!prog.length) h+=`<p class="pzhint">同一種反應觸發 ${resNeed()} 次，就能選擇它的共鳴。</p>`;
+  const ex=[];
+  for(const k in S.rl) ex.push(pzRow(RL[k].c,RL[k].ch,RL[k].n,'聖物',RL[k].d));
+  for(const k in S.ct) ex.push(pzRow(CT[k].c,CT[k].ch,CT[k].n,'契約 ×'+S.ct[k],CT[k].d));
+  for(const k in S.mu) ex.push(pzRow(MU[k].c,MU[k].ch,MU[k].n,'詛咒'+(S.mu[k]>1?' ×'+S.mu[k]:''),MU[k].d));
+  for(const k in S.ms) ex.push(pzRow(REACT[k].c,'精',REACT[k].n+'精通','×'+S.ms[k],`${REACT[k].n}傷害 +${20*S.ms[k]}%。`));
+  if(S.asc) ex.push(pzRow('#f2c46d','昇','昇華','×'+S.asc,`所有反應傷害 +${6*S.asc}%。`));
+  if(ex.length) h+=`<div class="pzsec">聖物與強化<small>${ex.length}</small></div>`+ex.join('');
+  h+=`<div class="pzsec">目前能觸發的反應</div><div class="cl">${act.length?act.map(k=>`<span class="chip on" style="--c:${REACT[k].c}">${REACT[k].n}</span>`).join(''):'<span class="supt">還沒有。試著拿兩種不同元素的技能。</span>'}</div>`;
+  h+=`<div class="pzbtns"><button class="btn primary" data-act="resume">繼續</button><button class="btn" data-act="codex">圖鑑</button><button class="btn" data-act="sound">音效：${AU.on?'開':'關'}</button><button class="btn" data-act="fxlite">特效：${FXL?'精簡':'完整'}</button><button class="btn" data-act="restart">重新開始</button><button class="btn" data-act="home">回到標題</button></div></div>`;
   return h;
 }
 function pause(){ if(!S||S.mode!=='play')return; S.mode='pause'; input.active=false; input.id=null; for(const k in input.keys)input.keys[k]=false; showOv(pauseHTML()); }
@@ -1748,7 +2197,7 @@ function endlessOver(entries,total,share,rEntries,school,sc,sub,bars){
     ${onlineOn()?`<button class="btn primary" data-act="upload" id="upBtn">上傳到全球排行榜</button><p class="msg" id="upMsg"></p>`:''}
     <button class="btn${onlineOn()?'':' primary'}" data-act="share">分享成績碼</button><p class="msg" id="shareMsg"></p>
     <div class="stats"><div><b>${S.p.lv}</b><small>等級</small></div><div><b>${S.kills}</b><small>擊殺</small></div><div><b>${S.slain}</b><small>討伐強敵</small></div></div>
-    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}</p>
+    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}${S.fu&&Object.keys(S.fu).length?'<br>融合：'+Object.keys(S.fu).map(fzLabel).join('、'):''}</p>
     <h3>傷害來源</h3><div class="bars">${bars||'<p class="sub">沒有造成傷害</p>'}</div>
     <button class="btn primary" data-act="restart">再來一局</button>
     <button class="btn" data-act="board">排行榜</button>
@@ -1781,7 +2230,7 @@ function endGame(win){
     ${met&&!slain?`<p class="note" style="text-align:left">${B.fail}</p>`:''}
     <div class="school" style="--c:${sc}"><small>你的流派</small><strong>${school}</strong><span>${sub}</span></div>
     <div class="stats"><div><b>${S.p.lv}</b><small>等級</small></div><div><b>${S.kills}</b><small>擊殺</small></div><div><b>${nReact}</b><small>觸發反應</small></div></div>
-    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}</p>
+    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}${S.fu&&Object.keys(S.fu).length?'<br>融合：'+Object.keys(S.fu).map(fzLabel).join('、'):''}</p>
     <h3>傷害來源</h3><div class="bars">${bars||'<p class="sub">沒有造成傷害</p>'}</div>
     <button class="btn primary" data-act="restart">再來一局</button>
     <button class="btn" data-act="home">回到標題</button>
@@ -1802,7 +2251,9 @@ el.ov.addEventListener('click',e=>{
   else if(a==='upload') uploadResult();
   else if(a==='evoback'){ if(S&&S.evoPrev){ S.choices=S.evoPrev; S.evoPrev=null; S.evoMode=0; showPick(); } }
   else if(a==='tab'){ boardTab=b.dataset.t; showBoard(); }
+  else if(a==='fxlite'){ FXL=!FXL; try{localStorage.setItem('resonance-fx',FXL?'lite':'full')}catch(_){} if(S&&S.mode==='pause') showOv(pauseHTML()); }
   else if(a==='sound'){ AU.on=!AU.on; try{localStorage.setItem('resonance-sound',AU.on?'on':'off')}catch(_){} if(S&&S.mode==='pause') showOv(pauseHTML()); }
+  else if(a==='sel'){ const i=+b.dataset.i; if(S.sel===i){ if(performance.now()-S.pickAt<250)return; choose(i); } else { S.sel=i; showPick(true); } }
   else if(a==='pick'){ if(performance.now()-S.pickAt<350)return; choose(+b.dataset.i); }
   else if(a==='reroll'){ if(S.rerolls>0){ S.rerolls--; S.choices=genChoices(); showPick(); } }
   else if(a==='codex'){ codexBack=S&&S.mode==='pause'?'pause':'title'; showOv(codexHTML()); }
@@ -1941,14 +2392,16 @@ function render(now){
       ctx.fillStyle=`rgba(255,150,70,${0.7*a})`;
       for(let i=0;i<6;i++){ const an=i*1.7+z.x*0.01, rr=z.r*(0.25+0.6*((i*0.37)%1)), fl=0.6+0.4*Math.sin(t*9+i*3);
         circle(z.x+Math.cos(an)*rr,z.y+Math.sin(an)*rr,1.8*fl+0.6); ctx.fill(); }
+    } else if(z.k==='xz'||z.k==='gz'){ drawZ(z,a,t);
     } else if(z.k==='well'){
       ctx.fillStyle=`rgba(181,140,255,${0.07*a})`; circle(z.x,z.y,z.r); ctx.fill();
       ctx.lineWidth=2;
       for(let i=0;i<3;i++){ const k=1-((i/3+t*0.8)%1); ctx.strokeStyle=`rgba(181,140,255,${0.45*k*a})`; circle(z.x,z.y,z.r*k); ctx.stroke(); }
-      ctx.fillStyle='#120c24'; circle(z.x,z.y,9); ctx.fill(); ctx.strokeStyle=`rgba(200,170,255,${a})`; ctx.stroke();
+      ctx.fillStyle=z.col?'#2a1a08':'#120c24'; circle(z.x,z.y,9); ctx.fill(); ctx.strokeStyle=z.col?`rgba(242,196,109,${a})`:`rgba(200,170,255,${a})`; ctx.stroke();
     }
   }
 
+  for(const z of S.Z) if(z.ch>S.t&&vis(z.x,z.y,z.r)){ ctx.strokeStyle='rgba(255,224,74,0.6)'; ctx.lineWidth=1.5; ctx.setLineDash([3,5]); circle(z.x,z.y,z.r+3); ctx.stroke(); ctx.setLineDash([]); }
   // 經驗
   ctx.fillStyle='#46f0b4'; ctx.beginPath();
   for(const gm of S.G){ if(gm.k||!vis(gm.x,gm.y,6))continue; const s=gm.v>=10?6:gm.v>=3?4.5:3.5; ctx.moveTo(gm.x,gm.y-s);ctx.lineTo(gm.x+s*0.7,gm.y);ctx.lineTo(gm.x,gm.y+s);ctx.lineTo(gm.x-s*0.7,gm.y);ctx.closePath(); }
@@ -2034,20 +2487,18 @@ function render(now){
     ctx.globalCompositeOperation='source-over';
   }
 
-  for(const id of S.order){ const d=SK[id]; if(!d||!d.fused) continue; const F=d.fused, s=S.sk[id];
-    if(F.form==='field'&&s.f) for(const z of s.f){ const a=Math.min(1,z.l/0.5,(3.5-z.l)/0.3+0.2);
-      ctx.fillStyle=hexA(d.c,0.13*a); circle(z.x,z.y,z.r); ctx.fill();
-      ctx.strokeStyle=hexA(d.c2,0.7*a); ctx.lineWidth=2; ctx.setLineDash([8,6]); ctx.lineDashOffset=-t*30; circle(z.x,z.y,z.r); ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset=0; }
-    if(F.form==='ring'){ const n=[3,4,5][s.lv-1], R=[85,95,105][s.lv-1];
-      ctx.strokeStyle=hexA(d.c,0.12); ctx.lineWidth=1; circle(p.x,p.y,R); ctx.stroke();
-      for(let i=0;i<n;i++){ const a=(s.ang||0)+i*TAU/n, x=p.x+Math.cos(a)*R, y=p.y+Math.sin(a)*R;
-        ctx.fillStyle=hexA(d.c2,0.35); circle(x,y,13); ctx.fill(); ctx.fillStyle=d.c; circle(x,y,8); ctx.fill(); } }
+  // 環繞、冰牆
+  for(const id in S.sk){ const s=S.sk[id]; if(!s) continue;
+    if(s.orb&&s.ov){ const P=s.ov, c=P.c||'#ffffff', c2=P.c2||c, rr=P.r||12; ctx.strokeStyle=hexA(c,0.1); ctx.lineWidth=1; circle(p.x,p.y,P.R); ctx.stroke();
+      for(let i=0;i<s.orb.length;i+=2){ ctx.fillStyle=hexA(c2,0.35); circle(s.orb[i],s.orb[i+1],rr+3); ctx.fill(); ctx.fillStyle=c; circle(s.orb[i],s.orb[i+1],rr*0.6); ctx.fill(); } }
+    if(s.w) for(const w of s.w){ const a=Math.min(1,w.l/0.4); ctx.lineCap='round'; ctx.strokeStyle=`rgba(159,232,255,${0.8*a})`; ctx.lineWidth=10; ctx.beginPath(); ctx.moveTo(w.x1,w.y1); ctx.lineTo(w.x2,w.y2); ctx.stroke();
+      ctx.strokeStyle=`rgba(235,250,255,${0.9*a})`; ctx.lineWidth=3; ctx.stroke(); ctx.lineCap='butt'; }
   }
 
   // 環刃
   const bl=S.sk.blades;
   if(bl&&bl.pos.length){
-    const R=[58,66,74][bl.lv-1];
+    const R=LV([58,66,74,80],bl.lv);
     ctx.strokeStyle='rgba(230,230,238,0.06)'; ctx.lineWidth=1; circle(p.x,p.y,R); ctx.stroke();
     ctx.fillStyle='#e6e6ee';
     for(let i=0;i<bl.pos.length;i+=3){
@@ -2067,26 +2518,37 @@ function render(now){
       const k=Math.min(1,o.t/o.dur), x=o.sx+(o.tx-o.sx)*k, y=o.sy+(o.ty-o.sy)*k, h=Math.sin(Math.PI*k)*50;
       ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.ellipse(x,y,5,2.5,0,0,TAU); ctx.fill();
       ctx.fillStyle=COL.oil; circle(x,y-h,5); ctx.fill();
-    } else if(o.k==='fo'){
-      const d=SK[o.id]; if(d){ ctx.fillStyle=hexA(d.c2,0.35); circle(o.x,o.y,9); ctx.fill(); ctx.fillStyle=d.c; circle(o.x,o.y,5); ctx.fill(); }
+    } else if(o.k==='xs'){ ctx.fillStyle=hexA(o.c2||o.c||'#ffffff',0.35); circle(o.x,o.y,o.sz+4); ctx.fill(); ctx.fillStyle=o.c||'#ffffff'; circle(o.x,o.y,o.sz); ctx.fill();
+    } else if(o.k==='xk'){ const k=Math.min(1,o.t/o.dur), h=(1-k)*140, c=o.c||'#ffffff'; ctx.fillStyle=hexA(c,0.08+0.14*k); circle(o.x,o.y,o.r*k); ctx.fill(); ctx.strokeStyle=hexA(c,0.45*k); ctx.lineWidth=1.5; circle(o.x,o.y,o.r); ctx.stroke();
+      if(!(o.P&&o.P.spk)){ ctx.fillStyle=o.c2||c; circle(o.x,o.y-h,7+4*k); ctx.fill(); }
+    } else if(o.k==='xn'){ const a=1-Math.min(1,o.t/(o.dur+0.12)); ctx.strokeStyle=hexA(o.c||'#ffffff',0.8*a); ctx.lineWidth=4; circle(o.cx!=null?o.cx:p.x,o.cy!=null?o.cy:p.y,o.rad); ctx.stroke();
     } else if(o.k==='gale'){
       const k=Math.min(1,o.l/0.4);
       for(let i=0;i<3;i++){ const rr=o.r*(0.4+0.28*i), a0=t*(9-2*i)+i*2.1; ctx.strokeStyle=`rgba(94,230,208,${(0.6-0.15*i)*k})`; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(o.x,o.y,rr,a0,a0+3.4); ctx.stroke(); }
+      if(o.carry){ ctx.strokeStyle=hexA(COL[o.carry],0.75*k); ctx.lineWidth=3; const a0=-t*7; ctx.beginPath(); ctx.arc(o.x,o.y,o.r*0.55,a0,a0+2.6); ctx.stroke(); ctx.beginPath(); ctx.arc(o.x,o.y,o.r*0.55,a0+3.14,a0+5.74); ctx.stroke(); }
     } else if(o.k==='rock'){
       const k=Math.min(1,o.t/o.dur), h=(1-k)*150;
       ctx.fillStyle=`rgba(231,176,79,${0.1+0.15*k})`; circle(o.x,o.y,o.r*k); ctx.fill();
       ctx.strokeStyle=`rgba(231,176,79,${0.45*k})`; ctx.lineWidth=1.5; circle(o.x,o.y,o.r); ctx.stroke();
       ctx.fillStyle='#e7b04f'; circle(o.x,o.y-h,8+4*k); ctx.fill();
+      if(o.el){ ctx.strokeStyle=COL[o.el]; ctx.lineWidth=2.5; circle(o.x,o.y-h,10+4*k); ctx.stroke(); }
     } else if(o.k==='wave'){
       const k=Math.min(1,o.t/o.dur), a=1-Math.min(1,o.t/(o.dur+0.15));
       ctx.strokeStyle=`rgba(63,169,255,${0.8*a})`; ctx.lineWidth=5; circle(p.x,p.y,o.rad); ctx.stroke();
       ctx.fillStyle=`rgba(63,169,255,${0.07*a})`; ctx.fill();
       void k;
+    } else if(o.k==='ebb'){
+      const a=1-Math.min(1,o.t/o.dur);
+      ctx.strokeStyle=`rgba(140,205,255,${0.7*a})`; ctx.lineWidth=3; ctx.setLineDash([10,7]); circle(p.x,p.y,o.rad); ctx.stroke(); ctx.setLineDash([]);
     }
   }
+  for(const f of S.FX){ if(f.k!=='ln'&&f.k!=='cone') continue; const k=Math.max(0,f.l/f.m);
+    if(f.k==='ln'){ ctx.strokeStyle=hexA(f.c||'#ffffff',0.75*k); ctx.lineWidth=f.w*0.9*k+1; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(f.x1,f.y1); ctx.lineTo(f.x2,f.y2); ctx.stroke(); ctx.lineCap='butt'; }
+    else { ctx.fillStyle=hexA(f.c||'#ffffff',0.22*k); ctx.beginPath(); ctx.moveTo(f.x,f.y); ctx.arc(f.x,f.y,f.len,f.a-f.ang/2,f.a+f.ang/2); ctx.closePath(); ctx.fill(); } }
   for(const h of S.H){ if(h.k!=='shot'||!vis(h.x,h.y,12))continue; ctx.fillStyle=`rgba(${h.c},0.35)`; circle(h.x,h.y,h.r+5); ctx.fill(); ctx.fillStyle=`rgb(${h.c})`; circle(h.x,h.y,h.r); ctx.fill(); }
   for(const f of S.FX){
     const k=Math.max(0,f.l/f.m);
+    if(f.k==='ln'||f.k==='cone') continue;
     if(f.k==='pt'){ ctx.globalAlpha=k; ctx.fillStyle=f.c; ctx.fillRect(f.x-f.s/2,f.y-f.s/2,f.s,f.s); }
     else if(f.k==='boom'){ const r=f.r*(0.45+0.55*(1-k*k)); ctx.globalAlpha=0.35*k; ctx.fillStyle=f.c; circle(f.x,f.y,r); ctx.fill(); ctx.globalAlpha=0.9*k; ctx.strokeStyle=f.c; ctx.lineWidth=2.5; ctx.stroke(); }
     else if(f.k==='ring'){ const r=f.r*(0.3+0.7*(1-k)); ctx.globalAlpha=k; ctx.strokeStyle=f.c; ctx.lineWidth=2.5; circle(f.x,f.y,r); ctx.stroke(); }
