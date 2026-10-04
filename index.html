@@ -116,7 +116,7 @@ textarea.code,textarea.imp{display:block;width:100%;border-radius:12px;border:1p
 textarea.code{height:64px;margin-top:8px}
 textarea.imp{height:92px}
 .msg{font-size:12px;color:var(--gold);min-height:1.4em;margin:6px 0 0;text-align:center}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 4px}
+.tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px;margin:12px 0 4px}
 .tab{padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--muted);font:800 15px var(--sans);cursor:pointer}
 .tab.on{border-color:var(--gold);color:var(--gold);background:rgba(242,196,109,.08)}
 .mode2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -301,7 +301,7 @@ h3{font-family:var(--serif);font-weight:900;font-size:18px;margin:22px 0 8px}
 .phint{font-size:12px;color:var(--muted);text-align:center;margin:12px 0 4px}
 
 /* ===== 主頁面 ===== */
-.title.t3{max-width:440px;width:100%;margin:0 auto;text-align:center;position:relative;--below:452px}   /* --below：主角下方內容的高度，主角區域吃剩下的空間 */
+.title.t3{max-width:440px;width:100%;margin:0 auto;text-align:center;position:relative;--below:474px}   /* --below：主角下方內容的高度，主角區域吃剩下的空間 */
 .t3 .hero{position:relative;height:clamp(240px,calc(100vh - var(--below)),600px);height:clamp(240px,calc(100svh - var(--below)),600px);margin:calc(-18px - env(safe-area-inset-top,0px)) -16px 0;pointer-events:none}
 .t3 .hero img{position:absolute;top:0;left:50%;height:100%;width:auto;aspect-ratio:1/1;transform:translateX(-50%);object-fit:cover;background:transparent;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%),linear-gradient(180deg,transparent 0,#000 3%,#000 94%,transparent 100%);-webkit-mask-composite:source-in;
@@ -310,8 +310,8 @@ h3{font-family:var(--serif);font-weight:900;font-size:18px;margin:22px 0 8px}
   background:radial-gradient(ellipse 50% 50% at 50% 50%,#020203 0,#020203 66%,rgba(2,2,3,.6) 84%,rgba(2,2,3,0) 100%)}   /* 新影片是純黑背景 */
 .t3 .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:14%;background:linear-gradient(180deg,rgba(6,7,13,0),rgba(6,7,13,.9));pointer-events:none}   /* 只淡最底部，不壓暗主角 */
 .t3 .tmain{position:relative;z-index:2;margin-top:-22px}   /* 標誌只碰到腳尖下方，不蓋住主角 */
-@media (max-height:760px){ .title.t3{--below:398px} .t3 .formula{display:none} }   /* 畫面矮：先拿掉反應公式，主角不縮 */
-@media (max-height:640px){ .title.t3{--below:318px} .t3 .tag{display:none} .t3 .logo3 .star{display:none} .t3 .logo3 h1{font-size:46px} .t3 .logo3 .en{margin-top:4px} }
+@media (max-height:760px){ .title.t3{--below:420px} .t3 .formula{display:none} }   /* 畫面矮：先拿掉反應公式，主角不縮 */
+@media (max-height:640px){ .title.t3{--below:340px} .t3 .tag{display:none} .t3 .logo3 .star{display:none} .t3 .logo3 h1{font-size:46px} .t3 .logo3 .en{margin-top:4px} }
 .t3 .logo3 .star{width:24px;height:24px;display:block;margin:0 auto 6px;filter:drop-shadow(0 0 8px rgba(242,196,109,.8));animation:tstar 3.2s ease-in-out infinite}
 @keyframes tstar{0%,100%{transform:scale(.9) rotate(0);opacity:.85}50%{transform:scale(1.12) rotate(45deg);opacity:1}}
 .t3 .logo3 h1{font-family:var(--serif);font-weight:900;font-size:clamp(56px,16.5vw,82px);letter-spacing:.16em;padding-left:.16em;margin:0;line-height:1;
@@ -319,6 +319,15 @@ h3{font-family:var(--serif);font-weight:900;font-size:18px;margin:22px 0 8px}
 .t3 .logo3 .en{font-family:var(--serif);font-size:11px;letter-spacing:.52em;padding-left:.52em;color:#cdb98d;margin-top:8px;opacity:.9}
 .t3 .tag{font-family:var(--serif);font-weight:700;font-size:15px;color:#f6efe9;margin:12px 0 10px;opacity:.92}
 .t3 .formula{margin-bottom:14px;opacity:.85}
+.lb.pd1{border-color:rgba(242,196,109,.75);background:linear-gradient(90deg,rgba(242,196,109,.16),transparent)} .lb.pd1 .rk{color:#f2c46d}
+.lb.pd2{border-color:rgba(207,214,228,.55)} .lb.pd2 .rk{color:#cfd6e4} .lb.pd3{border-color:rgba(217,154,108,.55)} .lb.pd3 .rk{color:#d99a6c}
+.lb .rk{min-width:2.4em} .dh{padding:8px 10px;margin:6px 0;border:1px solid rgba(255,255,255,.08);border-radius:10px;text-align:left}
+.dh b{display:block;color:#cdb98d;font-size:12px;margin-bottom:6px}
+.dh .dg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dh .dg span{display:flex;flex-direction:column;gap:1px;min-width:0;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dh .dg i{font-style:normal;font-size:11px;font-weight:400;opacity:.75} .dh .dg em{font-style:normal;font-size:12px;font-weight:400;opacity:.85}
+.dh .dh1{color:#f2c46d} .dh .dh2{color:#cfd6e4} .dh .dh3{color:#d99a6c} .dh .dh0{color:rgba(255,255,255,.25)}
+.t3 .dtop{font-size:12px;color:#cdb98d;margin-top:8px;min-height:1em}
 .title.t2 .logo{margin-top:4px}
 .title.t2 h1{background:linear-gradient(180deg,#fff7df 8%,#f6cf7e 50%,#b9822e 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px rgba(242,196,109,.32));animation:tglow 4s ease-in-out infinite}
 @keyframes tglow{50%{filter:drop-shadow(0 0 36px rgba(242,196,109,.55))}}
@@ -2773,6 +2782,21 @@ async function fsSubmit(e){
   const I=v=>({integerValue:String(v|0)}), T=v=>({stringValue:String(v)});
   await fsFetch(fsBase()+'/scores',{fields:{name:T(e.name),sc:T(e.sc),t:I(e.t),k:I(e.k),lv:I(e.lv),b:I(e.b),sk:T(e.sk),d:I(e.d),v:I(1)}});
 }
+const twDay=(ms=Date.now())=>Math.floor((ms+8*3600e3)/864e5);   // 台灣時間的「第幾天」，每天 00:00 換日
+const msToReset=()=>(twDay()+1)*864e5-8*3600e3-Date.now();
+function fsParse(f){ const str=k=>f[k]&&f[k].stringValue!=null?String(f[k].stringValue):'', num=k=>f[k]&&f[k].integerValue!=null?parseInt(f[k].integerValue,10)||0:0;
+  return {name:cleanName(str('name'))||'無名旅人',sc:SCHOOL[str('sc')]?str('sc'):'',t:num('t'),k:num('k'),lv:Math.max(1,num('lv')),b:num('b'),sk:str('sk').slice(0,12),d:num('d')}; }
+function topN(list,n){ const out=[], seen=new Set(); list.sort((a,b)=>b.t-a.t||b.k-a.k); for(const e of list){ if(seen.has(e.name)) continue; seen.add(e.name); out.push(e); if(out.length>=n) break; } return out; }
+let dCache=null;
+async function fsDaily(){   // 每日排行榜：今天＋前 7 天，每天前三名（每個暱稱只算最佳成績）
+  if(dCache&&performance.now()-dCache.at<30000) return dCache.v;
+  const today=twDay();
+  const rows=await fsFetch(fsBase()+':runQuery',{structuredQuery:{from:[{collectionId:'scores'}],where:{fieldFilter:{field:{fieldPath:'d'},op:'GREATER_THAN_OR_EQUAL',value:{integerValue:String(today-7)}}},orderBy:[{field:{fieldPath:'d'},direction:'DESCENDING'}],limit:600}});
+  const by={};
+  for(const row of rows||[]){ const f=row&&row.document&&row.document.fields; if(!f) continue; const e=fsParse(f); (by[e.d]||(by[e.d]=[])).push(e); }
+  const days={}; for(const d in by) days[d]=topN(by[d],3);
+  dCache={at:performance.now(),v:{today,days}}; return dCache.v;
+}
 let gCache=null;
 async function fsTop(){
   if(gCache&&performance.now()-gCache.at<30000) return gCache.list;
@@ -2798,7 +2822,8 @@ async function uploadResult(){
   const e=S&&S.lbEnt, b=$('upBtn'), m=$('upMsg'); if(!e||S.uploaded||!b) return;
   if(!getName()){ if(m) m.textContent='先在上面填暱稱，再上傳'; const n=$('nick2'); if(n) n.focus(); return; }
   b.disabled=true; if(m) m.textContent='上傳中…';
-  try{ await fsSubmit(e); S.uploaded=1; gCache=null; b.textContent='已上傳到全球排行榜'; if(m) m.textContent=''; const n=$('nick2'); if(n) n.disabled=true; }
+  try{ await fsSubmit(e); S.uploaded=1; gCache=null; dCache=null; b.textContent='已上傳到全球排行榜'; if(m) m.textContent=''; const n=$('nick2'); if(n) n.disabled=true;
+    fsDaily().then(v=>{ const i=(v.days[v.today]||[]).findIndex(x=>x.name===getName()); const mm=$('upMsg'); if(mm&&i>=0) mm.innerHTML=`<b style="color:var(--gold)">登上今日榜：${MEDAL[i]}！</b>`; }).catch(()=>{}); }
   catch(_){ b.disabled=false; if(m) m.textContent='上傳失敗，確認網路後再試一次'; }
 }
 const LB_KEY='resonance-lb', NAME_KEY='resonance-name', LB_SALT='共鳴/resonance/lb/v1';
@@ -2834,12 +2859,14 @@ function lbRow(e,i){
   const sc=schoolOf(e.sc);
   return `<div class="lb${i<3?' top':''}${e.own?' me':''}"><span class="rk">${i+1}</span><div class="who"><span style="color:${sc.c}">${sc.n}</span>・${esc(e.name)}${e.own?'<span class="you">我</span>':''}<small>Lv ${e.lv}・${e.k} 擊殺${e.b?'・討伐 '+e.b:''}　${skChars(e.sk)}</small></div><span class="tm">${fmt(e.t)}</span></div>`;
 }
-let boardBack='title', boardTab='global';
+let boardBack='title', boardTab='daily';
 function boardHTML(){
   const tab=onlineOn()?boardTab:'local';
   let h=`<div class="panel"><h2>排行榜</h2>`;
-  if(onlineOn()) h+=`<div class="tabs"><button class="tab${tab==='global'?' on':''}" data-act="tab" data-t="global">全球</button><button class="tab${tab==='local'?' on':''}" data-act="tab" data-t="local">本機</button></div>`;
-  if(tab==='global'){
+  if(onlineOn()) h+=`<div class="tabs"><button class="tab${tab==='daily'?' on':''}" data-act="tab" data-t="daily">每日</button><button class="tab${tab==='global'?' on':''}" data-act="tab" data-t="global">全球</button><button class="tab${tab==='local'?' on':''}" data-act="tab" data-t="local">本機</button></div>`;
+  if(tab==='daily'){
+    h+=`<p class="sub">今天（台灣時間）無盡模式存活最久的前三名，每天 00:00 重置，畫面開著時每 30 秒自動更新。<br><b id="dCount" style="color:var(--gold)"></b></p><div id="dList"><p class="note">載入中…</p></div><h3>前幾天的前三名</h3><div id="dHist"></div>`;
+  } else if(tab==='global'){
     h+=`<p class="sub">無盡模式，依存活時間排名，每個暱稱只顯示最佳成績。</p><div id="gList"><p class="note">載入中…</p></div>`;
   } else {
     const a=lbLoad();
@@ -2851,7 +2878,24 @@ function boardHTML(){
   h+=`<button class="btn" data-act="boardback">返回</button></div>`;
   return h;
 }
-function showBoard(){ showOv(boardHTML()); if(onlineOn()&&boardTab==='global') loadGlobal(); }
+function showBoard(){ showOv(boardHTML()); if(onlineOn()&&boardTab==='global') loadGlobal(); if(onlineOn()&&boardTab==='daily') loadDaily(); }
+const hms=ms=>{ const t=Math.max(0,Math.floor(ms/1000)); return [t/3600|0,(t/60|0)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':'); };
+const dayLabel=d=>{ const t=new Date(d*864e5); return `${t.getUTCMonth()+1}/${t.getUTCDate()}（${'日一二三四五六'[t.getUTCDay()]}）`; };
+const MEDAL=['第一','第二','第三'];
+function podRow(e,i,me){ const sc=schoolOf(e.sc); return `<div class="lb top pd${i+1}${me&&e.name===me?' me':''}"><span class="rk">${MEDAL[i]}</span><div class="who"><span style="color:${sc.c}">${sc.n}</span>・${esc(e.name)}${me&&e.name===me?'<span class="you">我</span>':''}<small>Lv ${e.lv}・${e.k} 擊殺${e.b?'・討伐 '+e.b:''}　${skChars(e.sk)}</small></div><span class="tm">${fmt(e.t)}</span></div>`; }
+function renderDaily(v){
+  const L=$('dList'), Hs=$('dHist'); if(!L) return; const me=getName(), td=v.days[v.today]||[];
+  L.innerHTML=td.length?td.map((e,i)=>podRow(e,i,me)).join('')+(td.length<3?`<p class="note">還有 ${3-td.length} 個位置空著。</p>`:''):'<p class="note">今天還沒有人上榜，第一個上傳的人就是今日第一。</p>';
+  const past=[]; for(let d=v.today-1;d>=v.today-7;d--) if(v.days[d]&&v.days[d].length) past.push(`<div class="dh"><b>${dayLabel(d)}</b><div class="dg">${[0,1,2].map(i=>{ const e=v.days[d][i]; return e?`<span class="dh${i+1}"><i>${MEDAL[i]}</i>${esc(e.name)}<em>${fmt(e.t)}</em></span>`:'<span class="dh0"><i>—</i></span>'; }).join('')}</div></div>`);
+  if(Hs) Hs.innerHTML=past.length?past.join(''):'<p class="note">前幾天還沒有紀錄。</p>';
+}
+let dTimer=0;
+function loadDaily(){   // 更新式：畫面開著就每秒更新倒數、每 30 秒重新抓一次
+  const run=()=>fsDaily().then(renderDaily).catch(()=>{ const b=$('dList'); if(b) b.innerHTML='<p class="note">連不上排行榜（可能沒有網路）。可以看本機排行榜。</p>'; });
+  const tick=()=>{ const c=$('dCount'); if(c) c.textContent='距離今日榜重置還有 '+hms(msToReset()); };
+  run(); tick(); clearInterval(dTimer); let n=0, day=twDay();
+  dTimer=setInterval(()=>{ if(!$('dList')){ clearInterval(dTimer); return; } tick(); if(++n%30===0||twDay()!==day){ day=twDay(); dCache=null; run(); } },1000);
+}
 function importCodes(){
   const box=$('imp'), msg=$('impMsg'); if(!box)return;
   const found=[...new Set(box.value.match(CODE_RE)||[])]; let ok=0, bad=0, dup=0; const have=new Set(lbLoad().map(x=>x.code));
@@ -2891,10 +2935,12 @@ function showTitle(){
       <button class="mcard alt" data-act="endless"><i>∞</i><b>無盡模式</b><small>撐越久排越前面</small></button>
     </div>
     <div class="row3"><button class="btn" data-act="howto">玩法</button><button class="btn" data-act="board">排行榜</button><button class="btn" data-act="codex">圖鑑</button></div>
+    ${onlineOn()?'<p class="dtop" id="dTop"></p>':''}
     ${b?`<p class="best">標準最佳：存活 ${fmt(b.time)}${b.slain?'（討伐強敵）':b.win?'（通關）':''}，流派「${b.school}」</p>`:''}
     ${eb?`<p class="best" style="margin-top:4px">無盡最佳：${fmt(eb.t)}，${esc(schoolOf(eb.sc).n+'・'+eb.name)}</p>`:''}
     </div>
   </div>`,true);
+  if(onlineOn()) fsDaily().then(v=>{ const el=$('dTop'), e=(v.days[v.today]||[])[0]; if(el) el.innerHTML=e?`今日第一　<b style="color:#f2c46d">${esc(e.name)}</b>　${fmt(e.t)}`:'今日榜還空著，第一個上傳的人就是今日第一'; }).catch(()=>{});   // 主畫面：今日第一
 }
 function howtoHTML(){
   return `<div class="panel howto"><h2>玩法</h2>
@@ -3026,7 +3072,7 @@ function resume(){ if(!S||S.mode!=='pause')return; S.mode='play'; hideOv(); }
 
 function endlessOver(entries,total,share,rEntries,school,sc,sub,bars){
   const ent={name:getName()||'無名旅人',sc:share>=0.3&&rEntries.length?rEntries[0][0]:'',t:Math.floor(S.t),k:S.kills,lv:S.p.lv,b:S.slain,
-    sk:S.order.map(id=>SK[id].ch).join(''),d:Math.floor(Date.now()/864e5),own:true};
+    sk:S.order.map(id=>SK[id].ch).join(''),d:twDay(),own:true};
   ent.code=encodeEntry(ent); S.lbEnt=ent;
   const rank=lbPut(ent);
   showOv(`<div class="panel">
