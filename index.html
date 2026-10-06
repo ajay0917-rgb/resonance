@@ -131,7 +131,7 @@ textarea.imp{height:92px}
 .sbr em{font-style:normal;font-family:var(--serif);font-weight:900;font-variant-numeric:tabular-nums}
 .sbr.r1{font-size:15px;color:#fff}.sbr.r1 i{color:var(--gold)}.sbr.r1 em{font-size:17px}
 .sbr.me span{color:var(--gold)}
-.sbt{margin:0 0 4px}.sbt b{font-size:14px;font-weight:900;letter-spacing:.14em;background:linear-gradient(100deg,var(--c) 20%,#fff 45%,var(--c) 70%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--c) 70%,transparent));animation:cshine 3.4s linear infinite}
+.sbt{display:flex;align-items:baseline;gap:8px;margin:0 0 4px}.sbt span{font-size:12px;font-weight:700;color:#e9e8f4}.sbt.none span{color:#8d8fae;font-weight:400}.sbt.none b{animation:none;opacity:.55}.sbt b{font-size:14px;font-weight:900;letter-spacing:.14em;background:linear-gradient(100deg,var(--c) 20%,#fff 45%,var(--c) 70%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--c) 70%,transparent));animation:cshine 3.4s linear infinite}
 .cosm .ckg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .cosm .ckg span{display:flex;align-items:baseline;justify-content:space-between;gap:6px;padding:6px 9px;border-radius:10px;border:1px solid rgba(255,255,255,.07);border-left:3px solid var(--c);background:rgba(255,255,255,.02)}
 .cosm .ckg b{font-size:13px;color:var(--c);letter-spacing:.06em}.cosm .ckg small{font-size:10.5px;color:#8d8fae;white-space:nowrap}
@@ -510,6 +510,11 @@ const REACT={
   forge:{n:'熔鑄',c:'#ff6a3d',pair:['metal','burn'],d:'金屬被火熔開：生命低於 30% 的敵人直接熔掉（強敵受到 1.5 倍傷害），熔液濺到附近 3 名敵人身上讓它們燃燒。'},
   sever:{n:'伐木',c:'#c9b27c',pair:['metal','wood'],d:'金剋木：造成目標最大生命 8% 的傷害（菁英 5%、強敵 1.5%），回復你 1 點生命。會吃掉纏藤，和綻放、蔓燃、藤縛搶同一份木。'},
   crystal:{n:'結晶',c:'#e7b04f',pair:['geo','ele'],d:'岩打中有燃燒、濕潤、寒冷或帶電的敵人時，把那個狀態凝成晶體。撿起晶體獲得 8 點護盾，場上最多 8 顆。'},
+  /* 2026-10-05 新增：原本不反應的組合裡，挑四個能帶來新戰術身份的（反傷、削弱、定時連爆、場地）。判定順序都排在舊反應後面 */
+  icethorn:{n:'冰棘',c:'#7ee8c8',pair:['chill','wood'],d:'凍硬的藤蔓長成冰棘：你身上長出冰棘甲 4 秒，碰到你的敵人被刺傷並寒冷（同一隻每 0.5 秒一次）。這個敵人移動 −40%，2 秒。'},
+  coldiron:{n:'寒鐵',c:'#9fb6d6',pair:['chill','metal'],d:'寒氣讓金屬冷縮成枷鎖：敵人被鎖住 5 秒（強敵 2 秒）——碰到你的傷害 −40%、移動 −25%。'},
+  fuse:{n:'引信',c:'#ff6fa0',pair:['oil','wood'],d:'浸了油的藤蔓變成引信：1.5 秒後在原地炸開（不管它死了沒），範圍傷害並讓周圍敵人沾油。周圍纏藤的敵人沾到油，會接著點燃新的引信。'},
+  slick:{n:'浮油',c:'#d4b45e',pair:['wet','oil'],d:'油浮在水上散開：地上留下一片油膜 5 秒，踩到的敵人打滑（移動 −30%）並不斷沾油；火碰到油膜會整片爆燃。'},
 };
 const SK={
   ember:{ch:'燼',n:'餘燼彈',c:COL.burn,ap:['burn'],st:1,d:['每 1.2 秒向最近的敵人射出火球，施加燃燒。','同時射出 2 顆，冷卻 1.0 秒。','同時射出 3 顆，冷卻 0.85 秒，燃燒更痛。','燃燒持續 5 秒，留給水、油、電更長的反應時間。','質變「火種」：被餘燼彈點燃的敵人，燃燒如果自然熄滅、沒被反應用掉，火會跳到附近另一名敵人身上（最多跳 2 次）。火會自己去找燃料。']},
@@ -545,8 +550,8 @@ const ET={
   crawler:{n:'爬行者',r:10,spd:56,hp:8,dmg:8,xp:1,c:'#e0476b',f:'#2a1022'},
   runner:{n:'疾影',r:8,spd:108,hp:5,dmg:6,xp:1,c:'#ff6fb0',f:'#2a1026'},
   brute:{n:'巨殼',r:16,spd:38,hp:36,dmg:14,xp:3,c:'#c7353f',f:'#2c0e16',armor:0.4},
-  husk:{n:'熔殼',r:12,spd:50,hp:16,dmg:10,xp:2,c:'#ff8a3d',f:'#3a1a08',aura:'burn'},
-  bubble:{n:'泡沫',r:11,spd:62,hp:11,dmg:7,xp:2,c:'#5fbcff',f:'#0c2236',aura:'wet'},
+  husk:{n:'熔殼',r:12,spd:50,hp:16,dmg:10,xp:2,c:'#ff8a3d',f:'#3a1a08',rEl:'burn'},
+  bubble:{n:'泡沫',r:11,spd:62,hp:11,dmg:7,xp:2,c:'#5fbcff',f:'#0c2236',rEl:'wet'},
   splitter:{n:'孢囊',r:13,spd:46,hp:16,dmg:9,xp:2,c:'#9be36b',f:'#16260e',split:3},
   mite:{n:'蟎',r:6,spd:96,hp:3,dmg:4,xp:0,c:'#c4f08f',f:'#1c2a10'},
   cleanser:{n:'淨化者',r:12,spd:44,hp:22,dmg:8,xp:3,c:'#d9c8ff',f:'#1e1836',purge:4},
@@ -562,8 +567,8 @@ const EINFO=[
   ['crawler','最基本的敵人。'],
   ['runner','很快，靠控場或範圍處理。'],
   ['brute','甲殼：技能直接傷害 −60%。反應傷害和「易傷」都能無視甲殼。'],
-  ['husk','永遠帶著燃燒、不吃燃燒傷害。碰到水、電、油、風、岩就會反應，是現成的反應素材。'],
-  ['bubble','永遠濕潤。導電、凍結、蒸發的好目標。'],
+  ['husk','抗火：火系技能、燃燒和含火的反應（蒸發、爆燃、過載、烈綻、蔓燃、熔鑄）傷害減少：開場 20%，每分鐘 +6%，最多 60%。身上沒有火，不會幫你觸發反應。'],
+  ['bubble','抗水：水系技能和含水的反應（蒸發、導電、凍結、綻放、烈綻、雷綻、鏽蝕、浮油）傷害減少：開場 20%，每分鐘 +6%，最多 60%。身上沒有水，不會幫你觸發反應。'],
   ['splitter','死亡時分裂成 3 隻蟎，蟎會繼承它身上的狀態。範圍反應最有價值的對象。'],
   ['cleanser','每 4 秒洗掉周圍敵人的狀態（出手前會有虛線圈預警）。優先處理。'],
   ['charger','（深淵）停下蓄力後直線衝撞，地上會先出現衝鋒線，往旁邊閃就好。'],
@@ -574,8 +579,8 @@ const EINFO=[
 ];
 /* 菁英詞綴：每隻菁英隨機一種 */
 const AFX={
-  blaze:{n:'熾燃',c:'#ff7a3d',d:'自帶燃燒、不吃燃燒傷害；會點燃身邊的小怪，並在地上留下灼熱區域。帶水的組合可以順勢蒸發一整群。',
-    t2:'噴火：每 3 秒朝你吐出 3 顆火球。',t3:'餘燼反撲：身上的火被反應帶走時，會炸出一圈火環。遠距離觸發反應比較安全。'},
+  blaze:{n:'熾燃',c:'#ff7a3d',d:'抗火（和熔殼一樣）；在地上留下灼熱區域。',
+    t2:'噴火：每 3 秒朝你吐出 3 顆火球。',t3:'餘燼反撲：被火系攻擊或含火的反應打中時，炸出一圈火環（每 2 秒最多一次）。用火打它要保持距離。'},
   purge:{n:'淨化',c:'#e6d9ff',d:'每 3.5 秒洗掉自己與周圍敵人的狀態。',
     t2:'護持：淨化時替周圍沒有結界的敵人罩上小結界（只怕反應）。要在兩次淨化之間打出反應才拆得掉。',t3:'淨化波：淨化同時放出一圈震波。'},
   crystal:{n:'晶甲',c:'#9fe8ff',d:'晶甲先吃傷害：技能只剩 15%，反應全額。打破後暈眩 2.5 秒並進入易傷。',
@@ -1162,6 +1167,10 @@ const RXP_DEF={
   rust:{c1:'#d08a5a',c2:'#d08a5a',burst:'#d08a5a'},
   forge:{c1:'#ff6a3d',c2:'#ff9a5a',burst:'#ff6a3d'},
   sever:{c1:'#c9b27c',c2:'#c9b27c',burst:'#c9b27c'},
+  icethorn:{c1:'#7ee8c8',c2:'#d8fff4',burst:'#bff7e6'},
+  coldiron:{c1:'#9fb6d6',c2:'#dfe9f5',burst:'#c8d6ea'},
+  fuse:{c1:'#ff6fa0',c2:'#ffb37a',burst:'#ffd0e0'},
+  slick:{c1:'#d4b45e',c2:'#8a6a30',burst:'#f0d890'},
 };
 /* 第一批造型（6 個高頻反應）：只換顏色；need＝解鎖條件的文字 */
 const RX_SKIN={
@@ -1261,16 +1270,15 @@ function cosmRx(type){   // react()：元素學者、風暴行者、元素框（
   if(n===3000) cosmUnlock('frame','element'); }
 /* 流派＝招牌反應：你比一般玩家多觸發最多的反應——（你的觸發次數佔比）÷（一般玩家的平均佔比），而且至少佔你反應次數的 15%（SIG_MIN）。
    每種反應只跟自己的平均比：天生傷害高（蒸發）、天生次數多（擴散）的要比平常多很多才算；沒什麼傷害的控場反應（凍結、結晶、藤縛）也能當流派。
-   只算你自己鋪的（用到泡沫、熔殼天生元素的不算）。每分鐘自己鋪的反應不到 10 次（ASCETIC_RPM）＝苦行者：幾乎沒在反應。
+   每分鐘反應不到 10 次（ASCETIC_RPM）＝苦行者：幾乎沒在反應。
    RX_AVG：隨機選卡的無敵機器人（標準 48 局、無盡 16 局）每種反應的平均次數佔比；改了平衡用 tools/school_base.js 重算後貼回來。 */
-const RX_AVG={"std":{"vaporize":0.1988,"swirl":0.1715,"combust":0.125,"crystal":0.106,"overload":0.072,"forge":0.0677,"rust":0.0459,"conduct":0.0452,"superconduct":0.0395,"freeze":0.0376,"magstorm":0.0262,"bloom":0.0242,"wildfire":0.0192,"entangle":0.0082,"sever":0.0071,"burgeon":0.0045,"shatter":0.001,"hyperbloom":0.0003},"endless":{"vaporize":0.1985,"conduct":0.1573,"forge":0.1303,"overload":0.0769,"combust":0.0753,"crystal":0.0566,"swirl":0.0404,"rust":0.0403,"freeze":0.0366,"superconduct":0.0349,"magstorm":0.0344,"wildfire":0.0342,"shatter":0.0279,"bloom":0.0195,"entangle":0.0152,"burgeon":0.0113,"sever":0.0061,"hyperbloom":0.0043}};
+const RX_AVG={"std":{"combust":0.1802,"vaporize":0.1631,"swirl":0.1457,"forge":0.0955,"overload":0.0767,"crystal":0.0733,"rust":0.0524,"superconduct":0.0401,"conduct":0.0333,"wildfire":0.0319,"slick":0.0229,"magstorm":0.0201,"bloom":0.0157,"freeze":0.0144,"coldiron":0.0106,"sever":0.0064,"entangle":0.0049,"burgeon":0.004,"fuse":0.0038,"icethorn":0.0032,"hyperbloom":0.0011,"shatter":0.0008},"endless":{"vaporize":0.1925,"combust":0.1334,"forge":0.0982,"conduct":0.0929,"overload":0.0787,"crystal":0.0542,"superconduct":0.0453,"wildfire":0.0381,"freeze":0.0352,"slick":0.0319,"swirl":0.0302,"rust":0.0289,"bloom":0.0242,"magstorm":0.0224,"entangle":0.0215,"shatter":0.0144,"sever":0.0136,"coldiron":0.0114,"burgeon":0.011,"fuse":0.0105,"icethorn":0.0066,"hyperbloom":0.0048}};
 const SIG_MIN=0.15, ASCETIC_RPM=10;
-function rxSchool(){   // share＝自己鋪的反應傷害佔總傷害（獨奏者用）、ent＝自己鋪的反應傷害（大到小）、school／ratio／cs＝招牌反應、是平均的幾倍、佔你反應次數多少
+function rxSchool(){   // share＝反應傷害佔總傷害（獨奏者用）、ent＝反應傷害（大到小）、school／ratio／cs＝招牌反應、是平均的幾倍、佔你反應次數多少
   let t=0, r=0, cn=0; const ent=[], cnt={};
   for(const k in S.dmg){ const v=S.dmg[k]; if(!(v>0)) continue; t+=v; if(!REACT[k]) continue;
-    const n=S.rc[k]||0, i=Math.min(n,(S.rcI&&S.rcI[k])||0), own=n>0?v*(n-i)/n:v;   // 照次數拆開：用到天生元素的那幾次不算
-    if(own>0){ r+=own; ent.push([k,own]); } }
-  for(const k in S.rc){ const c=(S.rc[k]||0)-((S.rcI&&S.rcI[k])||0); if(c>0&&REACT[k]){ cnt[k]=c; cn+=c; } }
+    r+=v; ent.push([k,v]); }
+  for(const k in S.rc){ const c=S.rc[k]||0; if(c>0&&REACT[k]){ cnt[k]=c; cn+=c; } }
   ent.sort((a,b)=>b[1]-a[1]);
   const A=RX_AVG[S.endless?'endless':'std'], rpm=cn/(Math.max(S.t,1)/60); let school='', ratio=0, cs=0;
   if(cn>0&&rpm>=ASCETIC_RPM){
@@ -1292,14 +1300,16 @@ function ttlHTML(id){
   const T=TITLE[id]; if(!T) return ''; const s=T.tier===2?'✦ '+T.n+' ✦':T.n;
   return `<i class="ttl t${T.tier}"${T.c?` style="--c:${T.c}"`:''}${T.tier===2?` data-t="${s}"`:''}>${s}</i>`; }
 function frameAttr(id){ if(!FRAME[id]||id==='none') return ''; const k=frameRx(); return ` data-frame="${id}"`+(id==='element'?` style="--fc:${REACT[k]?REACT[k].c:'#7cffb2'}"`:''); }
-/* 流派稱號：每個流派歷來的第一名戴上，被超過就換人（直接搶）。和深淵之冕一樣用共享資料算，每日榜、全球榜上每個人都看得到。
-   KINGS＝{暱稱:[流派代號…]}，fsSchool() 抓到資料時算，只放記憶體 */
+/* 流派稱號：每個流派裡「討伐 2 隻強敵以上（KING_MIN_B）的成績」存活最久的那位戴上，被超過就換人（直接搶）。
+   門檻用成績本來就有的討伐數 b，不新增欄位：擋掉撐幾十秒就上傳、搶下冷門流派稱號的情況。
+   和深淵之冕一樣用共享資料算，每日榜、全球榜上每個人都看得到。KINGS＝{暱稱:[流派代號…]}，fsSchool() 抓到資料時算，只放記憶體 */
+const KING_MIN_B=2;
 const SCHOOL_TITLE={vaporize:'沸海霧皇',conduct:'雷澤天帝',combust:'焚天魔尊',freeze:'永凍霜皇',shatter:'碎天冰神',overload:'狂雷暴君',superconduct:'寒雷破軍',
   swirl:'八荒風帝',crystal:'不滅晶皇',bloom:'萬花天尊',burgeon:'業火蓮尊',hyperbloom:'雷籽獵神',wildfire:'燎原火帝',entangle:'萬木主宰',magstorm:'磁暴天尊',
-  rust:'朽鐵魔君',forge:'百煉刃皇',sever:'斷嶽斧聖','':'唯我獨尊'};
+  rust:'朽鐵魔君',forge:'百煉刃皇',sever:'斷嶽斧聖',icethorn:'千棘冰皇',coldiron:'鎮獄寒帝',fuse:'轟爆魔君',slick:'油海霸皇','':'唯我獨尊'};
 let KINGS=null, KINGS_AT=-1e9;
 const kingOf=n=>KINGS&&KINGS[n]||null;
-const kingHTML=k=>`<i class="ttl king" style="--c:${schoolOf(k).c}" data-t="♔ ${SCHOOL_TITLE[k]}">♔ ${SCHOOL_TITLE[k]}<small>${schoolOf(k).n}第一</small></i>`;
+const kingHTML=k=>`<i class="ttl king" style="--c:${schoolOf(k).c}" data-t="♔ ${SCHOOL_TITLE[k]}">♔ ${SCHOOL_TITLE[k]}<small>${schoolOf(k).n}</small></i>`;
 function lbDeco(e){   // 深淵之冕 ＞ 流派稱號 ＞ 自己裝備的頭銜（造型面板的預覽 pv 只看自己的裝備）
   const cr=crownName();
   if(!e.pv&&cr&&e.name===cr) return {ttl:ttlHTML('crown'),attr:'',cls:' crown'};   // 冠冕蓋過頭銜和邊框
@@ -1347,7 +1357,7 @@ function cosmHTML(){
         h+=`</div></div>`; });
       const cr=crownName();
       h+=`<div class="ckrow"><div class="ckh"><b>每日榮耀</b></div><div class="ccr"><span class="tpv">${ttlHTML('crown')}</span><small>每天 00:00（台灣時間）結算：昨天每日排行榜的第一名戴上一整天，直到今天結算出下一位。每日榜、全球榜上的每個人都看得到，會蓋過自己裝備的頭銜。不能裝備，只能搶。${cr?`<br>現在戴著的是：<b>${esc(cr)}</b>`:''}</small></div></div>`;
-      h+=`<div class="ckrow"><div class="ckh"><b>流派稱號</b><small>每個流派歷來的第一名戴上，被超過就換人</small></div><div class="ckg">${[...Object.keys(SCHOOL),''].map(k=>`<span style="--c:${schoolOf(k).c}"><b>${SCHOOL_TITLE[k]}</b><small>${schoolOf(k).n}</small></span>`).join('')}</div></div>`;
+      h+=`<div class="ckrow"><div class="ckh"><b>流派稱號</b><small>討伐 ${KING_MIN_B} 隻強敵以上的成績裡，每個流派存活最久的戴上，被超過就換人</small></div><div class="ckg">${[...Object.keys(SCHOOL),''].map(k=>`<span style="--c:${schoolOf(k).c}"><b>${SCHOOL_TITLE[k]}</b><small>${schoolOf(k).n}</small></span>`).join('')}</div></div>`;
     } else {
       h+=`<div class="ckrow"><div class="ckl">`;
       for(const F of FRAMES){ const own=COSM.frames.includes(F.id), on=COSM.equipFrame===F.id, pv=cosmPvF===F.id;
@@ -1480,7 +1490,7 @@ const FZ_SP={
       let px=z.x, py=z.y; for(const o of ts){ fxBolt(px,py,o.x,o.y,COL.shock,0.22); fzHit(o,3); fzSt(o,'shock',2.5); px=o.x; py=o.y; } }},
 };
 const FZ_SPE={   // 舊融合保留的特例：依元素配對（主技能的元素>副元素），不分是哪個技能
-  'wood>chill':{k:'hibernate',n:'冬眠',d:'命中時原地長出一顆冰種核（每 0.9 秒最多一顆）：種核爆開讓周圍敵人寒冷，冰也能進入綻放的反應鏈',why:'舊融合保留：把冰接進種核的反應鏈',
+  'wood>chill':{k:'hibernate',n:'冬眠',d:'命中時目標寒冷（纏藤的敵人凍成冰棘），並原地長出一顆冰種核（每 0.9 秒最多一顆）：種核爆開讓周圍敵人寒冷，冰也能進入綻放的反應鏈',why:'舊融合保留：把冰接進種核的反應鏈；有了冰棘之後也保留命中寒冷，不然比通用改造還弱',gen:1,
     hit(e,x,y,src){ if(fzCd(src,'seed',0.9)){ addSeed(x,y,0,'chill'); fxRing(x,y,16,COL.chill,0.3); } }},
   'shock>wood':{k:'ripen',n:'催熟',d:'電流催熟附近所有種核讓它們立刻爆開；沒有種核時，原地炸出一朵雷花，周圍敵人纏藤又帶電（藤縛）（每 3.5 秒一次）',why:'舊融合保留：一次引爆整片種核',gen:1,
     hit(e,x,y,src){ if(!fzCd(src,'ripen',3.5)) return; let n=0; for(const d of S.SD) if(!d.dead&&dd(d.x,d.y,x,y)<220*220){ d.dead=1; n++; fxBolt(x,y,d.x,d.y,'#c6f26b',0.22); seedPop(d); } S.SD=S.SD.filter(d=>!d.dead);
@@ -1661,24 +1671,28 @@ const MU={
 const RES={
   vaporize:{n:'蒸汽雲',out:['wet'],d:'蒸發後留下一團蒸汽，待在裡面的敵人會濕潤。'},
   conduct:{n:'殘電',out:['shock'],d:'被導電打中的敵人，電流散去後仍然帶電。'},
-  combust:{n:'焦土',out:['burn'],d:'爆燃燒焦地面，踩在上面的敵人持續燃燒。'},
+  combust:{n:'焦土',out:['burn','oil'],d:'爆燃燒焦地面，踩在上面的敵人持續燃燒，每 1.2 秒再沾一次油：還在燒的就再爆燃一次。'},
   freeze:{n:'霜爆',out:['chill'],d:'凍結自然解除時炸開，讓周圍敵人寒冷。被碎裂提前打破就不會炸。'},
-  shatter:{n:'冰片',out:['chill'],d:'碎裂時向周圍 4 名敵人射出冰片：造成傷害並讓敵人寒冷；打中凍結的敵人會讓它碎裂（半傷，不再噴出冰片）。'},
-  overload:{n:'引燃',out:['burn'],d:'過載會點燃爆炸中心附近的 6 名敵人。'},
-  superconduct:{n:'脆化',out:['frozen'],d:'易傷的敵人被金、岩攻擊打中時，會像凍結一樣碎裂（傷害減半，消耗易傷）。'},
-  swirl:{n:'風蝕',out:['vuln'],d:'被擴散傳染的敵人同時進入易傷 2.5 秒，受到的所有傷害 +50%。'},
-  crystal:{n:'晶爆',out:['ele'],d:'撿起晶體時炸開，讓你身邊的敵人沾上晶體原本的元素。'},
+  shatter:{n:'冰片',out:['chill'],d:'碎裂時向周圍 6 名敵人射出冰片：造成傷害並讓敵人寒冷；打中凍結的敵人會讓它碎裂（半傷，不再噴出冰片）。'},
+  overload:{n:'引燃',out:['burn'],d:'過載點燃爆炸範圍內所有敵人；已經在燒的敵人再被過載炸到，傷害 ×2、擊退減半——越燒越痛，不會把怪炸得到處飛。'},
+  superconduct:{n:'脆化',out:['chill','shock'],d:'超導的易傷 +50% → +80%；這些敵人死掉時炸出寒氣和電，周圍 70 內的敵人寒冷並帶電（接著超導）。易傷的敵人被金、岩打中仍然會碎裂。'},
+  swirl:{n:'風蝕',out:['vuln'],d:'擴散傳染 4 → 6 名，被傳染的敵人被風捲向中心擠成一團，並進入易傷 2.5 秒（受到的所有傷害 +50%）。'},
+  crystal:{n:'晶爆',out:['ele'],d:'晶體 2.5 秒沒被撿走就自己炸開，讓周圍 110 內的敵人沾上晶體原本的元素；撿起來也會炸。要護盾還是要炸，看你撿不撿。'},
   bloom:{n:'繁花',out:['wood'],d:'種核自爆時讓周圍敵人纏藤，再遇到水就會接著綻放。'},
   burgeon:{n:'餘燼花',out:['burn'],d:'烈綻燒焦地面，踩在上面的敵人持續燃燒。'},
-  hyperbloom:{n:'雷籽',out:['shock'],d:'雷綻的棘刺讓打中的敵人帶電。'},
-  wildfire:{n:'野火',out:['burn'],d:'蔓燃每一跳的距離 120 → 170，最多燒 12 名。'},
-  entangle:{n:'荊棘',out:['vuln'],d:'被藤縛定住的敵人同時易傷，受到的所有傷害 +50%。'},
-  magstorm:{n:'磁核',out:['metal','shock'],d:'磁暴之後，被吸過來的敵人仍然磁化並帶電，可以再磁暴一次。'},
-  rust:{n:'蝕甲',out:['vuln'],d:'鏽蝕會傳給 90 內濕潤的敵人：它們的護盾也一起被鏽穿。'},
+  hyperbloom:{n:'雷籽',out:['shock'],d:'雷綻的棘刺 3 → 5 根，讓打中的敵人帶電。'},
+  wildfire:{n:'野火',out:['burn','wood'],d:'蔓燃每一跳的距離 120 → 170、最多燒 12 名；燒過的敵人腳下留一團野火 2 秒，踩到的敵人燃燒並纏藤，下一把火會再沿著它們燒一次。'},
+  entangle:{n:'荊棘',out:['vuln','wood'],d:'被藤縛定住的敵人同時易傷（受到的所有傷害 +50%）；藤縛讓 90 內所有敵人纏藤，下一道雷會一起定住。'},
+  magstorm:{n:'磁核',out:['metal'],d:'磁暴在中心留下一顆磁核 2 秒，持續把 160 內的敵人吸過來並磁化：範圍反應一次打到更多。'},
+  rust:{n:'蝕甲',out:['vuln','wet'],d:'鏽蝕流出鏽水：周圍 90 內的敵人濕潤並易傷 3 秒，本來就濕的護盾也一起被鏽穿。'},
   forge:{n:'淬火',out:['metal'],d:'斬殺門檻 30% → 40%，濺出的熔液也讓敵人磁化。'},
   sever:{n:'木靈',out:['wood'],d:'伐木時掉出一顆種核：金吃掉的木，變成綻放的種子。'},
+  icethorn:{n:'霜林',out:['chill'],d:'冰棘刺中敵人時炸出寒霜，讓周圍 60 內的敵人寒冷：再遇到水就凍結、遇到雷就超導。'},
+  coldiron:{n:'冷鍛',out:['metal'],d:'被鎖住的敵人同時磁化；它死掉時，枷鎖跳到最近的敵人身上（3 秒）。'},
+  fuse:{n:'連環引信',out:['wood'],d:'引信爆炸也讓周圍敵人纏藤：沒有藤蔓也能一路連爆下去。'},
+  slick:{n:'油海',out:['oil'],d:'油膜半徑 60 → 90、持續 5 → 8 秒：整片戰場都是爆燃和引信的燃料。'},
 };
-const SCHOOL={bloom:'花語者',burgeon:'焚花者',hyperbloom:'雷籽獵手',wildfire:'蔓燃者',entangle:'守林人',magstorm:'磁暴師',rust:'蝕甲匠',forge:'鑄刃者',sever:'伐木人',vaporize:'蒸汽術士',conduct:'雷澤行者',combust:'焚油爆破手',freeze:'霜縛者',shatter:'碎冰者',overload:'過載狂人',superconduct:'超導破甲師',swirl:'御風者',crystal:'晶壁守衛'};
+const SCHOOL={bloom:'花語者',burgeon:'焚花者',hyperbloom:'雷籽獵手',wildfire:'蔓燃者',entangle:'守林人',magstorm:'磁暴師',rust:'蝕甲匠',forge:'鑄刃者',sever:'伐木人',vaporize:'蒸汽術士',conduct:'雷澤行者',combust:'焚油爆破手',freeze:'霜縛者',shatter:'碎冰者',overload:'過載狂人',superconduct:'超導破甲師',swirl:'御風者',crystal:'晶壁守衛',icethorn:'棘霜者',coldiron:'寒鐵獄卒',fuse:'引信匠',slick:'浮油師'};
 
 /* ---------- 音效（全部即時合成） ---------- */
 const AU={ctx:null,master:null,nb:null,last:{},on:true};
@@ -1721,6 +1735,10 @@ function sfx(n){
     case 'superconduct': tone('sine',300,1200,0.3,0.07); break;
     case 'swirl': noise(0.3,0.16,'bandpass',400,1800); tone('sine',700,1100,0.18,0.04); break;
     case 'crystal': tone('triangle',1320,1320,0.2,0.06); tone('triangle',1980,1980,0.25,0.04,0.04); break;
+    case 'icethorn': noise(0.18,0.12,'highpass',3000,7000); tone('triangle',1700,900,0.14,0.05); break;
+    case 'coldiron': tone('square',420,300,0.18,0.04); tone('triangle',1260,1260,0.22,0.03,0.03); break;
+    case 'fuse': noise(0.4,0.32,'lowpass',1100,120); tone('sine',160,50,0.3,0.18); break;
+    case 'slick': noise(0.3,0.12,'bandpass',300,900); tone('sine',260,180,0.2,0.05); break;
     case 'rock': noise(0.25,0.3,'lowpass',500,60); tone('sine',90,40,0.2,0.15); break;
     case 'block': tone('triangle',900,600,0.1,0.08); break;
     case 'break': noise(0.3,0.2,'highpass',3000,7000); tone('triangle',1500,300,0.3,0.08); break;
@@ -1831,8 +1849,10 @@ function hit(e,dmg,src,phys,dot){
   if(e.dead)return;
   if(!dot&&S.fz&&S.fz[src]){ const D=S.fz[src].sp; if(D&&D.pre){ const r=D.pre(e,dmg,src); if(r!=null) dmg=r; } if(FZ_SHAPE[src]!=='place') fzNote(e,src); }   // 融合：專屬的命中前效果；主技能打中敵人，這一幀最後鋪上副元素
   const isR=!!REACT[src]||src==='fusion';   // 融合傷害和反應一樣無視甲殼
-  if(e.st.vuln>0) dmg*=1.5; else if(e.armor&&!isR) dmg*=e.armor;
+  if(e.st.vuln>0) dmg*=e.scv>S.t&&S.res.superconduct?1.8:1.5; else if(e.armor&&!isR) dmg*=e.armor;
   if(e.boss) dmg*=bossMul(e,isR,src); else if(e.dr) dmg*=e.dr;   // 母巢Ⅲ：蟲群護衛
+  if(e.rEl&&rElHit(e.rEl,src,dot)){ dmg*=1-rElPct(); e.rsF=S.t+0.18;   // 抗性：畫面上的抗性圈閃一下
+    if(e.af==='blaze'&&e.tier>=3&&!dot&&(e.erT||0)<=S.t){ e.erT=S.t+2; addHaz({k:'ring',x:e.x,y:e.y,rad:e.r,max:170,spd:230,w:7,dmg:12,c:'255,122,61',l:2}); } }   // 熾燃Ⅲ 餘燼反撲：被火打中就炸
   e.fl=0.07;
   if(e.sh>0){
     const sd=dmg*(isR?1:0.15); e.sh-=sd; S.dmg[src]=(S.dmg[src]||0)+sd;
@@ -1852,6 +1872,8 @@ function hit(e,dmg,src,phys,dot){
 }
 function kill(e,src){
   e.dead=true; S.kills++;
+  if(S.res.superconduct&&e.scv>S.t){ e.scv=0; fxRing(e.x,e.y,70,REACT.superconduct.c,0.35); for(const o of query(e.x,e.y,70)) if(o!==e&&!o.dead){ applyStatus(o,'chill',2,'superconduct'); if(!o.dead) applyStatus(o,'shock',2,'superconduct'); } }   // 脆化：死掉時炸出寒氣和電
+  if(S.res.coldiron&&e.ciT>S.t){ const o=nearestN(e.x,e.y,1,160,e)[0]; if(o){ o.wk=S.t+3; o.ciT=S.t+3; if(!(o.slw>S.t)||o.slwF>0.75){ o.slw=S.t+3; o.slwF=0.75; } fxBolt(e.x,e.y,o.x,o.y,REACT.coldiron.c,0.2); } }   // 冷鍛：枷鎖跳走
   if(e.par>S.t) addSeed(e.x,e.y);   // 孢子囊 Lv5 寄生
   if(e.sp2>S.t){ const r=e.sp2r||1; S.P.push({k:'xk',id:'spore',x:e.x,y:e.y,t:0,dur:0.8,r:55+15*r,dmg:5*dMult(),m:{els:['wood'],sd:3},P:{spore:1},l:1,c:'#a6e86a',c2:'#e6ffc0'}); }   // 孢子囊分支：寄生擴散
   const st=e.st;
@@ -1904,11 +1926,11 @@ function knock(e,x0,y0,f){
   if(d<1){ dx=e.x-S.p.x; dy=e.y-S.p.y; d=Math.hypot(dx,dy)||1; }
   const m=e.boss?0.08:e.elite?0.3:1; e.kx+=dx/d*f*m; e.ky+=dy/d*f*m;
 }
-/* 天生元素：泡沫的水、熔殼的火、燃燒菁英身上的火。用到它們的反應傷害照常，但不算進你的流派（流派只看你自己鋪的）。
-   你自己的元素補過一次就算你的（e.own）；被反應消耗、重新長出來的又是天生的。天候不算天生（天候本來就是給你抓的機會），強敵也不算（熔核巨像的火是題目）。
-   RX_INN：觸發反應前先記下「另一半是不是天生的」，react() 一開始讀走，記在 S.rcI。 */
-let RX_INN=0;
-const isInnate=(e,k)=>e.aura===k&&!e.boss&&!(e.own&&e.own[k]);   // 強敵不算：熔核巨像的火本來就是要你用反應帶走的題目
+/* 抗性小怪（e.rEl）：泡沫抗水、熔殼和熾燃菁英抗火。身上不帶會反應的元素（不幫你觸發反應、不會讓你的流派被別人的火帶走），
+   改成那個元素的技能（PE）、燃燒（火）、含那個元素的反應（REACT.pair）傷害減少：開場 20%，每分鐘 +6%，最多 60%。
+   強敵不在內：熔核巨像身上的火（e.aura）本來就是要你用反應帶走的題目。 */
+const rElPct=()=>Math.min(0.6,0.2+0.06*S.t/60);
+const rElHit=(k,src,dot)=>dot?k==='burn':PE[src]===k||!!(REACT[src]&&REACT[src].pair.includes(k));   // dot 只有燃燒
 function applyStatus(e,st,dur,src,dps){
   if(e.dead||(e.res&&e.res===st))return;
   if(st==='shock'&&e.thm>S.t&&(e.thT||0)<=S.t&&src!=='arc'){ e.thT=S.t+1.2; e.thm=0; const R=42+10*e.thr, x=e.x, y=e.y, dm=(2.5+1.5*e.thr)*dMult(); later(0,()=>brBoom('arc',x,y,R,dm,null,{c:COL.shock})); }   // 電弧分支：雷痕
@@ -1922,17 +1944,17 @@ function applyStatus(e,st,dur,src,dps){
   if(st==='wind'||st==='geo'){
     const list=st==='wind'?ANY5:ELE4, r2=st==='wind'?'swirl':'crystal';
     if((e.rc[r2]||0)>S.t) return;
-    for(const x of list) if(s[x]>0){ RX_INN=isInnate(e,x); react(r2,e,0,x); return; }
+    for(const x of list) if(s[x]>0){ react(r2,e,0,x); return; }
     return;
   }
   if(st==='burn') rt=s.wet>0?'vaporize':s.oil>0?'combust':s.shock>0?'overload':s.wood>0?'wildfire':s.metal>0?'forge':null;
-  else if(st==='wet') rt=s.burn>0?'vaporize':s.shock>0?'conduct':s.chill>0?'freeze':s.wood>0?'bloom':s.metal>0?'rust':null;
-  else if(st==='chill') rt=s.wet>0?'freeze':s.shock>0?'superconduct':null;
+  else if(st==='wet') rt=s.burn>0?'vaporize':s.shock>0?'conduct':s.chill>0?'freeze':s.wood>0?'bloom':s.metal>0?'rust':s.oil>0?'slick':null;
+  else if(st==='chill') rt=s.wet>0?'freeze':s.shock>0?'superconduct':s.wood>0?'icethorn':s.metal>0?'coldiron':null;
   else if(st==='shock') rt=s.wet>0?'conduct':s.burn>0?'overload':s.chill>0?'superconduct':s.wood>0?'entangle':s.metal>0?'magstorm':null;
-  else if(st==='oil') rt=s.burn>0?'combust':null;
-  else if(st==='wood') rt=s.wet>0?'bloom':s.burn>0?'wildfire':s.shock>0?'entangle':s.metal>0?'sever':null;   // 木、金：新反應排在舊反應後面
-  else if(st==='metal') rt=s.shock>0?'magstorm':s.wet>0?'rust':s.burn>0?'forge':s.wood>0?'sever':null;
-  if(rt&&(e.rc[rt]||0)<=S.t){ const P=REACT[rt].pair; RX_INN=isInnate(e,P[0]===st?P[1]:P[0]); react(rt,e,0);
+  else if(st==='oil') rt=s.burn>0?'combust':s.wood>0?'fuse':s.wet>0&&src!=='slick'?'slick':null;   // 油膜給的油不再生油膜（不然站在油膜上的濕敵人會一直生新的）
+  else if(st==='wood') rt=s.wet>0?'bloom':s.burn>0?'wildfire':s.shock>0?'entangle':s.metal>0?'sever':s.chill>0?'icethorn':s.oil>0?'fuse':null;   // 木、金：新反應排在舊反應後面
+  else if(st==='metal') rt=s.shock>0?'magstorm':s.wet>0?'rust':s.burn>0?'forge':s.wood>0?'sever':s.chill>0?'coldiron':null;
+  if(rt&&(e.rc[rt]||0)<=S.t){ react(rt,e,0);
     const rp=pvl('ripple'); if(rp&&!S.ripG&&ST7.includes(st)){ S.ripG=1; const R=80+20*rp, x=e.x, y=e.y;   // 被動：漣漪
       for(const o of nearestN(x,y,rp+1,R)) if(o!==e&&!o.dead) applyStatus(o,st,2,'ripple');
       S.ripG=0; if(S.vq>0.35&&(S.ripT||0)<=S.t){ S.ripT=S.t+0.15; fxRing(x,y,R,COL[st]||'#7fe3ff',0.3); } }
@@ -1940,7 +1962,6 @@ function applyStatus(e,st,dur,src,dps){
   dur*=1+0.25*pvl('echo');
   if(st==='burn'){ if(s.burn<=0||dps>e.bd){e.bd=dps;e.bs=src} s.burn=Math.max(s.burn,dur); }
   else s[st]=Math.max(s[st]||0,dur);   // ||0：新元素沒初始化時不會變成 NaN
-  if(e.aura===st) (e.own||(e.own={}))[st]=1;   // 天生元素被補過一次：之後算你的
 }
 function later(t,fn){ S.Q.push({t,fn}); }
 const burstMax=()=>80+S.p.lv*6;
@@ -2012,7 +2033,7 @@ function updSeeds(dt){
   for(const d of S.SD){ d.t+=dt;
     if(dd(d.x,d.y,p.x,p.y)<(p.r+14)**2){ d.dead=1; p.hp=Math.min(p.max,p.hp+Math.max(2,p.max*0.02)); txt(p.x,p.y-p.r-14,'採收','#7ed957',0.9); burst(d.x,d.y,rxSkin('bloom').burst,6,90,2); sfx('pick'); cosmAdd('harvest',1); continue; }   // 造型「夜櫻」：採收種核
     let trig=null; for(const o of query(d.x,d.y,48)) if(!o.dead&&(o.st.burn>0||o.st.shock>0)){ trig=o; break; }
-    if(trig){ d.dead=1; const k=trig.st.burn>0?'burn':'shock'; RX_INN=isInnate(trig,k); react(k==='burn'?'burgeon':'hyperbloom',trig,0); continue; }
+    if(trig){ d.dead=1; react(trig.st.burn>0?'burgeon':'hyperbloom',trig,0); continue; }
     if(d.t>=d.l){ d.dead=1; seedPop(d); } }
   S.SD=S.SD.filter(d=>!d.dead);
 }
@@ -2040,12 +2061,11 @@ function sandPull(e){   // 鐵砂 Lv5：磁化的敵人被扯向最近的另一�
 { const _as=applyStatus; applyStatus=function(e,st,dur,src,dps){ if(!S.sk[src]) return _as(e,st,dur,src,dps); const pv=S.rxBy; S.rxBy=src; try{ return _as(e,st,dur,src,dps); } finally{ S.rxBy=pv; } }; }   // 記下是哪個技能掛的狀態：引發的反應算它的
 { const _hit=hit; hit=function(e,dmg,src,phys,dot){ if(!S.sk[src]) return _hit(e,dmg,src,phys,dot); const pv=S.rxBy; S.rxBy=src; try{ return _hit(e,dmg,src,phys,dot); } finally{ S.rxBy=pv; } }; }   // 碎裂這類在命中時觸發的反應也算
 function react(type,e,casc,el){
-  const inn=RX_INN; RX_INN=0;   // 這次反應有沒有用到天生元素（不算流派）
   if(e.dead)return;
   if((e.rc[type]||0)>S.t)return;
-  e.rc[type]=S.t+(type==='combust'?0.7:type==='crystal'||type==='swirl'?1.0:0.2);
+  e.rc[type]=S.t+(type==='combust'?0.7:type==='crystal'||type==='swirl'||type==='slick'?1.0:type==='fuse'?1.6:0.2);
   const by=!casc&&S.rxBy&&S.sk[S.rxBy]&&!NODMG.has(S.rxBy)?S.rxBy:null, [qk,qr]=by?top(by):[null,0], R=REACT[type], m=rMult()*(casc||1)*(1+0.2*(S.ms[type]||0))*(S.rl.core&&S.bbT>S.t?2:1)*(S.wx==='eclipse'?1.4:1)*(qk==='pow'?1+0.2*qr:1), s=e.st;
-  S.rc[type]=(S.rc[type]||0)+1; if(inn) (S.rcI||(S.rcI={}))[type]=(S.rcI[type]||0)+1; addCharge(casc?0.5:1); cosmRx(type);
+  S.rc[type]=(S.rc[type]||0)+1; addCharge(casc?0.5:1); cosmRx(type);
   if(by){ const again=(o,lb)=>{ if(o.dead) return; o.rc[type]=0; const pv=S.rxBy; S.rxBy=by; react(type,o,0.5,el); S.rxBy=pv; if((S.rsT||0)<=S.t){ S.rsT=S.t+0.35; txt(o.x,o.y-o.r-16,lb,'#f2c46d',0.8); } };
     if(qk==='pow'&&Math.random()<0.15*qr) later(0.3,()=>again(e,'共振'));   // 威力→共振：同一個反應在原地再發生一次
     if(qk==='cnt'&&Math.random()<[0,0.2,0.35,0.5][qr]){ const o=nearestN(e.x,e.y,3,130).find(x=>x!==e&&!x.dead); if(o) later(0.15,()=>again(o,'回響')); } }   // 數量→回響：同一個反應傳到旁邊的敵人
@@ -2076,7 +2096,7 @@ function react(type,e,casc,el){
       const ts=query(e.x,e.y,70);
       fxBoom(e.x,e.y,70,P.c1); wallBurst(e.x,e.y,70); burst(e.x,e.y,P.burst,10,180,3); if(S.wx==='smog') cosmAdd('smog',1);   // 造型「蒼焰」：油霧天候裡的爆燃
       for(const o of ts) rHit(o,14*m,type,0.8);
-      for(const z of S.Z) if(z.k==='oil'&&z.l>0&&dd(z.x,z.y,e.x,e.y)<z.r*z.r){ z.l=0; fxBoom(z.x,z.y,z.r,P.c2); }
+      for(const z of S.Z) if(z.k==='oil'&&z.l>0&&dd(z.x,z.y,e.x,e.y)<z.r*z.r){ z.l=0; fxBoom(z.x,z.y,z.r,P.c2); if(z.slick) for(const o of query(z.x,z.y,z.r)) if(o!==e&&!o.dead) rHit(o,14*m,type,0.6); }   // 浮油的油膜：整片爆燃
       shown=14*m; S.shake=Math.max(S.shake,0.12);
       const bd=2*rMult();
       later(0.09,()=>{ for(const o of ts){ if(o!==e&&!o.dead) applyStatus(o,'burn',2.5,'combust',bd); } });
@@ -2091,7 +2111,7 @@ function react(type,e,casc,el){
       burst(e.x,e.y,P.burst,12,200,3.5);
       if(S.res.shatter&&!casc){
         const sx=e.x, sy=e.y, sd=8*m, og={n:0};   // og：這一次碎裂的冰片打碎了幾隻（造型「琉璃」）
-        for(const o of nearestN(sx,sy,4,150,e)){
+        for(const o of nearestN(sx,sy,6,150,e)){
           fxBolt(sx,sy,o.x,o.y,P.c1,0.16);
           later(0.06,()=>{ if(o.dead)return; if(o.st.frozen>0){ react('shatter',o,0.5); cosmAdd('shard',++og.n,1); } else { hit(o,sd,'shatter'); if(!o.dead) applyStatus(o,'chill',2,'shatter'); } });
         }
@@ -2101,8 +2121,9 @@ function react(type,e,casc,el){
       s.shock=0; s.burn=0;
       const ts=query(e.x,e.y,64*amp);
       fxBoom(e.x,e.y,64*amp,P.c1); wallBurst(e.x,e.y,64*amp);
-      for(const o of ts){ rHit(o,13*m,type,0.8); if(!o.dead) knock(o,e.x,e.y,o===e?170:260); }
-      if(S.res.overload){ const bd=2*rMult(), ig=ts.slice().sort((u,v)=>dd(u.x,u.y,e.x,e.y)-dd(v.x,v.y,e.x,e.y)).slice(0,6); later(0.08,()=>{ for(const o of ig) if(!o.dead) applyStatus(o,'burn',2.5,'overload',bd); }); }
+      for(const o of ts){ const hot=S.res.overload&&o!==e&&o.st.burn>0;   // 引燃：已經在燒的敵人被炸到，傷害 ×2、擊退減半（不會把怪炸得到處飛）
+        rHit(o,13*m*(hot?2:1),type,0.8); if(!o.dead) knock(o,e.x,e.y,(o===e?170:260)*(hot?0.5:1)); }
+      if(S.res.overload){ const bd=2*rMult(); later(0.08,()=>{ for(const o of ts) if(!o.dead) applyStatus(o,'burn',2.5,'overload',bd); }); }   // 引燃：點燃整個爆炸範圍
       shown=13*m; S.shake=Math.max(S.shake,0.12);
     } break;
     case 'swirl':{
@@ -2110,10 +2131,10 @@ function react(type,e,casc,el){
       shown=3*m; hit(e,shown,type);
       const tl=query(e.x,e.y,100*amp).filter(o=>o!==e&&!(o.st[x]>0)), oth=o=>ANY5.some(k=>k!==x&&o.st[k]>0)?1:0;
       if(e.swp>S.t) tl.sort((u,v)=>oth(v)-oth(u));   // 風刃 Lv5 真空
-      const ts=tl.slice(0,amp>1?6:4), bd=3*rMult();
+      const ts=tl.slice(0,(amp>1?6:4)+(S.res.swirl?2:0)), bd=3*rMult();
       fxRing(e.x,e.y,100*amp,COL[x],0.4); burst(e.x,e.y,P.c1,8,160,2.5);
       for(const o of ts){ fxBolt(e.x,e.y,o.x,o.y,COL[x],0.18); o.rc.swirl=Math.max(o.rc.swirl||0,S.t+1.2); }
-      later(0.08,()=>{ for(const o of ts) if(!o.dead){ applyStatus(o,x,3,'swirl',bd); if(S.res.swirl&&!o.dead) o.st.vuln=Math.max(o.st.vuln,2.5); } });
+      later(0.08,()=>{ for(const o of ts) if(!o.dead){ applyStatus(o,x,3,'swirl',bd); if(S.res.swirl&&!o.dead){ o.st.vuln=Math.max(o.st.vuln,2.5); if(!o.boss) knock(o,e.x,e.y,-Math.min(240,Math.sqrt(dd(o.x,o.y,e.x,e.y))*1.6)); } } });   // 風蝕：捲向中心
     } break;
     case 'crystal':{
       const x=el||'burn'; s[x]=0; label=x;
@@ -2133,7 +2154,7 @@ function react(type,e,casc,el){
       if(S.res.burgeon) addZone({k:'scorch',x:e.x,y:e.y,r:80,l:3.2,m:3.2,sk:'burgeon'},40);
       shown=26*m; } break;
     case 'hyperbloom':{   // 種核＋雷：追蹤棘刺
-      s.shock=0; const ts=nearestN(e.x,e.y,3,300); if(!ts.length) ts.push(e);
+      s.shock=0; const ts=nearestN(e.x,e.y,S.res.hyperbloom?5:3,300); if(!ts.length) ts.push(e);
       for(const o of ts){ fxBolt(e.x,e.y,o.x,o.y,P.c1,0.22); later(0.1,()=>{ if(o.dead) return; hit(o,22*m,type); burst(o.x,o.y,P.burst,6,120,2.5); if(S.res.hyperbloom&&!o.dead) applyStatus(o,'shock',2.5,'hyperbloom'); }); }
       shown=22*m; } break;
     case 'wildfire':{   // 火沿著纏藤一路燒
@@ -2143,25 +2164,28 @@ function react(type,e,casc,el){
         for(const a of fr) for(const o of query(a.x,a.y,jr)) if(!done.has(o)&&!o.dead&&o.st.wood>0&&done.size<=cap){ done.add(o); nx.push(o); o.st.wood=0; fxBolt(a.x,a.y,o.x,o.y,P.c1,0.25); }
         fr=nx; }
       done.delete(e); later(0.1,()=>{ for(const o of done) if(!o.dead){ hit(o,6*m,type); if(!o.dead) applyStatus(o,'burn',4,'wildfire',bd); } });
+      if(S.res.wildfire) for(const o of [e,...done]) addZone({k:'scorch',sk:'wildfire',x:o.x,y:o.y,r:30,l:2,m:2},34);   // 野火：腳下留一團野火
       shown=8*m+6*m*done.size; } break;
     case 'entangle':{   // 定身：不會碎、不擋攻擊
       s.wood=0; s.shock=0; shown=5*m; hit(e,shown,type);
       const root=(o,t)=>{ o.slw=S.t+t; o.slwF=o.boss?0.4:0.03; o.rtT=S.t+t; if(S.res.entangle) o.st.vuln=Math.max(o.st.vuln,t); };
       root(e,e.boss?0.5:e.elite?1.0:1.8);
-      for(const o of query(e.x,e.y,90)) if(o!==e&&!o.dead&&o.st.wood>0){ o.st.wood=0; root(o,o.boss?0.3:1.0); fxBolt(e.x,e.y,o.x,o.y,P.c1,0.2); }
+      for(const o of query(e.x,e.y,90)) if(o!==e&&!o.dead){ if(o.st.wood>0){ o.st.wood=0; root(o,o.boss?0.3:1.0); fxBolt(e.x,e.y,o.x,o.y,P.c1,0.2); } else if(S.res.entangle) o.st.wood=Math.max(o.st.wood,3); }   // 荊棘：沒纏藤的也纏上（直接設，不在這一下連鎖）
       fxRing(e.x,e.y,e.r+14,P.c2,0.4); } break;
     case 'magstorm':{   // 吸過來再爆
       s.metal=0; s.shock=0; const cx=e.x, cy=e.y, ps=query(cx,cy,220).filter(o=>o!==e&&!o.dead&&o.st.metal>0);
-      let pr=0; for(const o of ps){ pr=Math.max(pr,Math.sqrt(dd(o.x,o.y,cx,cy))); if(!o.boss) knock(o,cx,cy,-Math.min(520,Math.sqrt(dd(o.x,o.y,cx,cy))*3.2)); if(!S.res.magstorm) o.st.metal=0; fxBolt(o.x,o.y,cx,cy,P.c1,0.2); }
+      let pr=0; for(const o of ps){ pr=Math.max(pr,Math.sqrt(dd(o.x,o.y,cx,cy))); if(!o.boss) knock(o,cx,cy,-Math.min(520,Math.sqrt(dd(o.x,o.y,cx,cy))*3.2)); o.st.metal=0; fxBolt(o.x,o.y,cx,cy,P.c1,0.2); }
+      if(S.res.magstorm&&S.Z.filter(z=>z.k==='mcore').length<4&&S.Z.length<250) S.Z.push({k:'mcore',x:cx,y:cy,r:160,l:2,m:2});   // 磁核：中心留一顆，持續吸 2 秒
       const n=Math.min(10,ps.length); if(pr>0) fx({k:'ring',x:cx,y:cy,r:pr+10,c:P.c2,l:0.3,m:0.3,in:1});   // 只畫實際吸引的範圍，往內收
       later(0.25,()=>{ const R2=80*amp; fxBoom(cx,cy,R2,P.c1); burst(cx,cy,P.burst,10,200,3); S.shake=Math.max(S.shake,0.12);
-        for(const o of query(cx,cy,R2)) if(!o.dead){ rHit(o,(6+2*n)*m,type,0.5); if(S.res.magstorm&&!o.dead) applyStatus(o,'shock',2.5,'magstorm'); } });
+        for(const o of query(cx,cy,R2)) if(!o.dead) rHit(o,(6+2*n)*m,type,0.5); });
       shown=(6+2*n)*m; } break;
     case 'rust':{   // 專破護盾
       s.metal=0; s.wet=0;
       const brk=o=>{ if(o.sh>0){ if(o.boss) o.sh=Math.max(0,o.sh-o.shMax*0.35); else { o.sh=Math.min(o.sh,0.01); } hit(o,1,type); } if(!o.dead) o.st.vuln=Math.max(o.st.vuln,3); };
       brk(e); shown=6*m; if(!e.dead) hit(e,shown,type);
-      if(S.res.rust) for(const o of query(e.x,e.y,90)) if(o!==e&&!o.dead&&o.st.wet>0){ o.st.wet=0; brk(o); fxBolt(e.x,e.y,o.x,o.y,P.c1,0.18); }
+      if(S.res.rust){ for(const o of query(e.x,e.y,90)) if(o!==e&&!o.dead&&o.st.wet>0){ o.st.wet=0; brk(o); fxBolt(e.x,e.y,o.x,o.y,P.c1,0.18); }
+        later(0.06,()=>{ for(const o of query(e.x,e.y,90)) if(o!==e&&!o.dead){ o.st.vuln=Math.max(o.st.vuln,3); applyStatus(o,'wet',2.5,'rust'); } }); }   // 蝕甲：流出鏽水
       fxRing(e.x,e.y,e.r+12,P.c2,0.4); burst(e.x,e.y,P.burst,8,120,2.5); } break;
     case 'forge':{   // 斬殺
       s.metal=0; s.burn=0; const th=S.res.forge?0.4:0.3, low=e.hp/e.max<th;
@@ -2174,10 +2198,38 @@ function react(type,e,casc,el){
       shown=e.max*(e.boss?0.015:e.elite?0.05:0.08)*(1+0.2*(S.ms.sever||0)); hit(e,shown,type);
       S.p.hp=Math.min(S.p.max,S.p.hp+1); burst(e.x,e.y,P.burst,10,150,2.5);
       if(S.res.sever) addSeed(e.x,e.y,m); } break;
+    case 'icethorn':{   // 冰＋木：反傷——你身上長出冰棘甲，碰到你的敵人被刺
+      s.chill=0; s.wood=0; shown=6*m; hit(e,shown,type);
+      if(!(e.slw>S.t)||e.slwF>0.6){ e.slw=S.t+2; e.slwF=e.boss?0.85:0.6; }
+      const on=S.thornT>S.t; S.thornT=S.t+4; S.thornD=Math.max(on?S.thornD||0:0,16*m);   // 冰棘甲還在：傷害取最高的那次
+      fxRing(S.p.x,S.p.y,S.p.r+18,P.c1,0.35); fxBolt(e.x,e.y,S.p.x,S.p.y,P.c2,0.18); burst(e.x,e.y,P.burst,8,120,2.5);
+    } break;
+    case 'coldiron':{   // 冰＋金：削弱——枷鎖讓敵人打你變輕、走得更慢
+      s.chill=0; s.metal=0; shown=6*m; hit(e,shown,type);
+      const t=e.boss?2:5; e.wk=S.t+t; e.ciT=S.t+t; if(!(e.slw>S.t)||e.slwF>0.75){ e.slw=S.t+t; e.slwF=0.75; }
+      if(S.res.coldiron) e.st.metal=Math.max(e.st.metal,t);   // 冷鍛：被鎖住的敵人保持磁化（直接設，不再觸發反應）
+      fxRing(e.x,e.y,e.r+12,P.c1,0.4); burst(e.x,e.y,P.burst,6,90,2);
+    } break;
+    case 'fuse':{   // 油＋木：定時連爆——1.5 秒後在原地炸開，炸到的敵人沾油，纏藤的就接著點燃
+      s.oil=0; s.wood=0; shown=4*m; hit(e,shown,type); fxRing(e.x,e.y,e.r+10,P.c1,0.3);
+      if((S.fuseN||0)<14){ S.fuseN=(S.fuseN||0)+1; const fm=m, ex=e, R2=70*amp;   // 同時最多 14 個引信在等著炸
+        e.fuT=S.t+1.5; e.fuR=R2;   // 畫面：倒數火花＋爆炸範圍
+        later(1.5,()=>{ S.fuseN=Math.max(0,(S.fuseN||1)-1); const x=ex.x, y=ex.y;   // 死掉了也在原地炸
+          fxBoom(x,y,R2,P.c1); burst(x,y,P.burst,12,200,3); S.shake=Math.max(S.shake,0.12); sfx('fuse');
+          for(const o of query(x,y,R2)) if(!o.dead){ rHit(o,16*fm*(o.boss?0.5:1),'fuse',0.7); if(!o.dead){ if(S.res.fuse) applyStatus(o,'wood',3,'fuse'); if(!o.dead) applyStatus(o,'oil',3,'fuse'); } } }); }
+    } break;
+    case 'slick':{   // 水＋油：場地——地上留一片油膜，踩到的敵人打滑、不斷沾油
+      s.wet=0; s.oil=0; shown=3*m; hit(e,shown,type);
+      const R2=(S.res.slick?90:60)*amp, L=S.res.slick?8:5;
+      const z0=S.Z.find(z=>z.slick&&z.l>0&&dd(z.x,z.y,e.x,e.y)<(z.r*0.8)**2);
+      if(z0){ z0.l=Math.max(z0.l,L); z0.m=Math.max(z0.m,z0.l); }   // 旁邊已經有油膜：續命，不再疊一片
+      else { let n=0; for(const z of S.Z) if(z.slick&&z.l>0) n++; if(n<6&&S.Z.length<250) S.Z.push({k:'oil',slick:1,src:'slick',x:e.x,y:e.y,r:R2,l:L,m:L,od:1}); }   // 場上最多 6 片油膜
+      fxRing(e.x,e.y,R2,P.c1,0.35);
+    } break;
     case 'superconduct':{
       s.shock=0; s.chill=0;
       const sts=query(e.x,e.y,72*amp);
-      for(const o of sts) o.st.vuln=Math.max(o.st.vuln,4);
+      for(const o of sts){ o.st.vuln=Math.max(o.st.vuln,4); if(S.res.superconduct) o.scv=S.t+4; }   // 脆化：這 4 秒易傷 +80%
       shown=6*m; hit(e,shown,type);
       fxRing(e.x,e.y,72*amp,P.c1,0.45);
     } break;
@@ -2237,9 +2289,8 @@ function spawnEnemy(type,ang,dist,at){
   const T=ET[type], p=S.p, a=ang==null?rand(0,TAU):ang, r=dist==null?spawnDist():dist;
   const hp=T.hp*eHpMul(S.t)*(T.elite?1:rand(0.9,1.1));
   const e={tp:type,x:at?at.x:p.x+Math.cos(a)*r,y:at?at.y:p.y+Math.sin(a)*r,r:T.r,hp,max:hp,spd:T.spd*0.85*(1+Math.min(S.t,600)/900)*(1+0.2*(S.mu.haste||0))*rand(0.92,1.08),dmg:T.dmg*(T.elite?1:0.8)*(0.65+S.t/1300),   // 不封頂：後期繼續變痛   /* 一般小怪 ×0.8、成長放緩 */ai:T.ai||0,
-    xp:T.xp,c:T.c,f:T.f,elite:!!T.elite,armor:T.armor||0,aura:T.aura||null,auT:0,split:T.split||0,purge:T.purge||0,pg:(T.purge||0)*rand(0.5,1),
+    xp:T.xp,c:T.c,f:T.f,elite:!!T.elite,armor:T.armor||0,aura:null,auT:0,rEl:T.rEl||null,split:T.split||0,purge:T.purge||0,pg:(T.purge||0)*rand(0.5,1),
     st:{burn:0,wet:0,chill:0,shock:0,oil:0,frozen:0,vuln:0,wood:0,metal:0},bd:0,bs:'ember',kx:0,ky:0,fl:0,bcd:0,rc:{},fb:0,stun:0,sh:0,dead:false};
-  if(e.aura) e.st[e.aura]=1;
   if(!T.elite&&S.mu.warded&&Math.random()<0.1*S.mu.warded) e.sh=e.shMax=hp*0.5;
   if(!T.elite&&S.mu.attune&&Math.random()<Math.min(0.8,0.35*S.mu.attune)) e.res=ELE4[(Math.random()*4)|0];
   S.E.push(e); return e;
@@ -2252,7 +2303,7 @@ function spawnAt(type,x,y,src){
 }
 function spawnElite(k){
   const e=spawnEnemy('elite'); e.af=k; e.tier=tierOf();
-  if(k==='blaze'){ e.aura='burn'; e.st.burn=1; e.bzT=2; e.plT=1.6; }
+  if(k==='blaze'){ e.rEl='burn'; e.plT=1.6; }
   else if(k==='purge'){ e.purge=3.5; e.pg=3.5; }
   else if(k==='crystal'){ e.sh=e.shMax=e.max*0.5; }
   else if(k==='brood'){ e.brT=3; }
@@ -2753,13 +2804,15 @@ function updZones(dt){
         if(z.cw&&(e.cwT||0)<=S.t){ e.cwT=S.t+1.2; for(const o of nearestN(e.x,e.y,1+z.cw,90,e)) applyStatus(o,'chill',2,'frost'); }   // 分支：寒潮
         if(z.gel&&e.st.oil>0&&!(e.st.frozen>0)&&(e.rc.freeze||0)<=S.t){ e.st.oil=0; react('freeze',e,0); continue; }   // Lv5 凝油
         applyStatus(e,'chill',z.cd||1.2,'frost'); } }
-    else if(z.k==='oil'){ if(z.gr&&z.r<(z.r0||(z.r0=z.r))*(1.25+0.25*z.gr)) z.r+=(6+6*z.gr)*dt; for(const e of query(z.x,z.y,z.r)) applyStatus(e,'oil',z.od||0.5,'oil');
+    else if(z.k==='oil'){ if(z.gr&&z.r<(z.r0||(z.r0=z.r))*(1.25+0.25*z.gr)) z.r+=(6+6*z.gr)*dt; for(const e of query(z.x,z.y,z.r)){ applyStatus(e,'oil',z.od||0.5,z.src||'oil'); if(z.slick&&!e.dead&&(!(e.slw>S.t)||e.slwF>0.7)){ e.slw=S.t+0.3; e.slwF=e.boss?0.9:0.7; } }   // 浮油的油膜：打滑
       if(fzK('oil')==='ironoil'&&(z.fzt=(z.fzt||0)-dt)<=0){ z.fzt=0.5; fzDo('oil',()=>{ for(const e of query(z.x,z.y,z.r)) fzSt(e,'metal',1.5);   // 專屬融合「鐵油」：油池磁化，把附近的敵人吸進來
         for(const e of query(z.x,z.y,z.r*1.9)){ if(e.boss||e.dead) continue; const d=Math.sqrt(dd(e.x,e.y,z.x,z.y)); if(d>z.r*0.6) knock(e,z.x,z.y,-Math.min(220,d*1.6)*(e.elite?0.4:1)); } }); } }
     else if(z.k==='well'&&z.col&&z.l<=0&&!z.done){ z.done=1; collapse(z); }
     else if(z.k==='steam'){ const pv=S.rxBy; if(z.by) S.rxBy=z.by; for(const e of query(z.x,z.y,z.r)) applyStatus(e,'wet',1.2,z.by?'fusion':'vaporize'); S.rxBy=pv; }   // by：蒸汽彈留下的蒸汽，引發的反應算餘燼彈的
     else if(z.k==='fzpool'){ if((z.tk-=dt)<=0){ z.tk=0.35; z.ph^=1; const el=z.ph?'oil':'burn'; fzDo(z.by,()=>{ for(const e of query(z.x,z.y,z.r)) fzSt(e,el,1.5); }); } }   // 油燃彈：燒著的油池
-    else if(z.k==='scorch'){ const bd=2*rMult(); for(const e of query(z.x,z.y,z.r)) applyStatus(e,'burn',1.5,'combust',bd); }
+    else if(z.k==='scorch'){ const bd=2*rMult(), oz=(z.sk==='combust'||z.sk==='wildfire')&&(z.ot=(z.ot??1.2)-dt)<=0; if(oz) z.ot=1.2;
+      for(const e of query(z.x,z.y,z.r)){ applyStatus(e,'burn',1.5,z.sk==='wildfire'?'wildfire':'combust',bd); if(oz&&!e.dead) applyStatus(e,z.sk==='combust'?'oil':'wood',1,z.sk); } }   // 焦土：沾油（再爆燃）；野火：纏藤（再蔓燃）
+    else if(z.k==='mcore'){ if((z.pt=(z.pt||0)-dt)<=0){ z.pt=0.25; for(const e of query(z.x,z.y,z.r)){ if(e.boss||e.dead) continue; const d=Math.sqrt(dd(e.x,e.y,z.x,z.y)); if(d>18) knock(e,z.x,z.y,-Math.min(260,d*2.2)*(e.elite?0.5:1)); e.st.metal=Math.max(e.st.metal,1); } } }   // 磁核：持續吸過來
   }
   for(const z of S.Z) if(z.l<=0&&!z.ended){ const f=z.end||(z.P&&z.P.end); if(f){ z.ended=1; f(z); } }   // 分支：區域結束時
   if(S.fz) for(const z of S.Z){ if(z.l>0||z.fzE) continue; const id=z.k==='xz'?z.id:z.k==='well'?'gravity':null, F=id&&S.fz[id]; if(!F) continue; z.fzE=1;   // 融合：範圍結束時
@@ -2793,10 +2846,10 @@ function updEnemies(dt){
     if(!hold){ if(s.wet>0)s.wet-=dt; if(s.chill>0)s.chill-=dt; if(s.shock>0)s.shock-=dt; if(s.oil>0)s.oil-=dt; if(s.wood>0)s.wood-=dt; if(s.metal>0)s.metal-=dt; }
     if(s.vuln>0)s.vuln-=dt;
     if(s.frozen>0){ s.frozen-=dt; if(s.frozen<=0&&e.fb){ e.fb=0; frostBurst(e); if(e.dead)continue; } }
-    // 天生狀態：被反應消耗後，過一段時間會重新出現（寒冷會拖慢火焰重燃）
+    // 強敵身上的元素（熔核巨像的火）：被反應消耗後，過一段時間會重新出現（寒冷會拖慢火焰重燃）
     if(e.aura){ const k=e.aura;
       if(s[k]>0){ s[k]=Math.max(s[k],1); e.auT=e.boss?4:2.5; }
-      else { e.auT-=dt*(k==='burn'&&s.chill>0?0.3:1); if(e.auT<=0){ s[k]=1; if(e.own) e.own[k]=0; if(k==='burn') e.bd=0;   // 重新長出來的又是天生的
+      else { e.auT-=dt*(k==='burn'&&s.chill>0?0.3:1); if(e.auT<=0){ s[k]=1; if(k==='burn') e.bd=0;
         if(e.boss==='magma'&&e.tier>=2){ addHaz({k:'ring',x:e.x,y:e.y,rad:e.r,max:280,spd:240,w:9,dmg:15,c:'255,122,61',l:2}); S.shake=Math.max(S.shake,0.25); txt(e.x,e.y-e.r-30,'重燃','#ff7a3d',1.2); } } } }
     if(e.stun>0) e.stun-=dt;
     if(e.purge){ e.pg-=dt; if(e.pg<=0){ e.pg=e.purge; purgeAt(e,e.boss?170:e.elite?130:95); e.pjust=1; } }
@@ -2804,12 +2857,9 @@ function updEnemies(dt){
       for(let i=0;i<n;i++){ const a=rand(0,TAU); const m=spawnAt(e.af==='brood'&&e.tier>=2&&i===0&&e.brN%2===0?'bomber':'mite',e.x+Math.cos(a)*(e.r+10),e.y+Math.sin(a)*(e.r+10),e);
         if(m&&e.boss==='queen'&&e.tier>=2&&m.tp==='mite'){ m.sh=m.shMax=m.max*0.6; } } } }   // 巢冠女王Ⅱ：新生的蟎帶蟲甲
     if(e.af==='blaze'){
-      e.bzT-=dt; if(e.bzT<=0){ e.bzT=2; for(const o of nearestN(e.x,e.y,3,140,e)) if(!o.elite) applyStatus(o,'burn',3,'ember',0); }
       e.plT-=dt; if(e.plT<=0){ e.plT=1.6; addHaz({k:'pool',x:e.x,y:e.y,r:24,l:4,m:4,dmg:7,c:'255,106,42'}); }
       if(e.tier>=2){ e.fbT=(e.fbT==null?2:e.fbT)-dt; if(e.fbT<=0&&!(s.frozen>0)){ e.fbT=3; const a0=Math.atan2(p.y-e.y,p.x-e.x);   // Ⅱ 噴火
         for(let i=-1;i<=1;i++){ const a=a0+i*0.28; addHaz({k:'shot',x:e.x,y:e.y,vx:Math.cos(a)*150,vy:Math.sin(a)*150,r:7,dmg:8,c:'255,122,61',l:5}); } } }
-      if(e.tier>=3){ if(s.burn>0) e.hadB=1; else if(e.hadB&&(e.erT||0)<=S.t){ e.hadB=0; e.erT=S.t+2;   // Ⅲ 餘燼反撲：火被反應帶走就炸
-        addHaz({k:'ring',x:e.x,y:e.y,rad:e.r,max:170,spd:230,w:7,dmg:12,c:'255,122,61',l:2}); } }
     }
     if(e.af==='purge'&&e.tier>=2&&e.pjust){ e.pjust=0;   // 淨化剛發動的那一幀
       for(const o of nearestN(e.x,e.y,6,130,e)) if(!o.boss&&!(o.sh>0)){ o.sh=o.shMax=o.max*0.12; }
@@ -2848,6 +2898,10 @@ function updEnemies(dt){
       if(wd<w.r&&wd>5){ const f=w.str*(e.boss?0.1:e.elite?0.35:1)*(0.55+0.45*(1-wd/w.r)); vx=vx*0.3+wx/wd*f; vy=vy*0.3+wy/wd*f; if(S.fz&&S.fz.gravity) fzNote(e,'gravity'); }   // 融合：被引力井吸住的敵人鋪上副元素
     }
     e.x+=(vx+e.kx)*dt; e.y+=(vy+e.ky)*dt; e.kx*=dec; e.ky*=dec;
+    if(S.thornT>S.t&&(e.thC||0)<=S.t&&dd(p.x,p.y,e.x,e.y)<(e.r+p.r+6)**2){ e.thC=S.t+0.5;   // 冰棘甲：碰到你就被刺（不管你是不是無敵中）
+      hit(e,S.thornD||0,'icethorn'); burst(e.x,e.y,rxSkin('icethorn').burst,4,90,2);
+      if(!e.dead) applyStatus(e,'chill',2,'icethorn'); if(S.res.icethorn) for(const o of query(e.x,e.y,60)) if(o!==e&&!o.dead) applyStatus(o,'chill',2,'icethorn');   // 霜林
+      if(e.dead) continue; }
     if(e.tp==='bomber'){ const rr=e.r+p.r+14; if(s.frozen<=0&&e.stun<=0&&dd(p.x,p.y,e.x,e.y)<rr*rr){ kill(e,'blast'); continue; } }
     else if(s.frozen<=0&&e.stun<=0&&p.inv<=0){
       const rr=e.r+p.r;
@@ -2875,7 +2929,8 @@ function updQ(dt){
 function updGems(dt){
   const p=S.p, pk=pickR(), pr=pk*pk;
   for(const g of S.G){
-    if(g.k==='cry'){ g.l-=dt; if(g.l<=0){ g.dead=true; continue; } }
+    if(g.k==='cry'){ g.l-=dt; if(g.l<=0){ g.dead=true; continue; }
+      if(S.res.crystal&&g.l<=6.5&&!g.m){ g.dead=true; const bd=3*rMult(); fxRing(g.x,g.y,110,COL[g.el],0.4); burst(g.x,g.y,COL[g.el],10,160,2.5); for(const o of query(g.x,g.y,110)) applyStatus(o,g.el,3,'crystal',bd); continue; } }   // 晶爆：2.5 秒沒被撿走就自己炸開
     const dx=p.x-g.x, dy=p.y-g.y, q=dx*dx+dy*dy;
     if(!g.m&&q<pr) g.m=true;
     if(g.m){
@@ -3269,17 +3324,18 @@ async function fsSchool(){   // 流派排行榜（歷來）：存活最久的 30
   const rows=await fsFetch(fsBase()+':runQuery',{structuredQuery:{from:[{collectionId:'scores'}],orderBy:[{field:{fieldPath:'t'},direction:'DESCENDING'}],limit:300}});
   const list=[]; for(const row of rows||[]){ const f=row&&row.document&&row.document.fields; if(f) list.push(fsParse(f)); }
   sCache={at:performance.now(),list}; kingsSet(list); return list; }
-function kingsSet(list){ const K={}; for(const g of bySchool(list)) if(g.top.length) (K[g.top[0].name]||(K[g.top[0].name]=[])).push(g.k); KINGS=K; KINGS_AT=performance.now(); }
+function kingsSet(list){ const K={}; for(const g of bySchool(list)) if(g.king) (K[g.king.name]||(K[g.king.name]=[])).push(g.k); KINGS=K; KINGS_AT=performance.now(); }
 const kingsLoad=()=>KINGS&&performance.now()-KINGS_AT<600000?null:fsSchool().catch(()=>null);   // 每日榜、全球榜要顯示稱號：10 分鐘內抓過就不再抓（每日榜每 30 秒刷新，不能每次都讀 300 筆）
-function bySchool(list){   // 19 個流派（18 種反應＋苦行者）：每個流派的前三名（每個暱稱只算最佳）、上榜人數；有人的依冠軍成績排前面，空位排後面
+function bySchool(list){   // 每種反應一個流派＋苦行者：每個流派的前三名（每個暱稱只算最佳）、上榜人數；有人的依冠軍成績排前面，空位排後面
   const g={}; for(const e of list){ const k=SCHOOL[e.sc]?e.sc:''; (g[k]||(g[k]=[])).push(e); }
-  return [...Object.keys(SCHOOL),''].map(k=>{ const a=g[k]||[]; return {k,n:new Set(a.map(e=>e.name)).size,top:topN(a.slice(),3)}; })
+  return [...Object.keys(SCHOOL),''].map(k=>{ const a=g[k]||[]; return {k,n:new Set(a.map(e=>e.name)).size,top:topN(a.slice(),3),king:topN(a.filter(e=>e.b>=KING_MIN_B),1)[0]||null}; })   // king：達標（討伐 2 隻以上）的成績裡最好的
     .sort((x,y)=>(y.top.length?1:0)-(x.top.length?1:0)||(y.top.length?y.top[0].t-x.top[0].t||y.top[0].k-x.top[0].k:0)); }
 function schoolCard(g,me,crown){   // crown：歷來榜的第一名戴上流派稱號（今日榜不封）
   const S0=schoolOf(g.k), R=REACT[g.k], tag=R?`<span class="chip" style="--c:${R.c}">${R.n}</span>`:'<span class="chip" style="--c:#cfcbe0">不靠反應</span>';
   if(!g.top.length) return `<div class="sbx empty" style="--c:${S0.c}"><div class="sbh"><b>${S0.n}</b>${tag}<em>${crown?`「${SCHOOL_TITLE[g.k]}」等你來搶`:'空位——當第一個'}</em></div></div>`;
-  return `<div class="sbx" style="--c:${S0.c}"><div class="sbh"><b>${S0.n}</b>${tag}<small>${g.n} 人</small></div>${crown?`<div class="sbt"><b>♔ ${SCHOOL_TITLE[g.k]}</b></div>`:''}${g.top.map((e,i)=>{ const own=!!me&&e.name===me;
-    return `<div class="sbr r${i+1}${own?' me':''}"><i>${MEDAL[i]}</i><span>${esc(e.name)}${own?'<span class="you">我</span>':''}</span><em>${fmt(e.t)}</em></div>`; }).join('')}</div>`; }
+  const kt=!crown?'':g.king?`<div class="sbt"><b>♔ ${SCHOOL_TITLE[g.k]}</b><span>${esc(g.king.name)}</span></div>`:`<div class="sbt none"><b>♔ ${SCHOOL_TITLE[g.k]}</b><span>王位空懸：要討伐 ${KING_MIN_B} 隻強敵</span></div>`;
+  return `<div class="sbx" style="--c:${S0.c}"><div class="sbh"><b>${S0.n}</b>${tag}<small>${g.n} 人</small></div>${kt}${g.top.map((e,i)=>{ const own=!!me&&e.name===me, kg=crown&&g.king&&g.king.name===e.name;
+    return `<div class="sbr r${i+1}${own?' me':''}"><i>${MEDAL[i]}</i><span>${kg?'♔ ':''}${esc(e.name)}${own?'<span class="you">我</span>':''}</span><em>${fmt(e.t)}</em></div>`; }).join('')}</div>`; }
 function loadSchool(){
   if(!$('sList')) return; const me=getName();
   (schoolScope==='today'?fsDaily().then(v=>(v.all&&v.all[v.today])||[]):fsSchool()).then(list=>{ const b=$('sList'); if(!b) return;
@@ -3314,8 +3370,10 @@ async function uploadResult(){
   try{ await fsSubmit(e); S.uploaded=1; gCache=null; dCache=null; sCache=null; b.textContent='已上傳到全球排行榜'; if(m) m.textContent=''; const n=$('nick2'); if(n) n.disabled=true;
     cosmGrant('frame','bronze');   // 銅框：無盡模式上傳過成績（接著抓每日榜時順便判定金框）
     fsDaily().then(v=>{ const i=(v.days[v.today]||[]).findIndex(x=>x.name===getName()); const mm=$('upMsg'); if(mm&&i>=0) mm.insertAdjacentHTML('afterbegin',`<b style="color:var(--gold)">登上今日榜：${MEDAL[i]}！</b><br>`); }).catch(()=>{});
-    fsSchool().then(()=>{ const ks=kingOf(getName()), mm=$('upMsg'); if(!ks||!ks.includes(e.sc)) return; const t=SCHOOL_TITLE[e.sc], n=schoolOf(e.sc).n;   // 搶下流派稱號
-      banner('♔ 搶下稱號：'+t,schoolOf(e.sc).c); sfx('unlock'); if(mm) mm.insertAdjacentHTML('beforeend',`<b style="color:${schoolOf(e.sc).c}">♔ 你搶下了「${t}」！（${n}歷來第一）</b>`); }).catch(()=>{}); }
+    fsSchool().then(list=>{ const ks=kingOf(getName()), mm=$('upMsg'), t=SCHOOL_TITLE[e.sc], n=schoolOf(e.sc).n, c=schoolOf(e.sc).c;   // 搶下流派稱號
+      if(ks&&ks.includes(e.sc)){ banner('♔ 搶下稱號：'+t,c); sfx('unlock'); if(mm) mm.insertAdjacentHTML('beforeend',`<b style="color:${c}">♔ 你搶下了「${t}」！（${n}）</b>`); return; }
+      const g=bySchool(list).find(x=>x.k===e.sc);   // 流派第一但討伐不夠：告訴他差什麼
+      if(g&&g.top[0]&&g.top[0].name===getName()&&e.b<KING_MIN_B&&mm) mm.insertAdjacentHTML('beforeend',`<span style="color:${c}">你是${n}第一！再討伐 ${KING_MIN_B-e.b} 隻強敵，就能戴上「${t}」</span>`); }).catch(()=>{}); }
   catch(_){ b.disabled=false; if(m) m.textContent='上傳失敗，確認網路後再試一次'; }
 }
 const LB_KEY='resonance-lb', NAME_KEY='resonance-name', LB_SALT='共鳴/resonance/lb/v1';
@@ -3361,7 +3419,7 @@ function boardHTML(){
   } else if(tab==='global'){
     h+=`<p class="sub">無盡模式，依存活時間排名，每個暱稱只顯示最佳成績。</p><div id="gList"><p class="note">載入中…</p></div>`;
   } else if(tab==='school'){
-    h+=`<p class="sub">每個流派的前三名（無盡模式，每個暱稱只算最佳成績）。流派看的是你的招牌反應：你比一般玩家多觸發最多的那一種（凍結、結晶這些沒什麼傷害的反應也算）。每個流派歷來的第一名戴上專屬稱號，被超過就換人，每日榜、全球榜上都看得到。</p>
+    h+=`<p class="sub">每個流派的前三名（無盡模式，每個暱稱只算最佳成績）。流派看的是你的招牌反應：你比一般玩家多觸發最多的那一種（凍結、結晶這些沒什麼傷害的反應也算）。討伐 2 隻強敵以上的成績裡，每個流派存活最久的戴上專屬稱號，被超過就換人，每日榜、全球榜上都看得到。</p>
     <div class="sscope"><button class="${schoolScope==='all'?'on':''}" data-act="sscope" data-t="all">歷來</button><button class="${schoolScope==='today'?'on':''}" data-act="sscope" data-t="today">今日</button></div><div id="sList"><p class="note">載入中…</p></div>`;
   } else {
     const a=lbLoad();
@@ -3448,7 +3506,7 @@ function howtoHTML(){
     </div><div class="pzbar"><button class="btn primary" data-act="home">回到主頁</button></div></div>`;
 }
 function codexHTML(){
-  let h=`<div class="panel pfull"><div class="pbody"><h2>反應圖鑑</h2><p class="sub">敵人身上已經有一種狀態時，再施加另一種就會觸發反應，兩種狀態會被消耗掉。反應傷害隨你的等級成長，這是變強的主要方式。泡沫天生帶水、熔殼天生帶火：用它們觸發的反應不算進你的流派（流派只看你自己鋪的）；你自己的元素補過一次就算你的。同一種反應觸發 ${RES_NEED} 次後可以選擇共鳴，讓它產生新的狀態去接下一個反應。風和岩不會留在敵人身上，只負責觸發：風把現有狀態擴散出去，岩把狀態凝成護盾晶體。</p>`;
+  let h=`<div class="panel pfull"><div class="pbody"><h2>反應圖鑑</h2><p class="sub">敵人身上已經有一種狀態時，再施加另一種就會觸發反應，兩種狀態會被消耗掉。反應傷害隨你的等級成長，這是變強的主要方式。泡沫抗水、熔殼抗火：身上不帶元素，該元素的技能和反應打它們會被減傷（越後期越硬）。同一種反應觸發 ${RES_NEED} 次後可以選擇共鳴，讓它產生新的狀態去接下一個反應。風和岩不會留在敵人身上，只負責觸發：風把現有狀態擴散出去，岩把狀態凝成護盾晶體。</p>`;
   for(const k in REACT){
     const R=REACT[k], a=R.pair[0], b=R.pair[1];
     const cb=b==='frozen'?`<span class="chip" style="--c:${COL.frozen}">凍結中</span>`:chip(b);
@@ -3572,7 +3630,7 @@ function pauseHTML(){
 function pause(){ if(!S||S.mode!=='play')return; S.mode='pause'; input.active=false; input.id=null; for(const k in input.keys)input.keys[k]=false; showOv(pauseHTML()); }
 function resume(){ if(!S||S.mode!=='pause')return; S.mode='play'; hideOv(); }
 
-function endlessOver(entries,total,share,rEntries,school,sc,sub,bars,own){
+function endlessOver(entries,total,share,rEntries,school,sc,sub,bars){
   const ent={name:getName()||'無名旅人',sc:rxSchool().school,t:Math.floor(S.t),k:S.kills,lv:S.p.lv,b:S.slain,
     sk:S.order.map(id=>SK[id].ch).join(''),d:twDay(),own:true};
   ent.code=encodeEntry(ent); S.lbEnt=ent;
@@ -3587,7 +3645,7 @@ function endlessOver(entries,total,share,rEntries,school,sc,sub,bars,own){
     ${onlineOn()?`<button class="btn primary" data-act="upload" id="upBtn">上傳到全球排行榜</button><p class="msg" id="upMsg"></p>`:''}
     <button class="btn${onlineOn()?'':' primary'}" data-act="share">分享成績碼</button><p class="msg" id="shareMsg"></p>
     <div class="stats"><div><b>${S.p.lv}</b><small>等級</small></div><div><b>${S.kills}</b><small>擊殺</small></div><div><b>${S.slain}</b><small>討伐強敵</small></div></div>
-    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${share-own>=0.05?`（自己鋪的 ${(own*100).toFixed(0)}%，用到泡沫、熔殼天生元素的不算流派）`:''}${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}${S.fz&&Object.keys(S.fz).length?'<br>融合：'+Object.keys(S.fz).map(a=>fzName(a,S.fz[a].sec)).join('、'):''}</p>
+    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}${S.fz&&Object.keys(S.fz).length?'<br>融合：'+Object.keys(S.fz).map(a=>fzName(a,S.fz[a].sec)).join('、'):''}</p>
     <h3>傷害來源</h3><div class="bars">${bars||'<p class="sub">沒有造成傷害</p>'}</div>
     <button class="btn primary" data-act="restart">再來一局</button>
     <button class="btn" data-act="board">排行榜</button>
@@ -3600,7 +3658,7 @@ function endGame(win){
   const total=entries.reduce((a,[,v])=>a+v,0)||1;
   const rTotal=entries.filter(([k])=>REACT[k]).reduce((a,[,v])=>a+v,0), share=rTotal/total;   // 畫面上的「反應造成了 X%」：真正的傷害
   const nReact=Object.values(S.rc).reduce((a,b)=>a+b,0);
-  const SC=rxSchool(), rEntries=SC.ent, own=SC.share;   // 流派：招牌反應（只算自己鋪的）
+  const SC=rxSchool(), rEntries=SC.ent;   // 流派：招牌反應
   let school='苦行者', sub='幾乎沒有觸發反應，靠技能本身硬撐', sc='#cfcbe0';
   const rTop=rEntries.length?`主要傷害：${rEntries.slice(0,2).map(([k,v])=>REACT[k].n+' '+Math.round(v/total*100)+'%').join('、')}`:'';
   if(SC.school){ const R=REACT[SC.school]; school=SCHOOL[SC.school]; sc=R.c;
@@ -3612,14 +3670,14 @@ function endGame(win){
     const nm=SK[k]?SK[k].n:REACT[k]?REACT[k].n:PV[k]?PV[k].n:MISC[k]?MISC[k][0]:k, c=SK[k]?SK[k].c:REACT[k]?REACT[k].c:PV[k]?PV[k].c:MISC[k]?MISC[k][1]:'#999', pc=v/total*100;
     return `<div class="bar" style="--c:${c}"><span class="nm">${nm}</span><span class="tr"><i style="width:${Math.max(2,pc)}%"></i></span><span class="pc">${pc.toFixed(0)}%</span></div>`;
   }).join('');
-  if(S.endless) return endlessOver(entries,total,share,rEntries,school,sc,sub,bars,own);
+  if(S.endless) return endlessOver(entries,total,share,rEntries,school,sc,sub,bars);
   showOv(`<div class="panel">
     <h2>${slain?'討伐成功':win?'撐過來了':'倒下了'}</h2>
     <p class="sub">${slain?`${B.n}在 ${Math.round(S.bossDown-S.boss.t0)} 秒內倒下。這套組合解開了它的題目：${B.test}。`:win?(met?`5 分鐘結束，但${B.n}還站著。它考的是「${B.test}」。`:'5 分鐘結束，場上的元素全都聽你的。'):(met?`存活 ${fmt(S.t)}，敗給${B.n}。`:'存活 '+fmt(S.t)+'。換個組合再來一次。')}</p>
     ${met&&!slain?`<p class="note" style="text-align:left">${B.fail}</p>`:''}
     <div class="school" style="--c:${sc}"><small>你的流派</small><strong>${school}</strong><span>${sub}</span></div>${cosmNewHTML()}
     <div class="stats"><div><b>${S.p.lv}</b><small>等級</small></div><div><b>${S.kills}</b><small>擊殺</small></div><div><b>${nReact}</b><small>觸發反應</small></div></div>
-    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${share-own>=0.05?`（自己鋪的 ${(own*100).toFixed(0)}%，用到泡沫、熔殼天生元素的不算流派）`:''}${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}${S.fz&&Object.keys(S.fz).length?'<br>融合：'+Object.keys(S.fz).map(a=>fzName(a,S.fz[a].sec)).join('、'):''}</p>
+    <p class="note">反應造成了 ${(share*100).toFixed(0)}% 的總傷害${Object.keys(S.res).length?'<br>共鳴：'+Object.keys(S.res).map(k=>RES[k].n).join('、'):''}${S.fz&&Object.keys(S.fz).length?'<br>融合：'+Object.keys(S.fz).map(a=>fzName(a,S.fz[a].sec)).join('、'):''}</p>
     <h3>傷害來源</h3><div class="bars">${bars||'<p class="sub">沒有造成傷害</p>'}</div>
     <button class="btn primary" data-act="restart">再來一局</button>
     <button class="btn" data-act="home">回到標題</button>
@@ -4164,6 +4222,7 @@ function render(now){
     else if(z.k==='steam'){ if((S.vq||1)>0.45||z.fz) for(let i=0;i<2;i++){ const ox=Math.cos(t*0.7+i*1.6)*z.r*0.3, oy=Math.sin(t*0.9+i*1.6)*z.r*0.25; bloom(z.x+ox,z.y+oy,z.r*0.7,z.fz?'#d7e8ff':rxSkin('vaporize').c2,(z.fz?0.32:0.15)*a); } }
     else if(z.k==='fzpool'){ const g=ctx.createRadialGradient(z.x,z.y,z.r*0.1,z.x,z.y,z.r); g.addColorStop(0,`rgba(58,34,10,${0.85*a})`); g.addColorStop(0.8,`rgba(30,18,6,${0.7*a})`); g.addColorStop(1,'rgba(30,18,6,0)'); ctx.fillStyle=g; circle(z.x,z.y,z.r); ctx.fill();   // 油燃彈：黑油上燒著火
       for(let i=0;i<5;i++){ const an=i*1.3+z.x*0.01, rr=z.r*(0.15+0.6*((i*0.37)%1)), fl=0.6+0.4*Math.sin(t*11+i*2.3); bloom(z.x+Math.cos(an)*rr,z.y+Math.sin(an)*rr-4*fl,7*fl+3,'#ff8a2d',0.8*a); } bloom(z.x,z.y,z.r*1.2,'#ff6a1a',0.25*a); }
+    else if(z.k==='mcore'){ const Q=rxSkin('magstorm'), ph=(t*1.6)%1; bloom(z.x,z.y,26,Q.c1,0.55*a); ctx.strokeStyle=hexA(Q.c2,0.4*a*(1-ph)); ctx.lineWidth=2; circle(z.x,z.y,z.r*(1-ph)); ctx.stroke(); }   // 磁核：往內收的圈
     else if(z.k==='scorch'){ const Q=z.sk==='combust'?rxSkin('combust'):RXP_DEF.combust;   // 焦土：爆燃共鳴留下的跟著「爆燃」的造型
       ctx.fillStyle=`rgba(${Q.ground},${0.45*a})`; circle(z.x,z.y,z.r); ctx.fill();
       bloom(z.x,z.y,z.r*1.1,Q.glow,0.2*a); if((S.vq||1)>0.4){ const sn=(S.vq||1)>0.6?4:2;
@@ -4219,7 +4278,8 @@ function render(now){
     if(e.res&&!(e.af==='storm'||e.af==='frost')){ ctx.strokeStyle=COL[e.res]; ctx.lineWidth=2; ctx.setLineDash([3,4]); circle(e.x,e.y,e.r+8); ctx.stroke(); ctx.setLineDash([]); }   // 雷殛、寒獄的免疫是詞綴本身，不另外畫
     if(e.tp==='spitter'&&e.fT!=null&&e.fT<0.5){ ctx.fillStyle=`rgba(255,92,138,${0.5-e.fT})`; circle(e.x,e.y,e.r+9); ctx.fill(); }
     ctx.globalAlpha=e.tp==='blinker'?(e.bl?Math.max(0.15,e.bl.t/0.65):0.8):1;
-    if(e.aura&&s[e.aura]>0&&!e.boss){ ctx.globalAlpha=0.13+0.05*Math.sin(t*6+e.x*0.1); ctx.fillStyle=COL[e.aura]; circle(e.x,e.y,e.r+6); ctx.fill(); ctx.globalAlpha=1; }
+    if(e.rEl){ const k=rElPct()/0.6, f=Math.max(0,((e.rsF||0)-S.t)/0.18), R=e.r+5, b0=t*0.8;   // 抗性：三段元素色的弧（盾），越後期越亮；被抗住時閃一下（虛線圈是「元素抗性」詛咒的免疫，別混）
+      ctx.strokeStyle=hexA(COL[e.rEl],0.3+0.35*k+0.35*f); ctx.lineWidth=1.8+1.6*f; for(let j=0;j<3;j++){ const b=b0+j*TAU/3; ctx.beginPath(); ctx.arc(e.x,e.y,R,b,b+1.3); ctx.stroke(); } }
     if(e.elite&&!e.boss&&e.af){ const ac=AFX[e.af].c, R=e.r*2.0;   // 菁英：一圈旋轉的虛線＋階級刻度，不再疊光暈
       ctx.strokeStyle=hexA(ac,0.7); ctx.lineWidth=2; ctx.setLineDash([R*0.5,R*0.28]); ctx.lineDashOffset=-t*18; circle(e.x,e.y,R); ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset=0;
       for(let i=0;i<(e.tier||1);i++){ const a=-Math.PI/2+(i-((e.tier||1)-1)/2)*0.32; ctx.fillStyle=ac; circle(e.x+Math.cos(a)*(R+5),e.y+Math.sin(a)*(R+5),2.6); ctx.fill(); } }
@@ -4234,6 +4294,12 @@ function render(now){
     if(e.sh>0){ ctx.strokeStyle='rgba(159,232,255,0.85)'; ctx.lineWidth=2+3*e.sh/e.shMax; circle(e.x,e.y,e.r+9); ctx.stroke(); }
     if(e.stun>0){ ctx.strokeStyle='#ffe04a'; ctx.lineWidth=2; ctx.setLineDash([3,5]); circle(e.x,e.y,e.r+12); ctx.stroke(); ctx.setLineDash([]); }
     if(s.metal>0){ const b=t*1.5+e.x*0.01; ctx.strokeStyle='rgba(184,199,255,0.85)'; ctx.lineWidth=2.2; ctx.beginPath(); ctx.arc(e.x,e.y,e.r+5,b,b+1.1); ctx.stroke(); ctx.beginPath(); ctx.arc(e.x,e.y,e.r+5,b+Math.PI,b+Math.PI+1.1); ctx.stroke(); }   // 磁化：兩段對稱的磁弧
+    if(e.ciT>S.t){ const C=rxSkin('coldiron').c1, k=Math.min(1,(e.ciT-S.t)/0.5), R=e.r+7;   // 寒鐵：鐵鍊枷鎖
+      ctx.globalAlpha=k; ctx.strokeStyle=hexA(C,0.55); ctx.lineWidth=1.6; circle(e.x,e.y,R); ctx.stroke(); ctx.strokeStyle=C; ctx.lineWidth=2;
+      for(let j=0;j<6;j++){ const b=j*TAU/6-t*0.4; ctx.beginPath(); ctx.ellipse(e.x+Math.cos(b)*R,e.y+Math.sin(b)*R,3.6,2,b+Math.PI/2,0,TAU); ctx.stroke(); } ctx.globalAlpha=1; }
+    if(e.fuT>S.t){ const C=rxSkin('fuse').c1, u=1-(e.fuT-S.t)/1.5;   // 引信：倒數火花越閃越快，虛線圈是爆炸範圍
+      ctx.strokeStyle=hexA(C,0.2+0.35*u); ctx.lineWidth=1.5; ctx.setLineDash([5,6]); ctx.lineDashOffset=-t*40; circle(e.x,e.y,e.fuR*(0.6+0.4*u)); ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset=0;
+      if(Math.sin(t*(10+30*u))>-0.2){ ctx.fillStyle='#fff3c0'; circle(e.x,e.y-e.r-5,2.2+1.6*u); ctx.fill(); ctx.fillStyle=hexA(C,0.6); circle(e.x,e.y-e.r-5,4+3*u); ctx.fill(); } }
     if(e.rtT>S.t){ ctx.strokeStyle='#5fd18a'; ctx.lineWidth=2.4; ctx.beginPath(); for(let j=0;j<=28;j++){ const b=j/28*TAU*2, rr=e.r+4+3*Math.sin(b*3); const px=e.x+Math.cos(b)*rr, py=e.y+Math.sin(b)*rr*0.6+e.r*0.35; j?ctx.lineTo(px,py):ctx.moveTo(px,py); } ctx.stroke();
       ctx.fillStyle='#a6e86a'; for(let j=0;j<4;j++){ const b=j*TAU/4+0.4; circle(e.x+Math.cos(b)*(e.r+6),e.y+Math.sin(b)*(e.r+6)*0.6+e.r*0.35,2.4); ctx.fill(); } }
     // 狀態環
@@ -4262,6 +4328,14 @@ function render(now){
     const k=Math.min(1,p.sh/shMax());
     ctx.globalCompositeOperation='lighter';
     ctx.strokeStyle=`rgba(191,234,255,${0.3+0.45*k})`; ctx.lineWidth=1.5+2.5*k; circle(p.x,p.y,p.r+7+Math.sin(t*5)*0.8); ctx.stroke();
+    ctx.globalCompositeOperation='source-over';
+  }
+  if(S.thornT>S.t){   // 冰棘甲：一圈冰刺繞著主角轉，最後 0.6 秒淡出
+    const P=rxSkin('icethorn'), a=Math.min(1,(S.thornT-S.t)/0.6), R=p.r+8, n=10;
+    ctx.globalCompositeOperation='lighter'; bloom(p.x,p.y,R+10,P.c1,0.22*a);
+    ctx.fillStyle=hexA(P.c2||P.c1,0.85*a); ctx.strokeStyle=hexA(P.c1,0.9*a); ctx.lineWidth=1;
+    for(let i=0;i<n;i++){ const b=i*TAU/n+t*0.6, h=9+(i%2)*5, cx=Math.cos(b), cy=Math.sin(b);
+      ctx.beginPath(); ctx.moveTo(p.x+cx*R-cy*3.2,p.y+cy*R+cx*3.2); ctx.lineTo(p.x+cx*(R+h),p.y+cy*(R+h)); ctx.lineTo(p.x+cx*R+cy*3.2,p.y+cy*R-cx*3.2); ctx.closePath(); ctx.fill(); ctx.stroke(); }
     ctx.globalCompositeOperation='source-over';
   }
 
